@@ -4,7 +4,7 @@ import java.util.Date;
 
 public abstract class Product 
 {
-	private String name;
+	private String title;
 	private String barcode;
 	private double costPrice;
 	private double recommendedRetailPrice;
@@ -13,128 +13,141 @@ public abstract class Product
 	private String description;
 	private Date dateSold;
 	private Date recievedInStore;
-	// falalala
 	
 	
-	
-	public Product(String name, double costPrice, double recommendedRetailPrice, int amountInStock, String publicationDate, Date recievedInStore, String description ) {
-		
-		this.name = name;
+	public Product(String title, String barcode, double costPrice, double recommendedRetailPrice, int amountInStock, String publicationDate, String description, Date recievedInStore) 
+
+	{	
+		this.title = title;
 		this.costPrice = costPrice;
 		this.recommendedRetailPrice = recommendedRetailPrice;
 		this.amountInStock = amountInStock;
 		this.publicationDate = publicationDate;
+		this.description = description;		
 		this.recievedInStore = recievedInStore;
-		this.description = desciption;
-		
-		
+	}
+
+	public String getTitle() 
+	{
+		return title;
 	}
 
 
 
-	public String getName() {
-		return name;
+	public void setTitle(String title) 
+	{
+		this.title = title;
 	}
 
 
 
-	public void setName(String name) {
-		this.name = name;
-	}
-
-
-
-	public String getBarcode() {
+	public String getBarcode() 
+	{
 		return barcode;
 	}
 
 
 
-	public void setBarcode(String barcode) {
+	public void setBarcode(String barcode) 
+	{
 		this.barcode = barcode;
 	}
 
 
 
-	public double getCostPrice() {
+	public double getCostPrice() 
+	{
 		return costPrice;
 	}
 
 
 
-	public void setCostPrice(double costPrice) {
+	public void setCostPrice(double costPrice) 
+	{
 		this.costPrice = costPrice;
 	}
 
 
 
-	public double getRecommendedRetailPrice() {
+	public double getRecommendedRetailPrice() 
+	{
 		return recommendedRetailPrice;
 	}
 
 
 
-	public void setRecommendedRetailPrice(double recommendedRetailPrice) {
+	public void setRecommendedRetailPrice(double recommendedRetailPrice) 
+	{
 		this.recommendedRetailPrice = recommendedRetailPrice;
 	}
 
 
 
-	public int getAmountInStock() {
+	public int getAmountInStock() 
+	{
 		return amountInStock;
 	}
 
 
 
-	public void setAmountInStock(int amountInStock) {
+	public void setAmountInStock(int amountInStock) 
+	{
 		this.amountInStock = amountInStock;
 	}
 
 
 
-	public String getPublicationDate() {
+	public String getPublicationDate() 
+	{
 		return publicationDate;
 	}
 
 
 
-	public void setPublicationDate(String publicationDate) {
+	public void setPublicationDate(String publicationDate) 
+	{
 		this.publicationDate = publicationDate;
 	}
 
 
 
-	public String getDescription() {
+	public String getDescription() 
+	{
 		return description;
 	}
 
 
 
-	public void setDescription(String description) {
+	public void setDescription(String description) 
+	{
 		this.description = description;
 	}
 
 
 
-	public Date getDateSold() {
+	public Date getDateSold() 
+	{
 		return dateSold;
 	}
 
 
 
-	public void setDateSold(Date dateSold) {
+	public void setDateSold(Date dateSold) 
+	{
 		this.dateSold = dateSold;
 	}
 
 
 
-	public Date getRecievedInStore() {
+	public Date getRecievedInStore() 
+	{
 		return recievedInStore;
 	}
 
 
 
-	public void setRecievedInStore(Date recievedInStore) {
+	public void setRecievedInStore(Date recievedInStore) 
+	{
 		this.recievedInStore = recievedInStore;
 	}
 	
