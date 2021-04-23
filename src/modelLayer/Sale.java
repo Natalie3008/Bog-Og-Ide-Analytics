@@ -74,6 +74,4 @@ public class Sale
 		this.position = position;
 	}
 
-
-
 }
