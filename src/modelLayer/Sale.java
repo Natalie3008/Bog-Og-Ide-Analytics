@@ -9,14 +9,14 @@ public class Sale
 	private String emailAddress;
 	private String position;
 	
-	public Sale(int CPR,String name,String address,int phoneNumber,String emailAddress,String position)
+	public Sale(int CPR, String name, String address, int phoneNumber, String emailAddress, String position)
 	{
 		this.CPR = CPR;
-		this.name= name;
-		this.address= address;
-		this.phoneNumber= phoneNumber;
-		this.emailAddress= emailAddress;
-		this.position= position;
+		this.name = name;
+		this.address = address;
+		this.phoneNumber = phoneNumber;
+		this.emailAddress = emailAddress;
+		this.position = position;
 	}
 
 	public int getCPR() 
@@ -28,6 +28,7 @@ public class Sale
 	{
 		this.CPR = CPR;
 	}
+	
 	public String getname() 
 	{
 		return name;
@@ -37,6 +38,7 @@ public class Sale
 	{
 		this.name = name;
 	}
+	
 	public String getaddress() 
 	{
 		return address;
@@ -46,6 +48,7 @@ public class Sale
 	{
 		this.address = address;
 	}
+	
 	public int getPhoneNumber() 
 	{
 		return phoneNumber;
@@ -55,6 +58,7 @@ public class Sale
 	{
 		this.phoneNumber = phoneNumber;
 	}
+	
 	public String getEmailAddress() 
 	{
 		return emailAddress;
@@ -64,6 +68,7 @@ public class Sale
 	{
 		this.emailAddress = emailAddress;
 	}
+	
 	public String getPosition() 
 	{
 		return position;

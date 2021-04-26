@@ -1,8 +1,7 @@
 package modelLayer;
 
 public class Game 
-{
-	
+{	
 	private String type;
 	
 	public Game(String type)

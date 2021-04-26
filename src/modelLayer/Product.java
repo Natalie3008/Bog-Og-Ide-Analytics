@@ -32,127 +32,89 @@ public abstract class Product
 		return title;
 	}
 
-
-
 	public void setTitle(String title) 
 	{
 		this.title = title;
 	}
-
-
 
 	public String getBarcode() 
 	{
 		return barcode;
 	}
 
-
-
 	public void setBarcode(String barcode) 
 	{
 		this.barcode = barcode;
 	}
-
-
 
 	public double getCostPrice() 
 	{
 		return costPrice;
 	}
 
-
-
 	public void setCostPrice(double costPrice) 
 	{
 		this.costPrice = costPrice;
 	}
-
-
 
 	public double getRecommendedRetailPrice() 
 	{
 		return recommendedRetailPrice;
 	}
 
-
-
 	public void setRecommendedRetailPrice(double recommendedRetailPrice) 
 	{
 		this.recommendedRetailPrice = recommendedRetailPrice;
 	}
-
-
 
 	public int getAmountInStock() 
 	{
 		return amountInStock;
 	}
 
-
-
 	public void setAmountInStock(int amountInStock) 
 	{
 		this.amountInStock = amountInStock;
 	}
-
-
 
 	public String getPublicationDate() 
 	{
 		return publicationDate;
 	}
 
-
-
 	public void setPublicationDate(String publicationDate) 
 	{
 		this.publicationDate = publicationDate;
 	}
-
-
 
 	public String getDescription() 
 	{
 		return description;
 	}
 
-
-
 	public void setDescription(String description) 
 	{
 		this.description = description;
 	}
-
-
 
 	public Date getDateSold() 
 	{
 		return dateSold;
 	}
 
-
-
 	public void setDateSold(Date dateSold) 
 	{
 		this.dateSold = dateSold;
 	}
-
-
 
 	public Date getRecievedInStore() 
 	{
 		return recievedInStore;
 	}
 
-
-
 	public void setRecievedInStore(Date recievedInStore) 
 	{
 		this.recievedInStore = recievedInStore;
 	}
-	
-	
-	
-	
 
 }
