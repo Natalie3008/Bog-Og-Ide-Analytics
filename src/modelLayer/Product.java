@@ -27,7 +27,7 @@ public abstract class Product
 		this.description = description;		
 		this.recievedInStore = recievedInStore;
 		this.supplier = supplier;
-		// something so it wil let me commit
+		// something so it wil let me commit aaaa
 	}
 
 	public Supplier getSupplier()
