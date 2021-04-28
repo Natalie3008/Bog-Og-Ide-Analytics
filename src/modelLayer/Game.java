@@ -6,9 +6,9 @@ public class Game extends Product
 {	
 	private String type;
 	
-	public Game(String title, String barcode, double costPrice, double recommendedRetailPrice, int amountInStock, String publicationDate, String description, Date receivedInStore, String type)
+	public Game(String title, String barcode, double costPrice, double recommendedRetailPrice, int amountInStock, String publicationDate, String description, Date receivedInStore, Supplier supplier, String type)
 	{
-		super(title, barcode, costPrice, recommendedRetailPrice, amountInStock, publicationDate, description, receivedInStore);
+		super(title, barcode, costPrice, recommendedRetailPrice, amountInStock, publicationDate, description, receivedInStore, supplier);
 		this.type = type;
 	}
 
