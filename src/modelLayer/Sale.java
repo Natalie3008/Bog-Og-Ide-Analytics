@@ -1,82 +1,74 @@
 package modelLayer;
 
+import java.util.Date;
+
 public class Sale 
 {
-	private int CPR;
-	private String name;
-	private String address;
-	private int phoneNumber;
-	private String emailAddress;
-	private String position;
+	private int ID;
+	private double amount;
+	private Date date;
+	private String ageCategory;
+	private String paymentMethod;
+	private Employee employee;
 	
-	public Sale(int CPR, String name, String address, int phoneNumber, String emailAddress, String position)
+	public Sale(int ID, double amount, Date date, String ageCategory, String paymentMethod, Employee employee)
 	{
-		this.CPR = CPR;
-		this.name = name;
-		this.address = address;
-		this.phoneNumber = phoneNumber;
-		this.emailAddress = emailAddress;
-		this.position = position;
+		this.ID = ID;
+		this.amount = amount;
+		this.date = date;
+		this.ageCategory = ageCategory;
+		this.paymentMethod = paymentMethod;
+		this.employee = employee;
 	}
 
-	public int getCPR() 
-	{
-		return CPR;
+	public int getID() {
+		return ID;
+		}
+
+	public void setID(int iD) {
+		ID = iD;
 	}
 
-	public void setCPR(int CPR) 
-	{
-		this.CPR = CPR;
-	}
-	
-	public String getname() 
-	{
-		return name;
+	public double getAmount() {
+		return amount;
 	}
 
-	public void setName(String name) 
-	{
-		this.name = name;
+	public void setAmount(double amount) {
+		this.amount = amount;
 	}
 	
-	public String getaddress() 
-	{
-		return address;
+	public Date getDate() {
+		return date;
 	}
 
-	public void setAddress(String address) 
-	{
-		this.address = address;
-	}
-	
-	public int getPhoneNumber() 
-	{
-		return phoneNumber;
+	public void setDate(Date date) {
+		this.date = date;
 	}
 
-	public void setPhoneNumber(int phoneNumber) 
-	{
-		this.phoneNumber = phoneNumber;
-	}
-	
-	public String getEmailAddress() 
-	{
-		return emailAddress;
+	public String getAgeCategory() {
+		return ageCategory;
 	}
 
-	public void setEmailAddress(String emailAddress) 
-	{
-		this.emailAddress = emailAddress;
-	}
-	
-	public String getPosition() 
-	{
-		return position;
+	public void setAgeCategory(String ageCategory) {
+		this.ageCategory = ageCategory;
 	}
 
-	public void setPosition(String position) 
-	{
-		this.position = position;
+	public String getPaymentMethod() {
+		return paymentMethod;
 	}
+
+	public void setPaymentMethod(String paymentMethod) {
+		this.paymentMethod = paymentMethod;
+	}
+
+	public Employee getEmployee() {
+		return employee;
+	}
+
+	public void setEmployee(Employee employee) 
+	{
+		this.employee = employee;
+	}
+
 
 }
