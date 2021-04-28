@@ -16,7 +16,7 @@ public abstract class Product
 	private Supplier supplier;
 	
 	
-	public Product(String title, String barcode, double costPrice, double recommendedRetailPrice, int amountInStock, String publicationDate, String description, Date recievedInStore, Supplier suppllier) 
+	public Product(String title, String barcode, double costPrice, double recommendedRetailPrice, int amountInStock, String publicationDate, String description, Date recievedInStore, Supplier supplier) 
 
 	{	
 		this.title = title;
