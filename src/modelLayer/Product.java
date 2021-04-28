@@ -13,9 +13,10 @@ public abstract class Product
 	private String description;
 	private Date dateSold;
 	private Date recievedInStore;
+	private Supplier supplier;
 	
 	
-	public Product(String title, String barcode, double costPrice, double recommendedRetailPrice, int amountInStock, String publicationDate, String description, Date recievedInStore) 
+	public Product(String title, String barcode, double costPrice, double recommendedRetailPrice, int amountInStock, String publicationDate, String description, Date recievedInStore, Supplier suppllier) 
 
 	{	
 		this.title = title;
@@ -25,6 +26,17 @@ public abstract class Product
 		this.publicationDate = publicationDate;
 		this.description = description;		
 		this.recievedInStore = recievedInStore;
+		this.supplier = supplier;
+	}
+
+	public Supplier getSupplier()
+	{
+		return supplier;
+	}
+
+	public void setSupplier(Supplier supplier) 
+	{
+		this.supplier = supplier;
 	}
 
 	public String getTitle() 
