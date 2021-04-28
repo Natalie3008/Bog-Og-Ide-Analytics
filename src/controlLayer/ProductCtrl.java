@@ -4,26 +4,21 @@ import java.sql.*;
 import databaseLayer.*;
 import modelLayer.*;
 
-public class ProductCtrl 
-{
+public class ProductCtrl {
 	private ProductDB productDb;
 	
-	public ProductCtrl() 
-	{
+	public ProductCtrl() {
 		productDb = new ProductDB();
 	}
 	
 /** Method to get the product information by giving title and barcode  	*/
-	public Product getProductInformation(String title, String barcode ) 
-	{
+	public Product getProductInformation(String title, String barcode ) {
 		Product p =null;
 		
-		try 
-		{
+		try {
 			p= productDb.getProductInformation(title, barcode);
 		}
-		catch(SQLException e)
-		{
+		catch(SQLException e){
 			e.printStackTrace();
 		}
 		return p;
@@ -33,16 +28,13 @@ public class ProductCtrl
 /** Method to create new Book and insert it in the database*/
 	
 	public boolean createBook(String title, String barcode, double costPrice, double recommendedRetailPrice, int amountInStock, String publicationDate, String description, 
-			Date dateSold, Date receivedInStore, String ISBN, String author, String genre) 
-	{
+			Date dateSold, Date receivedInStore, String ISBN, String author, String genre) {
 		boolean result=true;
 		
-		try 
-		{
+		try {
 			productDb.createBook(title, barcode, costPrice, recommendedRetailPrice, amountInStock, publicationDate, description, dateSold, receivedInStore, ISBN, author, genre);
 		}
-		catch(SQLException e)
-		{
+		catch(SQLException e){
 			e.printStackTrace();
 			result=false;
 		}
@@ -52,16 +44,13 @@ public class ProductCtrl
 	/** Method to create new Game and insert it in the database*/	
 	
 	public boolean createGame(String title, String barcode, double costPrice, double recommendedRetailPrice, int amountInStock, String publicationDate, String description, 
-			Date dateSold, Date receivedInStore, String type) 
-	{
+			Date dateSold, Date receivedInStore, String type) {
 		boolean result=true;
 		
-		try 
-		{
+		try {
 			productDb.createGame(title, barcode, costPrice, recommendedRetailPrice, amountInStock, publicationDate, description, dateSold, receivedInStore,type);
 		}
-		catch(SQLException e)
-		{
+		catch(SQLException e){
 			e.printStackTrace();
 			result=false;
 		}
@@ -69,15 +58,12 @@ public class ProductCtrl
 	}
 	
 	/** Method to remove product from database by giving barcode in the method parameter */
-	public boolean removeProduct(String barcode)
-	{
+	public boolean removeProduct(String barcode){
 		boolean res = true;
-		try
-		{
+		try{
 			productDb.deleteProduct(barcode);
 		}
-		catch(SQLException e)
-		{
+		catch(SQLException e){
 			e.printStackTrace();
 			res=false;
 		}
@@ -85,15 +71,12 @@ public class ProductCtrl
 	}
 	
 	
-	public boolean updateAmountInStock(Product product)
-	{
+	public boolean updateAmountInStock(Product product){
 		boolean res = true;
-		try
-		{
+		try{
 			productDb.updateAmountInStock(product);
 		}
-		catch(SQLException e)
-		{
+		catch(SQLException e){
 			e.printStackTrace();
 			res=false;
 		}
