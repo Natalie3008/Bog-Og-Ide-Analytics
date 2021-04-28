@@ -11,10 +11,10 @@ public class Book extends Product
 
 	
 	
-	public Book(String title, String barcode, double costPrice, double recommendedRetailPrice, int amountInStock, String publicationDate, String description, Date receivedInStore, 
+	public Book(String title, String barcode, double costPrice, double recommendedRetailPrice, int amountInStock, String publicationDate, String description, Date receivedInStore, Supplier supplier, 
 			String ISBN, String author, String genre)
 	{
-		super (title, barcode, costPrice, recommendedRetailPrice, amountInStock, publicationDate, description, receivedInStore);
+		super (title, barcode, costPrice, recommendedRetailPrice, amountInStock, publicationDate, description, receivedInStore, supplier);
 		this.ISBN = ISBN;
 		this.author = author;
 		this.genre = genre;
