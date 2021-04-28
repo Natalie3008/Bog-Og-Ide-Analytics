@@ -11,10 +11,11 @@ public class Supplier
 	private String email;
 	private String productCategory;
 	
-	public Supplier(int CVR, String name ,String address, String phoneNumber, String email, String productCategory) 
+	public Supplier(int CVR, String name, String contactPerson,String address, String phoneNumber, String email, String productCategory) 
 	{
 		this.CVR = CVR;
 		this.name = name;
+		this.contactPerson = contactPerson;
 		this.address = address;
 		this.phoneNumber = phoneNumber;
 		this.email = email;	
