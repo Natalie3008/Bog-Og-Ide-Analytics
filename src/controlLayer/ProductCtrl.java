@@ -1,8 +1,8 @@
 package controlLayer;
 
 import java.sql.*;
-import db.*;
-import model.*;
+import databaseLayer.*;
+import modelLayer.*;
 
 public class ProductCtrl 
 {
