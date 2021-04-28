@@ -1,0 +1,17 @@
+.chart {
+    -fx-padding: 10px;
+}
+.chart-content {
+    -fx-padding: 30px;
+    
+}
+.chart-title {
+  -fx-text-fill: #4682b4;
+}
+.axis-label {
+  -fx-text-fill: #4682b4;
+}
+.axis {  
+    -fx-tick-label-fill: #999999;
+
+}

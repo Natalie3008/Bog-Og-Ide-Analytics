@@ -91,7 +91,7 @@ public class MainMenu extends JFrame {
 		
 		CardLayout cardLayout = new CardLayout();
 		JPanel panelCardLayout = new JPanel();
-		panelCardLayout.setBorder(null);
+		panelCardLayout.setBorder(new EmptyBorder(10, 50, 10, 50));
 		panelCardLayout.setLayout(cardLayout);
 		panelCardLayout.setBackground(Color.decode("#1A1F20"));
 		GridBagConstraints gbc_cardLayout = new GridBagConstraints();
