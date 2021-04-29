@@ -12,11 +12,11 @@ public class ProductCtrl {
 	}
 	
 /** Method to get the product information by giving title and barcode  	*/
-	public Product getProductInformation(String title, String barcode ) {
-		Product p =null;
+	public Product getProductInformation(String barcode) {
+		Product p = null;
 		
 		try {
-			p= productDb.getProductInformation(title, barcode);
+			p= productDb.getProductInformation(barcode);
 		}
 		catch(SQLException e){
 			e.printStackTrace();
@@ -36,7 +36,7 @@ public class ProductCtrl {
 		}
 		catch(SQLException e){
 			e.printStackTrace();
-			result=false;
+			result = false;
 		}
 		return result;
 	}
@@ -45,14 +45,14 @@ public class ProductCtrl {
 	
 	public boolean createGame(String title, String barcode, double costPrice, double recommendedRetailPrice, int amountInStock, String publicationDate, String description, 
 			Date dateSold, Date receivedInStore, String type) {
-		boolean result=true;
+		boolean result = true;
 		
 		try {
 			productDb.createGame(title, barcode, costPrice, recommendedRetailPrice, amountInStock, publicationDate, description, dateSold, receivedInStore,type);
 		}
 		catch(SQLException e){
 			e.printStackTrace();
-			result=false;
+			result = false;
 		}
 		return result;
 	}
@@ -65,7 +65,7 @@ public class ProductCtrl {
 		}
 		catch(SQLException e){
 			e.printStackTrace();
-			res=false;
+			res = false;
 		}
 		return res;
 	}
@@ -78,7 +78,7 @@ public class ProductCtrl {
 		}
 		catch(SQLException e){
 			e.printStackTrace();
-			res=false;
+			res = false;
 		}
 		return res;
 	}
