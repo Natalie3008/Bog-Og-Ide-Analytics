@@ -2,17 +2,15 @@ package modelLayer;
 
 import java.util.Date;
 
-public class Sale 
-{
+public class Sale {
 	private int ID;
 	private double amount;
 	private Date date;
 	private String ageCategory;
 	private String paymentMethod;
 	private Employee employee;
-	
-	public Sale(int ID, double amount, Date date, String ageCategory, String paymentMethod, Employee employee)
-	{
+
+	public Sale(int ID, double amount, Date date, String ageCategory, String paymentMethod, Employee employee) {
 		this.ID = ID;
 		this.amount = amount;
 		this.date = date;
@@ -23,7 +21,7 @@ public class Sale
 
 	public int getID() {
 		return ID;
-		}
+	}
 
 	public void setID(int iD) {
 		ID = iD;
@@ -36,7 +34,7 @@ public class Sale
 	public void setAmount(double amount) {
 		this.amount = amount;
 	}
-	
+
 	public Date getDate() {
 		return date;
 	}
@@ -65,10 +63,8 @@ public class Sale
 		return employee;
 	}
 
-	public void setEmployee(Employee employee) 
-	{
+	public void setEmployee(Employee employee) {
 		this.employee = employee;
 	}
-
 
 }

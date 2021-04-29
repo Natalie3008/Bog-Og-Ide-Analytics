@@ -1,33 +1,27 @@
 package modelLayer;
 
-public class GameCopy 
-{
+public class GameCopy {
 	private String articleNumber;
 	private Game game;
-	
-	public GameCopy(String articleNumber, Game game)
-	{
+
+	public GameCopy(String articleNumber, Game game) {
 		this.articleNumber = articleNumber;
 		this.game = game;
 	}
 
-	public String getArticleNumber() 
-	{
+	public String getArticleNumber() {
 		return articleNumber;
 	}
 
-	public void setArticleNumber(String articleNumber) 
-	{
+	public void setArticleNumber(String articleNumber) {
 		this.articleNumber = articleNumber;
 	}
 
-	public Game getGame() 
-	{
+	public Game getGame() {
 		return game;
 	}
 
-	public void setGame(Game game) 
-	{
+	public void setGame(Game game) {
 		this.game = game;
 	}
 
