@@ -6,8 +6,6 @@ import java.util.List;
 import modelLayer.*;
 
 public interface SaleDBIF {
-	
-	List<Sale> getAll() throws SQLException;
 
-
+	List<Sale> getSaleInformation() throws SQLException;
 }

@@ -7,43 +7,59 @@ import java.sql.Statement;
 import java.util.*;
 
 import modelLayer.Sale;
+import modelLayer.Employee;
 
 public abstract class SaleDB implements SaleDBIF {
 
-		//I've added the same name for the return methods, bad practice?
-	
+	// TODO comment
 	public List<Sale> getSaleInformation() throws SQLException {
-		//Little unsure whether I should've placed these in or out of the try method. It seems unnecessary to have it outside of...
-			ResultSet res = null;
-			List<Sale> saleInformation = null;	
-			Statement statement = DBConnection.getInstance().getConnection().createStatement();	
-			try {
-				res = statement.executeQuery("SELECT * FROM Sale");
-				saleInformation = buildObjects(res);	
-			}
-				catch (SQLException e) {
-					e.printStackTrace();
-				}
-			return saleInformation;
-			}
-
-	private List<Sale> buildObjects(ResultSet res) throws SQLException {
-		ArrayList<Sale> saleInformation = new ArrayList<>();
-		//This should be a while loop right? In case of while, I don't have to end it since next() does that once it is at the end? 
-		if (res.next()) {
-			Sale info = buildObject(res);
-			saleInformation.add(info);
+		ResultSet resultSet = null;
+		List<Sale> saleInformation = null;
+		Statement statement = DBConnection.getInstance().getConnection().createStatement();
+		try {
+			resultSet = statement.executeQuery("SELECT * FROM Sale");
+			saleInformation = buildObjects(resultSet);
+		} catch (SQLException e) {
+			e.printStackTrace();
 		}
 		return saleInformation;
 	}
-	
-	private Sale buildObject(ResultSet res) throws SQLException {
-		Sale saleInformation = null;
-		//Employee is null?
-		saleInformation = new Sale(res.getInt("ID"), res.getDouble("totalPrice"), res.getDate("transactionDate"), res.getString("ageCategory"), res.getString("paymentMethod"), null);
+
+	// TODO comment
+	private List<Sale> buildObjects(ResultSet resultSet) throws SQLException {
+		ArrayList<Sale> saleInformation = new ArrayList<>();
+		while (resultSet.next()) {
+			Sale saleInfo = buildObject(resultSet);
+			saleInformation.add(saleInfo);
+		}
 		return saleInformation;
-	}	
+	}
+
+	// TODO comment
+	private Sale buildObject(ResultSet resultSet) throws SQLException {
+		Sale builtSale = null;
+		// Employee is null?
+		builtSale = new Sale(resultSet.getInt("ID"), resultSet.getDouble("totalPrice"),
+				resultSet.getDate("transactionDate"), resultSet.getString("ageCategory"),
+				resultSet.getString("paymentMethod"), buildEmployee(resultSet.getInt("EmployeeCPR")));
+		return builtSale;
+	}
+
+	// TODO comment
+	private Employee buildEmployee(int EmployeeCPR) throws SQLException {
+		Employee builtEmployee = null;
+		String SelectEmployee = String.format("SELECT * FROM Employee WHERE EmployeeCPR = ' " + EmployeeCPR + "'");
+		Statement statement = DBConnection.getInstance().getConnection().createStatement();
+		ResultSet resultSet = statement.executeQuery(SelectEmployee);
+		if (resultSet.next()) {
+			try {
+				builtEmployee = new Employee(resultSet.getInt("CPR"), resultSet.getString("name"),
+						resultSet.getString("address"), resultSet.getInt("phoneNumber"),
+						resultSet.getString("position"));
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return builtEmployee;
+	}
 }
-
-
-
