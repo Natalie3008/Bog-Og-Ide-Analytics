@@ -14,16 +14,16 @@ public class ProductCtrl {
 	}
 	
 // Method to get the product information by giving title and barcode 
-	public Product getProductInformation(String barcode) {
-		Product p = null;
+	public ArrayList<Product> getProductInformation(String barcode) {
+		ArrayList<Product> products = new ArrayList<Product>();
 		
 		try {
-			p= productDb.getProductInformation(barcode);
+			products = productDb.getProductInformation(barcode);
 		}
 		catch(SQLException e){
 			e.printStackTrace();
 		}
-		return p;
+		return products;
 
 	}
 	
