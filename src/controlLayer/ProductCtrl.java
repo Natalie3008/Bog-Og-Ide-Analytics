@@ -11,7 +11,7 @@ public class ProductCtrl {
 		productDb = new ProductDB();
 	}
 	
-/** Method to get the product information by giving title and barcode  	*/
+// Method to get the product information by giving title and barcode 
 	public Product getProductInformation(String barcode) {
 		Product p = null;
 		
@@ -25,7 +25,7 @@ public class ProductCtrl {
 
 	}
 	
-/** Method to create new Book and insert it in the database*/
+// Method to create new Book and insert it in the database
 	
 	public boolean createBook(String title, String barcode, double costPrice, double recommendedRetailPrice, int amountInStock, String publicationDate, String description, 
 			Date dateSold, Date receivedInStore, String ISBN, String author, String genre) {
@@ -41,7 +41,7 @@ public class ProductCtrl {
 		return result;
 	}
 	
-	/** Method to create new Game and insert it in the database*/	
+	// Method to create new Game and insert it in the database	
 	
 	public boolean createGame(String title, String barcode, double costPrice, double recommendedRetailPrice, int amountInStock, String publicationDate, String description, 
 			Date dateSold, Date receivedInStore, String type) {
@@ -57,7 +57,7 @@ public class ProductCtrl {
 		return result;
 	}
 	
-	/** Method to remove product from database by giving barcode in the method parameter */
+	// Method to remove product from database by giving barcode in the method parameter
 	public boolean removeProduct(String barcode){
 		boolean res = true;
 		try{
