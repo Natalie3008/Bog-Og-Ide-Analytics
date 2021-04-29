@@ -5,14 +5,14 @@ import databaseLayer.*;
 import modelLayer.*;
 
 public class SaleCtrl {
-	private SaleDBIF saleDb;
+	private SaleDB saleDb;
 	/** private EmployeeCtrl employeeCtrl */
 	private ProductCtrl productCtrl;
 
 	public SaleCtrl() {
 
-		saleDb = (SaleDBIF) new SaleDB();
-		productCtrl = newProductCtrl();
+		saleDb = new SaleDB();
+		productCtrl = new ProductCtrl();
 		/** EmployeeCtrl employerCtrl*/
 		
 

@@ -9,7 +9,7 @@ import java.util.*;
 import modelLayer.Sale;
 import modelLayer.Employee;
 
-public abstract class SaleDB implements SaleDBIF {
+public class SaleDB implements SaleDBIF {
 
 	// TODO comment
 	public List<Sale> getSaleInformation() throws SQLException {
