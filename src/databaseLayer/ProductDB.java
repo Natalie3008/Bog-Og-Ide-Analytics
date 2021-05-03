@@ -187,4 +187,10 @@ public class ProductDB {
 		int resultBook = DBConnection.getInstance().executeUpdate(sqlBook);
 		return resultGame == 1 || resultBook == 1 ? copy : null;
 	}
+	
+	public Product updateRRP(Product product) throws SQLException {
+		String sql = "UPDATE Product SET RRP = '" + product.getRecommendedRetailPrice() + "' WHERE barcode = " + product.getBarcode();
+		int result = DBConnection.getInstance().executeUpdate(sql);
+		return result == 1 ? product : null;
+	}
 }

@@ -99,4 +99,15 @@ public class ProductCtrl {
 		}
 		return res;
 	}
+	
+	public boolean updateRRP(Product product) {
+		boolean res = true;
+		try {
+			productDb.updateRRP(product);
+		} catch (SQLException e) {
+			e.printStackTrace();
+			res = false;
+		}
+		return res;
+	}
 }
