@@ -13,23 +13,35 @@ public class ProductCtrl {
 		productDb = new ProductDB();
 	}
 	
-// Method to get the product information by giving title and barcode 
-	public ArrayList<Product> getProductInformation(String barcode) {
-		ArrayList<Product> products = new ArrayList<Product>();
+// Method to get the product information by giving the barcode 
+	public ArrayList<Product> getOneProductInformation(String barcode) {
+		ArrayList<Product> foundProducts = new ArrayList<Product>();
 		
 		try {
-			products = productDb.getProductInformation(barcode);
+			foundProducts = productDb.getOneProductInformation(barcode);
 		}
 		catch(SQLException e){
 			e.printStackTrace();
 		}
-		return products;
+		return foundProducts;
 
 	}
 	
+	public ArrayList<Product> getProductInformation() {
+		ArrayList<Product> allProducts = new ArrayList<Product>();
+		
+		try {
+			allProducts.addAll(productDb.getProductInformation());
+		}
+		catch(SQLException e){
+			e.printStackTrace();
+		}
+		return allProducts;
+	}
+	 
 // Method to create new Book and insert it in the database
 	
-	public boolean createBook(String title, String barcode, double costPrice, double recommendedRetailPrice, int amountInStock, String publicationDate, String description, 
+	/*public boolean createBook(String title, String barcode, double costPrice, double recommendedRetailPrice, int amountInStock, String publicationDate, String description, 
 			Date dateSold, Date receivedInStore, String ISBN, String author, String genre) {
 		boolean result=true;
 		
@@ -84,6 +96,7 @@ public class ProductCtrl {
 		}
 		return res;
 	}
+	*/
 	
 	
 	

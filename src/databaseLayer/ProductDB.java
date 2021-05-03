@@ -73,7 +73,7 @@ public class ProductDB {
 	// a method for finding stuff with barcode since we have no article number this
 	// time? maybe?
 
-	public ArrayList<Product> getProductInformation(String barcode) throws SQLException {
+	public ArrayList<Product> getOneProductInformation(String barcode) throws SQLException {
 		ArrayList<Product> foundProducts = new ArrayList<Product>();
 		String selectBooks = String.format(
 				"SELECT * FROM Book JOIN Product ON Book.barcode = Product.barcode WHERE barcode = '" + barcode + "'");
@@ -91,6 +91,36 @@ public class ProductDB {
 			ResultSet rsGame = statement.executeQuery(selectGames);
 			if (rsGame.next()) {
 				foundProducts = buildObjects(rsGame, "Game");
+
+			}
+
+		}
+
+		catch (SQLException e) {
+
+			e.printStackTrace();
+
+		}
+
+		return foundProducts;
+	}
+	
+	public ArrayList<Product> getProductInformation() throws SQLException {
+		ArrayList<Product> foundProducts = new ArrayList<Product>();
+		String selectBooks = String.format("SELECT * FROM Book JOIN Product ON Book.barcode = Product.barcode");
+		String selectGames = String.format("SELECT * FROM Game JOIN Product ON Game.barcode = Product.barcode");
+		try {
+			Statement statement = DBConnection.getInstance().getConnection().createStatement();
+
+			ResultSet rsBook = statement.executeQuery(selectBooks);
+			if (rsBook.next()) {
+				foundProducts.addAll(buildObjects(rsBook, "Book"));
+
+			}
+
+			ResultSet rsGame = statement.executeQuery(selectGames);
+			if (rsGame.next()) {
+				foundProducts.addAll(buildObjects(rsGame, "Game"));
 
 			}
 
