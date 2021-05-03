@@ -14,8 +14,8 @@ public class ProductCtrl {
 	}
 	
 // Method to get the product information by giving the barcode 
-	public ArrayList<Product> getOneProductInformation(String barcode) {
-		ArrayList<Product> foundProduct = new ArrayList<Product>();
+	public Product getOneProductInformation(String barcode) {
+		Product foundProduct = null;
 		
 		try {
 			foundProduct = productDb.getOneProductInformation(barcode);

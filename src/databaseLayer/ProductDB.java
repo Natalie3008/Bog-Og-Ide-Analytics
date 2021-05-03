@@ -19,8 +19,8 @@ public class ProductDB {
 
 			if (selectedType.equals("Book")) {
 
-				builtProduct = new Book(resultSet.getString("Title"), resultSet.getString("barcode"),
-						resultSet.getDouble("costPrice"), resultSet.getDouble("recommendedRetailPrice"),
+				builtProduct = new Book(resultSet.getString("title"), resultSet.getString("barcode"),
+						resultSet.getDouble("costPrice"), resultSet.getDouble("RRP"),
 						resultSet.getInt("amountInStock"), resultSet.getString("publicationDate"),
 						resultSet.getString("description"),	buildSupplier(resultSet.getInt("supplierCVR")), 
 						resultSet.getString("author"), resultSet.getString("genre"), resultSet.getString("ISBN"));
@@ -28,10 +28,10 @@ public class ProductDB {
 			}
 
 			else if (selectedType.equals("Game")) {
-				builtProduct = new Game(resultSet.getString("Title"), resultSet.getString("barcode"),
-						resultSet.getDouble("costPrice"), resultSet.getDouble("recommendedRetailPrice"),
+				builtProduct = new Game(resultSet.getString("title"), resultSet.getString("barcode"),
+						resultSet.getDouble("costPrice"), resultSet.getDouble("RRP"),
 						resultSet.getInt("amountInStock"), resultSet.getString("publicationDate"),
-						resultSet.getString("description"), buildSupplier(resultSet.getInt("supplierCVR")), resultSet.getString("Type"));
+						resultSet.getString("description"), buildSupplier(resultSet.getInt("supplierCVR")), resultSet.getString("gamePlatform"));
 						builtProduct.setCopies(buildCopies(builtProduct, resultSet.getString("barcode"), "Game"));
 			}
 			
@@ -47,8 +47,8 @@ public class ProductDB {
 
 	private ArrayList<Copy> buildCopies(Product product, String barcode, String type) throws SQLException {
 		ArrayList<Copy> builtCopies = new ArrayList<Copy>();
-		String selectBookCopies = "SELECT * FROM Book WHERE barcode = '" + barcode + "'";
-		String selectGameCopies = "SELECT * FROM Game WHERE barcode = '" + barcode + "'";
+		String selectBookCopies = "SELECT * FROM Book WHERE Book.barcode = '" + barcode + "'";
+		String selectGameCopies = "SELECT * FROM Game WHERE Game.barcode = '" + barcode + "'";
 		Statement statement = DBConnection.getInstance().getConnection().createStatement();
 		ResultSet resultSet = null;
 		if (type.equals("Book")) {
@@ -96,23 +96,21 @@ public class ProductDB {
 	// a method for finding stuff with barcode since we have no article number this
 	// time? maybe?
 
-	public ArrayList<Product> getOneProductInformation(String barcode) throws SQLException {
-		ArrayList<Product> foundProducts = new ArrayList<Product>();
+	public Product getOneProductInformation(String barcode) throws SQLException {
+		Product foundProduct = null;
 		String selectBooks = "SELECT * FROM Book JOIN Product ON Book.barcode = Product.barcode WHERE Book.barcode = '" + barcode + "'";
-		String selectGames = "SELECT * FROM Game JOIN Product ON Game.barcode = Product.barcode WHERE Book.barcode = '" + barcode + "'";
+		String selectGames = "SELECT * FROM Game JOIN Product ON Game.barcode = Product.barcode WHERE Game.barcode = '" + barcode + "'";
 		try {
 			Statement statement = DBConnection.getInstance().getConnection().createStatement();
 
 			ResultSet rsBook = statement.executeQuery(selectBooks);
 			if (rsBook.next()) {
-				foundProducts = buildObjects(rsBook, "Book");
-
+				foundProduct = buildObject(rsBook, "Book");
 			}
 
 			ResultSet rsGame = statement.executeQuery(selectGames);
 			if (rsGame.next()) {
-				foundProducts = buildObjects(rsGame, "Game");
-
+				foundProduct = buildObject(rsGame, "Game");
 			}
 
 		}
@@ -123,7 +121,7 @@ public class ProductDB {
 
 		}
 
-		return foundProducts;
+		return foundProduct;
 	}
 	
 	public ArrayList<Product> getProductInformation() throws SQLException {
@@ -161,7 +159,9 @@ public class ProductDB {
 		while(resultSet.next()) {
 			Product product = buildObject(resultSet, category);
 			resultProducts.add(product);
-				}
+			
+		}
+		
 		return resultProducts;
 	}
 
