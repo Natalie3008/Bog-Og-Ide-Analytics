@@ -1,18 +1,23 @@
 package testing;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.jupiter.api.Assertions.*;
 
 import java.sql.SQLException;
-import java.util.*;
+import java.util.ArrayList;
 
 import org.junit.After;
 import org.junit.Before;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 
-import controlLayer.*;
-import databaseLayer.*;
-import modelLayer.*;
+import controlLayer.ProductCtrl;
+import databaseLayer.ProductDB;
+import databaseLayer.SaleDB;
+import modelLayer.Book;
+import modelLayer.Copy;
+import modelLayer.Employee;
+import modelLayer.Game;
+import modelLayer.Product;
+import modelLayer.Supplier;
 
 class testGetAllProductInformation {
 	
@@ -29,8 +34,17 @@ class testGetAllProductInformation {
 	// TODO comment
 	@Before
 	public void setUp() throws Exception {
-	
-	
+		productDB = new ProductDB();
+		saleDB = new SaleDB();
+		productCtrl = new ProductCtrl();
+		Supplier bookSupplier = new Supplier(123456789, "Johnny Supplies", "Papi Jakey", "Somewheere 1", "+4560513942",
+				"bonkMeDaddy@gmail.com", "I give u book");
+		Supplier gameSupplier = new Supplier(987654321, "Supplier Johnny", "daddy Lars", "Kattesundet 27",
+				"+4560514859", "plsDontHitMe@gmail.com", "I give u gaem");
+		book = new Book("1234", "pretty book", "novel", 14.4, 55.7, 10, "07/11/2020", "Description of pretty book",
+				bookSupplier, "ABC123", "Foon <3 ", "heavily erotic fanfic");
+		game = new Game("09876", "Tittie", "puzzle", 150.00, 250.50, 1, "21/11/2020", "description of tiddy",
+				gameSupplier, "good puzzle");
 	}
 	
 	// TODO comment
@@ -39,7 +53,6 @@ class testGetAllProductInformation {
 		
 	//Arrange
 	ArrayList<Product> getProductInformation = new ArrayList<Product>();
-	Product found = null;
 			
 	//Act	
 	try {
@@ -50,55 +63,26 @@ class testGetAllProductInformation {
 		}
 			
 	//Assert
-	assertEquals("Found list", product.getCopies(), found);
+	assertEquals("Found list", getProductInformation.size(), 2);
 	}
 	
 	// TODO comment
 	@Test
 	public void testIncorrectReturnData() {
-		
-	//Arrange
-	ArrayList<Product> getProductInformation = new ArrayList<Product>();
-	Product found = null;	
-			
-	//Act	
-	getProductInformation = productCtrl.getProductInformation();
-	for (Product p : getProductInformation) {
-		if (p.getBarcode() == product.getBarcode()){
-			found = p;
-		}
-	}				
-	//Assert
-	assertEquals("Found list", null, found);
-	}
-	
-	// TODO comment
-	@Test
-	public void testIncompleteList() {
-		
-	//Arrange
-			
-			
-	//Act	
-	
-			
-	//Assert
-	assertEquals();
-	}
-	
-	// TODO comment
-	@Test
-	public void testNothingReturn() {
-		
-	//Arrange
-			
-			
-	//Act	
-	
-			
-	//Assert
-	assertEquals();
-	}
+		//Arrange
+		ArrayList<Product> getProductInformation = new ArrayList<Product>();
+				
+		//Act	
+		try {
+			getProductInformation.addAll(productDB.getProductInformation());
+			} 
+			catch (SQLException e) {
+				e.printStackTrace();
+			}
+				
+		//Assert
+		assertEquals("Found list", getProductInformation.size(), 5);
+		}	
 
 	// TODO comment
 	@After

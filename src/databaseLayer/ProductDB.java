@@ -85,9 +85,6 @@ public class ProductDB {
 		return builtSupplier;
 	}
 
-	// a method for finding stuff with barcode since we have no article number this
-	// time? maybe?
-
 	public Product getOneProductInformation(String barcode) throws SQLException {
 		Product foundProduct = null;
 		String selectBooks = "SELECT * FROM Book JOIN Product ON Book.barcode = Product.barcode WHERE Book.barcode = '" + barcode + "'";
@@ -122,7 +119,6 @@ public class ProductDB {
 
 			ResultSet rsBook = statement.executeQuery(selectBooks);
 			foundProducts.addAll(buildObjects(rsBook, "Book"));
-
 			ResultSet rsGame = statement.executeQuery(selectGames);
 			foundProducts.addAll(buildObjects(rsGame, "Game"));
 		} catch (SQLException e) {
