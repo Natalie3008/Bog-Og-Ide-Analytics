@@ -132,16 +132,10 @@ public class ProductDB {
 			Statement statement = DBConnection.getInstance().getConnection().createStatement();
 
 			ResultSet rsBook = statement.executeQuery(selectBooks);
-			if (rsBook.next()) {
-				foundProducts.addAll(buildObjects(rsBook, "Book"));
-
-			}
+			foundProducts.addAll(buildObjects(rsBook, "Book"));
 
 			ResultSet rsGame = statement.executeQuery(selectGames);
-			if (rsGame.next()) {
-				foundProducts.addAll(buildObjects(rsGame, "Game"));
-
-			}
+			foundProducts.addAll(buildObjects(rsGame, "Game"));
 
 		}
 
