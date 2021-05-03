@@ -12,9 +12,9 @@ import modelLayer.Employee;
 public class SaleDB implements SaleDBIF {
 
 	// TODO comment
-	public List<Sale> getSaleInformation() throws SQLException {
+	public ArrayList<Sale> getSaleInformation() throws SQLException {
 		ResultSet resultSet = null;
-		List<Sale> saleInformation = null;
+		ArrayList<Sale> saleInformation = new ArrayList<Sale>();
 		Statement statement = DBConnection.getInstance().getConnection().createStatement();
 		try {
 			resultSet = statement.executeQuery("SELECT * FROM Sale");
@@ -24,9 +24,24 @@ public class SaleDB implements SaleDBIF {
 		}
 		return saleInformation;
 	}
+	
+	public Sale getOneSaleInformation(int ID) throws SQLException {
+		Sale foundSale = null;
+		String selectSale = "SELECT * FROM Sale WHERE ID = '" + ID + "'";
+		try {
+			Statement statement = DBConnection.getInstance().getConnection().createStatement();
+			ResultSet resultSet = statement.executeQuery(selectSale);
+			foundSale = buildObject(resultSet);
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+			
+		return foundSale;
+	}
 
 	// TODO comment
-	private List<Sale> buildObjects(ResultSet resultSet) throws SQLException {
+	private ArrayList<Sale> buildObjects(ResultSet resultSet) throws SQLException {
 		ArrayList<Sale> saleInformation = new ArrayList<>();
 		while (resultSet.next()) {
 			Sale saleInfo = buildObject(resultSet);
