@@ -8,14 +8,16 @@ public class Sale {
 	private Date date;
 	private String ageCategory;
 	private String paymentMethod;
+	private double totalPrice;
 	private Employee employee;
 	private ArrayList<OrderLine> orderLines;
 
-	public Sale(int ID, Date date, String ageCategory, String paymentMethod, Employee employee) {
+	public Sale(int ID, Date date, String ageCategory, String paymentMethod, double totalPrice, Employee employee) {
 		this.ID = ID;
 		this.date = date;
 		this.ageCategory = ageCategory;
 		this.paymentMethod = paymentMethod;
+		this.totalPrice = totalPrice;
 		this.employee = employee;
 		orderLines = new ArrayList<OrderLine>();
 	}
@@ -50,6 +52,14 @@ public class Sale {
 
 	public void setPaymentMethod(String paymentMethod) {
 		this.paymentMethod = paymentMethod;
+	}
+	
+	public double getTotalPrice() {
+		return totalPrice;
+	}
+	
+	public void setTotalPrice(double totalPrice) {
+		this.totalPrice = totalPrice;
 	}
 
 	public Employee getEmployee() {

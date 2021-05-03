@@ -54,9 +54,9 @@ public class SaleDB implements SaleDBIF {
 	private Sale buildObject(ResultSet resultSet) throws SQLException {
 		Sale builtSale = null;
 		// Employee is null?
-		builtSale = new Sale(resultSet.getInt("ID"), resultSet.getDouble("totalPrice"),
-				resultSet.getDate("transactionDate"), resultSet.getString("ageCategory"),
-				resultSet.getString("paymentMethod"), buildEmployee(resultSet.getInt("EmployeeCPR")));
+		builtSale = new Sale(resultSet.getInt("ID"),resultSet.getDate("transactionDate"), 
+				resultSet.getString("ageCategory"), resultSet.getString("paymentMethod"), 
+				resultSet.getDouble("totalPrice"), buildEmployee(resultSet.getInt("EmployeeCPR")));
 		return builtSale;
 	}
 
@@ -66,11 +66,13 @@ public class SaleDB implements SaleDBIF {
 		String SelectEmployee = String.format("SELECT * FROM Employee WHERE EmployeeCPR = ' " + EmployeeCPR + "'");
 		Statement statement = DBConnection.getInstance().getConnection().createStatement();
 		ResultSet resultSet = statement.executeQuery(SelectEmployee);
+		
 		if (resultSet.next()) {
+			
 			try {
-				builtEmployee = new Employee(resultSet.getInt("CPR"), resultSet.getString("name"),
-						resultSet.getString("address"), resultSet.getInt("phoneNumber"),
-						resultSet.getString("position"));
+				builtEmployee = new Employee(resultSet.getInt("CPR"), (resultSet.getString("firstName") + resultSet.getString("lastName")),
+						(resultSet.getString("street") + ", " + resultSet.getInt("zipcode") + ", " + resultSet.getString("city")), 
+						 resultSet.getInt("phoneNumber"),resultSet.getString("email"), resultSet.getString("position"));
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}

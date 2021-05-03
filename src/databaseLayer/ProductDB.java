@@ -19,19 +19,18 @@ public class ProductDB {
 
 			if (selectedType.equals("Book")) {
 
-				builtProduct = new Book(resultSet.getString("title"), resultSet.getString("barcode"),
-						resultSet.getDouble("costPrice"), resultSet.getDouble("RRP"),
-						resultSet.getInt("amountInStock"), resultSet.getString("publicationDate"),
-						resultSet.getString("description"),	buildSupplier(resultSet.getInt("supplierCVR")), 
-						resultSet.getString("author"), resultSet.getString("genre"), resultSet.getString("ISBN"));
+				builtProduct = new Book( resultSet.getString("barcode"), resultSet.getString("title"), resultSet.getString("category"), 
+						resultSet.getDouble("costPrice"), resultSet.getDouble("RRP"), resultSet.getInt("amountInStock"), 
+						resultSet.getString("publicationDate"),	resultSet.getString("description"),	buildSupplier(resultSet.getInt("CVR")),  
+						resultSet.getString("ISBN"), resultSet.getString("author"), resultSet.getString("genre"));
 						builtProduct.setCopies(buildCopies(builtProduct, resultSet.getString("barcode"), "Book"));
 			}
 
 			else if (selectedType.equals("Game")) {
-				builtProduct = new Game(resultSet.getString("title"), resultSet.getString("barcode"),
-						resultSet.getDouble("costPrice"), resultSet.getDouble("RRP"),
-						resultSet.getInt("amountInStock"), resultSet.getString("publicationDate"),
-						resultSet.getString("description"), buildSupplier(resultSet.getInt("supplierCVR")), resultSet.getString("gamePlatform"));
+				builtProduct = new Game(resultSet.getString("barcode"), resultSet.getString("title"), resultSet.getString("category"), 
+						resultSet.getDouble("costPrice"), resultSet.getDouble("RRP"), resultSet.getInt("amountInStock"), 
+						resultSet.getString("publicationDate"),	resultSet.getString("description"),	buildSupplier(resultSet.getInt("CVR")),  
+						resultSet.getString("type"));
 						builtProduct.setCopies(buildCopies(builtProduct, resultSet.getString("barcode"), "Game"));
 			}
 			
@@ -40,9 +39,7 @@ public class ProductDB {
 			e.printStackTrace();
 
 		}
-
 		return builtProduct;
-
 	}
 
 	private ArrayList<Copy> buildCopies(Product product, String barcode, String type) throws SQLException {
@@ -59,10 +56,10 @@ public class ProductDB {
 		}
 		while (resultSet.next()) {
 			try {
-				builtCopies.add(new Copy (resultSet.getString("articleNumber"), product, resultSet.getDate("dateSold"), resultSet.getDate("recievedInStore")));
+				builtCopies.add(new Copy (resultSet.getString("articleNumber"), resultSet.getDate("dateSold"), resultSet.getDate("recievedInStore"), product));
+			
 			} catch (SQLException e) {
 				e.printStackTrace();
-				
 			}
 		}
 		return builtCopies;
@@ -76,17 +73,12 @@ public class ProductDB {
 
 		if (resultSet.next()) {
 			try {
-
 				builtSupplier = new Supplier(resultSet.getInt("CVR"), resultSet.getString("name"), resultSet.getString("contactPerson"),
-						(resultSet.getString("street")+","+resultSet.getString("zipcode")+","+resultSet.getString("city")+", "+resultSet.getString("country")), resultSet.getString("phoneNumber"), resultSet.getString("email"),
-						resultSet.getString("category"));
-
-			}
-
-			catch (SQLException e) {
+						(resultSet.getString("street")+","+resultSet.getString("zipcode")+","+resultSet.getString("city")+", "+resultSet.getString("country")),
+						resultSet.getString("phoneNumber"), resultSet.getString("email"), resultSet.getString("category"));
+			} catch (SQLException e) {
 
 				e.printStackTrace();
-
 			}
 
 		}
@@ -112,13 +104,9 @@ public class ProductDB {
 			if (rsGame.next()) {
 				foundProduct = buildObject(rsGame, "Game");
 			}
-
-		}
-
-		catch (SQLException e) {
+		} catch (SQLException e) {
 
 			e.printStackTrace();
-
 		}
 
 		return foundProduct;
@@ -128,6 +116,7 @@ public class ProductDB {
 		ArrayList<Product> foundProducts = new ArrayList<Product>();
 		String selectBooks = "SELECT * FROM Book JOIN Product ON Book.barcode = Product.barcode";
 		String selectGames = "SELECT * FROM Game JOIN Product ON Game.barcode = Product.barcode";
+		
 		try {
 			Statement statement = DBConnection.getInstance().getConnection().createStatement();
 
@@ -136,13 +125,9 @@ public class ProductDB {
 
 			ResultSet rsGame = statement.executeQuery(selectGames);
 			foundProducts.addAll(buildObjects(rsGame, "Game"));
-
-		}
-
-		catch (SQLException e) {
+		} catch (SQLException e) {
 
 			e.printStackTrace();
-
 		}
 
 		return foundProducts;
@@ -150,12 +135,11 @@ public class ProductDB {
 	
 	private ArrayList<Product> buildObjects(ResultSet resultSet, String category) throws SQLException {
 		ArrayList<Product> resultProducts = new ArrayList<Product>();
+		
 		while(resultSet.next()) {
 			Product product = buildObject(resultSet, category);
-			resultProducts.add(product);
-			
+			resultProducts.add(product);	
 		}
-		
 		return resultProducts;
 	}
 
