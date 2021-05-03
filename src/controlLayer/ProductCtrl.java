@@ -41,12 +41,11 @@ public class ProductCtrl {
 	 
 // Method to create new Book and insert it in the database
 	
-	/*public boolean createBook(String title, String barcode, double costPrice, double recommendedRetailPrice, int amountInStock, String publicationDate, String description, 
-			Date dateSold, Date receivedInStore, String ISBN, String author, String genre) {
-		boolean result=true;
+	public boolean createBook(Book book, Copy copy) {
+		boolean result = true;
 		
 		try {
-			productDb.createBook(title, barcode, costPrice, recommendedRetailPrice, amountInStock, publicationDate, description, dateSold, receivedInStore, ISBN, author, genre);
+			productDb.createBook(book, copy);
 		}
 		catch(SQLException e){
 			e.printStackTrace();
@@ -57,12 +56,11 @@ public class ProductCtrl {
 	
 	// Method to create new Game and insert it in the database	
 	
-	public boolean createGame(String title, String barcode, double costPrice, double recommendedRetailPrice, int amountInStock, String publicationDate, String description, 
-			Date dateSold, Date receivedInStore, String type) {
+	public boolean createGame(Game game, Copy copy) {
 		boolean result = true;
 		
 		try {
-			productDb.createGame(title, barcode, costPrice, recommendedRetailPrice, amountInStock, publicationDate, description, dateSold, receivedInStore,type);
+			productDb.createGame(game, copy);
 		}
 		catch(SQLException e){
 			e.printStackTrace();
@@ -72,18 +70,16 @@ public class ProductCtrl {
 	}
 	
 	// Method to remove product from database by giving barcode in the method parameter
-	public boolean removeProduct(String barcode){
-		boolean res = true;
-		try{
-			productDb.deleteProduct(barcode);
-		}
-		catch(SQLException e){
+	public boolean deleteProduct(String articleNumber, String barcode){
+		boolean result = true;
+		try {
+			productDb.deleteProduct(articleNumber, barcode);
+		} catch(SQLException e){
 			e.printStackTrace();
-			res = false;
+			result = false;
 		}
-		return res;
+		return result;
 	}
-	
 	
 	public boolean updateAmountInStock(Product product){
 		boolean res = true;
@@ -95,9 +91,5 @@ public class ProductCtrl {
 			res = false;
 		}
 		return res;
-	}
-	*/
-	
-	
-	
+	}	
 }
