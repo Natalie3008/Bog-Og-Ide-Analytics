@@ -16,29 +16,29 @@ public class ProductDB {
 		Product builtProduct = null;
 
 		try {
-
 			if (selectedType.equals("Book")) {
 
-				builtProduct = new Book( resultSet.getString("barcode"), resultSet.getString("title"), resultSet.getString("category"), 
-						resultSet.getDouble("costPrice"), resultSet.getDouble("RRP"), resultSet.getInt("amountInStock"), 
-						resultSet.getString("publicationDate"),	resultSet.getString("description"),	buildSupplier(resultSet.getInt("CVR")),  
+				builtProduct = new Book(resultSet.getString("barcode"), resultSet.getString("title"),
+						resultSet.getString("category"), resultSet.getDouble("costPrice"), resultSet.getDouble("RRP"),
+						resultSet.getInt("amountInStock"), resultSet.getString("publicationDate"),
+						resultSet.getString("description"), buildSupplier(resultSet.getInt("CVR")),
 						resultSet.getString("ISBN"), resultSet.getString("author"), resultSet.getString("genre"));
-						builtProduct.setCopies(buildCopies(builtProduct, resultSet.getString("barcode"), "Book"));
+				builtProduct.setCopies(buildCopies(builtProduct, resultSet.getString("barcode"), "Book"));
 			}
 
 			else if (selectedType.equals("Game")) {
-				builtProduct = new Game(resultSet.getString("barcode"), resultSet.getString("title"), resultSet.getString("category"), 
-						resultSet.getDouble("costPrice"), resultSet.getDouble("RRP"), resultSet.getInt("amountInStock"), 
-						resultSet.getString("publicationDate"),	resultSet.getString("description"),	buildSupplier(resultSet.getInt("CVR")),  
+				builtProduct = new Game(resultSet.getString("barcode"), resultSet.getString("title"),
+						resultSet.getString("category"), resultSet.getDouble("costPrice"), resultSet.getDouble("RRP"),
+						resultSet.getInt("amountInStock"), resultSet.getString("publicationDate"),
+						resultSet.getString("description"), buildSupplier(resultSet.getInt("CVR")),
 						resultSet.getString("type"));
-						builtProduct.setCopies(buildCopies(builtProduct, resultSet.getString("barcode"), "Game"));
+				builtProduct.setCopies(buildCopies(builtProduct, resultSet.getString("barcode"), "Game"));
 			}
-			
-		}catch (SQLException e) {
 
+		} catch (SQLException e) {
 			e.printStackTrace();
-
 		}
+
 		return builtProduct;
 	}
 
@@ -49,22 +49,22 @@ public class ProductDB {
 		Statement statement = DBConnection.getInstance().getConnection().createStatement();
 		ResultSet resultSet = null;
 		if (type.equals("Book")) {
-			resultSet = statement.executeQuery(selectBookCopies);	
-		}
-		else if (type.equals("Game")) {
-			resultSet = statement.executeQuery(selectGameCopies);	
+			resultSet = statement.executeQuery(selectBookCopies);
+		} else if (type.equals("Game")) {
+			resultSet = statement.executeQuery(selectGameCopies);
 		}
 		while (resultSet.next()) {
 			try {
-				builtCopies.add(new Copy (resultSet.getString("articleNumber"), resultSet.getDate("dateSold"), resultSet.getDate("recievedInStore"), product));
-			
+				builtCopies.add(new Copy(resultSet.getString("articleNumber"), resultSet.getDate("dateSold"),
+						resultSet.getDate("recievedInStore"), product));
+
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
 		}
 		return builtCopies;
 	}
-	
+
 	private Supplier buildSupplier(int supplierCVR) throws SQLException {
 		Supplier builtSupplier = null;
 		String selectSupplier = "SELECT * FROM Supplier WHERE CVR = '" + supplierCVR + "'";
@@ -73,22 +73,25 @@ public class ProductDB {
 
 		if (resultSet.next()) {
 			try {
-				builtSupplier = new Supplier(resultSet.getInt("CVR"), resultSet.getString("name"), resultSet.getString("contactPerson"),
-						(resultSet.getString("street")+","+resultSet.getInt("zipcode")+","+resultSet.getString("city")+", "+resultSet.getString("country")),
-						resultSet.getString("phoneNumber"), resultSet.getString("email"), resultSet.getString("category"));
+				builtSupplier = new Supplier(resultSet.getInt("CVR"), resultSet.getString("name"),
+						resultSet.getString("contactPerson"),
+						(resultSet.getString("street") + "," + resultSet.getInt("zipcode") + ","
+								+ resultSet.getString("city") + ", " + resultSet.getString("country")),
+						resultSet.getString("phoneNumber"), resultSet.getString("email"),
+						resultSet.getString("category"));
 			} catch (SQLException e) {
-
 				e.printStackTrace();
 			}
-
 		}
 		return builtSupplier;
 	}
 
 	public Product getOneProductInformation(String barcode) throws SQLException {
 		Product foundProduct = null;
-		String selectBooks = "SELECT * FROM Book JOIN Product ON Book.barcode = Product.barcode WHERE Book.barcode = '" + barcode + "'";
-		String selectGames = "SELECT * FROM Game JOIN Product ON Game.barcode = Product.barcode WHERE Game.barcode = '" + barcode + "'";
+		String selectBooks = "SELECT * FROM Book JOIN Product ON Book.barcode = Product.barcode WHERE Book.barcode = '"
+				+ barcode + "'";
+		String selectGames = "SELECT * FROM Game JOIN Product ON Game.barcode = Product.barcode WHERE Game.barcode = '"
+				+ barcode + "'";
 		try {
 			Statement statement = DBConnection.getInstance().getConnection().createStatement();
 
@@ -102,18 +105,16 @@ public class ProductDB {
 				foundProduct = buildObject(rsGame, "Game");
 			}
 		} catch (SQLException e) {
-
 			e.printStackTrace();
 		}
-
 		return foundProduct;
 	}
-	
+
 	public ArrayList<Product> getProductInformation() throws SQLException {
 		ArrayList<Product> foundProducts = new ArrayList<Product>();
 		String selectBooks = "SELECT * FROM Book JOIN Product ON Book.barcode = Product.barcode";
 		String selectGames = "SELECT * FROM Game JOIN Product ON Game.barcode = Product.barcode";
-		
+
 		try {
 			Statement statement = DBConnection.getInstance().getConnection().createStatement();
 
@@ -122,19 +123,17 @@ public class ProductDB {
 			ResultSet rsGame = statement.executeQuery(selectGames);
 			foundProducts.addAll(buildObjects(rsGame, "Game"));
 		} catch (SQLException e) {
-
 			e.printStackTrace();
 		}
-
 		return foundProducts;
 	}
-	
+
 	private ArrayList<Product> buildObjects(ResultSet resultSet, String category) throws SQLException {
 		ArrayList<Product> resultProducts = new ArrayList<Product>();
-		
-		while(resultSet.next()) {
+
+		while (resultSet.next()) {
 			Product product = buildObject(resultSet, category);
-			resultProducts.add(product);	
+			resultProducts.add(product);
 		}
 		return resultProducts;
 	}
