@@ -14,104 +14,79 @@ import java.sql.Statement;
  * preferences of the user. 
  */
 
-public class DBConnection 
-{
+public class DBConnection {
 	private Connection connection = null; // the connection to the database
-	private static DBConnection dbConnection = new DBConnection(); //unique instance of the class - singleton pattern
-	
+	private static DBConnection dbConnection = new DBConnection(); // unique instance of the class - singleton pattern
+
 	private static final String DBNAME = "BogOgIdeAnalytics";
 	private static final String SERVERNAME = "localhost";
 	private static final String PORTNUMBER = "1433";
 	private static final String USERNAME = "sa";
-	private static final String PASSWORD = "secret2021*"; 
-	
+	private static final String PASSWORD = "secret2021*";
 
 	// constructor - private because of singleton pattern
-	private DBConnection() 
-	{
-		String urlString = String.format("jdbc:sqlserver://%s:%s;databaseName=%s", SERVERNAME, PORTNUMBER, DBNAME);	
-		
+	private DBConnection() {
+		String urlString = String.format("jdbc:sqlserver://%s:%s;databaseName=%s", SERVERNAME, PORTNUMBER, DBNAME);
+
 		String userName = getUserName();
 		String password = getPassword();
-		
-		try 
-		{
-			connection = DriverManager.getConnection(urlString, userName,  password);
-		} 
-		catch (SQLException e) 
-		{
+
+		try {
+			connection = DriverManager.getConnection(urlString, userName, password);
+		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-
 	}
-		
-	public static DBConnection getInstance() 
-	{
+
+	public static DBConnection getInstance() {
 		return dbConnection;
 	}
-	
-	public Connection getConnection() 
-	{
+
+	public Connection getConnection() {
 		return connection;
 	}
-	
-	public void disconnect() 
-	{
-		try 
-		{
+
+	public void disconnect() {
+		try {
 			connection.close();
-		} catch (SQLException e) 
-		{
+		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 	}
-	
 
-	public int executeUpdate(String sql) throws SQLException 
-	{
+	public int executeUpdate(String sql) throws SQLException {
 		int result = -1;
-		try (Statement s = connection.createStatement())
-		{
+		try (Statement s = connection.createStatement()) {
 			result = s.executeUpdate(sql);
-		} 
-		catch (Exception e) 
-		{
+		} catch (Exception e) {
 			e.printStackTrace();
 			throw e;
 		}
 		return result;
 	}
-	
-	public int executeSqlInsertWithIdentity(PreparedStatement sqlPreparedStatement) throws SQLException
-	{
+
+	public int executeSqlInsertWithIdentity(PreparedStatement sqlPreparedStatement) throws SQLException {
 		int result = -1;
-		try
-		{
+		try {
 			result = sqlPreparedStatement.executeUpdate();
-			if(result > 0)
-			{
+			if (result > 0) {
 				ResultSet resultSet = sqlPreparedStatement.getGeneratedKeys();
 				resultSet.next();
 				result = resultSet.getInt(1);
 			}
-			
-		}
-		catch(SQLException e)
-		{
+
+		} catch (SQLException e) {
 			e.printStackTrace();
 			throw e;
 		}
 		return result;
 	}
-	
-	private String getUserName() 
-	{
+
+	private String getUserName() {
 		return USERNAME;
 	}
-	
-	private String getPassword() 
-	{
-		return PASSWORD;
-	}	
 
+	private String getPassword() {
+		return PASSWORD;
+	}
 }

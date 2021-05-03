@@ -6,10 +6,9 @@ public class Book extends Product {
 	private String author;
 	private String genre;
 
-	public Book(String barcode, String title, String category, double costPrice, double recommendedRetailPrice, int amountInStock,
-			String publicationDate, String description, Supplier supplier, String ISBN,
-			String author, String genre) {
-		super(barcode, title, category, costPrice, recommendedRetailPrice, amountInStock, publicationDate, description, supplier);
+	public Book(String barcode, String title, double costPrice, double recommendedRetailPrice, int amountInStock,
+			String publicationDate, String description, Supplier supplier, String ISBN, String author, String genre) {
+		super(barcode, title, costPrice, recommendedRetailPrice, amountInStock, publicationDate, description, supplier);
 		this.ISBN = ISBN;
 		this.author = author;
 		this.genre = genre;
@@ -38,5 +37,5 @@ public class Book extends Product {
 	public void setGenre(String genre) {
 		this.genre = genre;
 	}
-	
+
 }

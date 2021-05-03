@@ -7,7 +7,7 @@ public class Copy {
 	private Date dateSold;
 	private Date receivedInStore;
 	private Product product;
-	
+
 	public Copy(String articleNumber, Date dateSold, Date receivedInStore, Product product) {
 		this.articleNumber = articleNumber;
 		this.dateSold = dateSold;
@@ -22,6 +22,7 @@ public class Copy {
 	public void setArticleNumber(String articleNumber) {
 		this.articleNumber = articleNumber;
 	}
+
 	public Date getDateSold() {
 		return dateSold;
 	}

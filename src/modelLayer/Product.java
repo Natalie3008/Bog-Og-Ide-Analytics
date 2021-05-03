@@ -4,8 +4,7 @@ import java.util.ArrayList;
 
 public abstract class Product {
 	private String barcode;
-	private String title;	
-	private String category;
+	private String title;
 	private double costPrice;
 	private double recommendedRetailPrice;
 	private int amountInStock;
@@ -14,13 +13,12 @@ public abstract class Product {
 	private Supplier supplier;
 	private ArrayList<Copy> copies;
 
-	public Product(String barcode, String title, String category, double costPrice, double recommendedRetailPrice, int amountInStock,
+	public Product(String barcode, String title, double costPrice, double recommendedRetailPrice, int amountInStock,
 			String publicationDate, String description, Supplier supplier)
 
 	{
 		this.barcode = barcode;
 		this.title = title;
-		this.category = category;
 		this.costPrice = costPrice;
 		this.recommendedRetailPrice = recommendedRetailPrice;
 		this.amountInStock = amountInStock;
@@ -37,7 +35,7 @@ public abstract class Product {
 	public void setBarcode(String barcode) {
 		this.barcode = barcode;
 	}
-	
+
 	public String getTitle() {
 		return title;
 	}
@@ -45,15 +43,7 @@ public abstract class Product {
 	public void setTitle(String title) {
 		this.title = title;
 	}
-	
-	public String getCategory() {
-		return category;
-	}
-	
-	public void setCategory(String category) {
-		this.category = category;
-	}
-	
+
 	public double getCostPrice() {
 		return costPrice;
 	}
@@ -93,7 +83,7 @@ public abstract class Product {
 	public void setDescription(String description) {
 		this.description = description;
 	}
-	
+
 	public Supplier getSupplier() {
 		return supplier;
 	}
@@ -101,15 +91,15 @@ public abstract class Product {
 	public void setSupplier(Supplier supplier) {
 		this.supplier = supplier;
 	}
-	
+
 	public boolean addCopy(Copy copy) {
 		return copies.add(copy);
 	}
-	
+
 	public ArrayList<Copy> getCopies() {
 		return copies;
 	}
-	
+
 	public void setCopies(ArrayList<Copy> copies) {
 		this.copies = copies;
 	}

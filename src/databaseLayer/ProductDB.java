@@ -19,19 +19,18 @@ public class ProductDB {
 			if (selectedType.equals("Book")) {
 
 				builtProduct = new Book(resultSet.getString("barcode"), resultSet.getString("title"),
-						resultSet.getString("category"), resultSet.getDouble("costPrice"), resultSet.getDouble("RRP"),
-						resultSet.getInt("amountInStock"), resultSet.getString("publicationDate"),
-						resultSet.getString("description"), buildSupplier(resultSet.getInt("CVR")),
-						resultSet.getString("ISBN"), resultSet.getString("author"), resultSet.getString("genre"));
+						resultSet.getDouble("costPrice"), resultSet.getDouble("RRP"), resultSet.getInt("amountInStock"),
+						resultSet.getString("publicationDate"), resultSet.getString("description"),
+						buildSupplier(resultSet.getInt("CVR")), resultSet.getString("ISBN"),
+						resultSet.getString("author"), resultSet.getString("genre"));
 				builtProduct.setCopies(buildCopies(builtProduct, resultSet.getString("barcode"), "Book"));
 			}
 
 			else if (selectedType.equals("Game")) {
 				builtProduct = new Game(resultSet.getString("barcode"), resultSet.getString("title"),
-						resultSet.getString("category"), resultSet.getDouble("costPrice"), resultSet.getDouble("RRP"),
-						resultSet.getInt("amountInStock"), resultSet.getString("publicationDate"),
-						resultSet.getString("description"), buildSupplier(resultSet.getInt("CVR")),
-						resultSet.getString("type"));
+						resultSet.getDouble("costPrice"), resultSet.getDouble("RRP"), resultSet.getInt("amountInStock"),
+						resultSet.getString("publicationDate"), resultSet.getString("description"),
+						buildSupplier(resultSet.getInt("CVR")), resultSet.getString("type"));
 				builtProduct.setCopies(buildCopies(builtProduct, resultSet.getString("barcode"), "Game"));
 			}
 

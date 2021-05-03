@@ -53,11 +53,11 @@ public class Sale {
 	public void setPaymentMethod(String paymentMethod) {
 		this.paymentMethod = paymentMethod;
 	}
-	
+
 	public double getTotalPrice() {
 		return totalPrice;
 	}
-	
+
 	public void setTotalPrice(double totalPrice) {
 		this.totalPrice = totalPrice;
 	}
@@ -69,16 +69,16 @@ public class Sale {
 	public void setEmployee(Employee employee) {
 		this.employee = employee;
 	}
-	
+
 	public void setOrderLines(ArrayList<OrderLine> orderLines) {
 		this.orderLines = orderLines;
 	}
-	
+
 	public ArrayList<OrderLine> getOrderLines() {
 		return orderLines;
 	}
-	
-	public boolean addOrderLine (OrderLine orderLine) {
+
+	public boolean addOrderLine(OrderLine orderLine) {
 		return orderLines.add(orderLine);
 	}
 

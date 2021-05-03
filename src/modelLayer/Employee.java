@@ -48,7 +48,7 @@ public class Employee {
 	public void setPhoneNumber(int phoneNumber) {
 		this.phoneNumber = phoneNumber;
 	}
-	
+
 	public String getEmail() {
 		return email;
 	}
