@@ -32,9 +32,8 @@ public class SaleCtrl {
 		return foundSale;
 	}
 	
-	public ArrayList<Product> getOneProductInformation(String barcode) {
-		ArrayList<Product> foundProduct = new ArrayList<Product>();
-		foundProduct = productCtrl.getOneProductInformation(barcode);
+	public Product getOneProductInformation(String barcode) {
+		Product foundProduct = productCtrl.getOneProductInformation(barcode);
 		return foundProduct;
 	}
 	
