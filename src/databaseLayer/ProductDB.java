@@ -59,7 +59,7 @@ public class ProductDB {
 		}
 		while (resultSet.next()) {
 			try {
-				builtCopies.add(new Copy (resultSet.getString("articleNumber"), product, resultSet.getDate("dateSold"), resultSet.getDate("receivedInStore")));
+				builtCopies.add(new Copy (resultSet.getString("articleNumber"), product, resultSet.getDate("dateSold"), resultSet.getDate("recievedInStore")));
 			} catch (SQLException e) {
 				e.printStackTrace();
 				
@@ -78,8 +78,8 @@ public class ProductDB {
 			try {
 
 				builtSupplier = new Supplier(resultSet.getInt("CVR"), resultSet.getString("name"), resultSet.getString("contactPerson"),
-						resultSet.getString("address"), resultSet.getString("phoneNumber"), resultSet.getString("email"),
-						resultSet.getString("productCategory"));
+						(resultSet.getString("street")+","+resultSet.getString("zipcode")+","+resultSet.getString("city")+", "+resultSet.getString("country")), resultSet.getString("phoneNumber"), resultSet.getString("email"),
+						resultSet.getString("category"));
 
 			}
 
