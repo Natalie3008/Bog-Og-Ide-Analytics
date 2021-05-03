@@ -17,19 +17,19 @@ class testGetOneProduct {
 	@Before
 	public void setUp() throws Exception {
 		productCtrl = new ProductCtrl();
-		Supplier bookSupplier = new Supplier(123456789, "Johnny Supplies", "Martin Smile", "Vesterbro 27", "+45605139782",
-				"smileyMartey@gmail.com", "I give u book");
-		Supplier gameSupplier = new Supplier(987654321, "Supplier Johnny", "Bob Smile", "Vesterbro 27",
-				"+4560514859", "bobIsInLove@gmail.com", "I give u game");
-		book = new Book("1234", "Spork", "novel", 14.4, 55.7, 10, "07/11/2020", "Description of pretty book",
-				bookSupplier, "ABC123", "Foon ", "novel");
-		game = new Game("09876", "Exploding puppies", "puzzle", 150.00, 250.50, 1, "21/11/2020", "description of pretty game",
-				gameSupplier, "good puzzle");
+		Supplier bookSupplier = new Supplier(123456789, "Johnny Supplies", "Martin Smile", "Vesterbro 27",
+				"+45605139782", "smileyMartey@gmail.com", "I give u book");
+		Supplier gameSupplier = new Supplier(987654321, "Supplier Johnny", "Bob Smile", "Vesterbro 27", "+4560514859",
+				"bobIsInLove@gmail.com", "I give u game");
+		book = new Book("1234", "Spork", 14.4, 55.7, 10, "07/11/2020", "Description of pretty book", bookSupplier,
+				"ABC123", "Foon ", "novel");
+		game = new Game("09876", "Exploding puppies", 150.00, 250.50, 1, "21/11/2020", "description of pretty game",
+				gameSupplier, "puzzle");
 		// productCtrl.addProduct(book); - come back to this when cruds have been made
 		// productCtrl.addProduct(game);
 	}
 
-	// expected to run smoothly 
+	// expected to run smoothly
 	@Test
 	public void testCorrectProductReturned() {
 		// Arrange
@@ -65,10 +65,10 @@ class testGetOneProduct {
 		// Act
 		foundProduct = productCtrl.getOneProductInformation(null);
 
-		assertEquals("No Item found", foundProduct, null );
+		assertEquals("No Item found", foundProduct, null);
 	}
 
-	// fuk u useless fuk (for now at least) 
+	// fuk u useless fuk (for now at least)
 	@After
 	public void tearDown() throws Exception {
 	}

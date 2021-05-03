@@ -20,7 +20,7 @@ import modelLayer.Product;
 import modelLayer.Supplier;
 
 class testGetAllProductInformation {
-	
+
 	private ProductDB productDB;
 	private SaleDB saleDB;
 	private Book book;
@@ -30,64 +30,60 @@ class testGetAllProductInformation {
 	private Product product;
 	private Copy copy;
 
-	
 	// TODO comment
 	@Before
 	public void setUp() throws Exception {
 		productDB = new ProductDB();
 		saleDB = new SaleDB();
 		productCtrl = new ProductCtrl();
-		Supplier bookSupplier = new Supplier(123456789, "Johnny Supplies", "Papi Jakey", "Somewheere 1", "+4560513942",
-				"bonkMeDaddy@gmail.com", "I give u book");
-		Supplier gameSupplier = new Supplier(987654321, "Supplier Johnny", "daddy Lars", "Kattesundet 27",
-				"+4560514859", "plsDontHitMe@gmail.com", "I give u gaem");
-		book = new Book("1234", "pretty book", "novel", 14.4, 55.7, 10, "07/11/2020", "Description of pretty book",
-				bookSupplier, "ABC123", "Foon <3 ", "heavily erotic fanfic");
-		game = new Game("09876", "Tittie", "puzzle", 150.00, 250.50, 1, "21/11/2020", "description of tiddy",
-				gameSupplier, "good puzzle");
+		Supplier bookSupplier = new Supplier(123456789, "Johnny Supplies", "Martin Smile", "Vesterbro 27",
+				"+45605139782", "smileyMartey@gmail.com", "I give u book");
+		Supplier gameSupplier = new Supplier(987654321, "Supplier Johnny", "Bob Smile", "Vesterbro 27", "+4560514859",
+				"bobIsInLove@gmail.com", "I give u game");
+		book = new Book("1234", "Spork", 14.4, 55.7, 10, "07/11/2020", "Description of pretty book", bookSupplier,
+				"ABC123", "Foon ", "novel");
+		game = new Game("09876", "Exploding puppies", 150.00, 250.50, 1, "21/11/2020", "description of pretty game",
+				gameSupplier, "puzzle");
 	}
-	
+
 	// TODO comment
 	@Test
-	public void testReturnAllProducts() {	
-		
-	//Arrange
-	ArrayList<Product> getProductInformation = new ArrayList<Product>();
-			
-	//Act	
-	try {
-		getProductInformation.addAll(productDB.getProductInformation());
-		} 
-		catch (SQLException e) {
+	public void testReturnAllProducts() {
+
+		// Arrange
+		ArrayList<Product> getProductInformation = new ArrayList<Product>();
+
+		// Act
+		try {
+			getProductInformation.addAll(productDB.getProductInformation());
+		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-			
-	//Assert
-	assertEquals("Found list", getProductInformation.size(), 2);
+
+		// Assert
+		assertEquals("Found list", getProductInformation.size(), 2);
 	}
-	
+
 	// TODO comment
 	@Test
 	public void testIncorrectReturnData() {
-		//Arrange
+		// Arrange
 		ArrayList<Product> getProductInformation = new ArrayList<Product>();
-				
-		//Act	
+
+		// Act
 		try {
 			getProductInformation.addAll(productDB.getProductInformation());
-			} 
-			catch (SQLException e) {
-				e.printStackTrace();
-			}
-				
-		//Assert
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		// Assert
 		assertEquals("Found list", getProductInformation.size(), 5);
-		}	
+	}
 
 	// TODO comment
 	@After
-	public void tearDown() throws Exception 
-	{
-		
+	public void tearDown() throws Exception {
+
 	}
 }
