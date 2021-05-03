@@ -2,7 +2,9 @@ package databaseLayer;
 
 import modelLayer.Product;
 import modelLayer.Book;
+import modelLayer.Copy;
 import modelLayer.Game;
+
 import java.sql.*;
 import java.util.ArrayList;
 
@@ -20,22 +22,20 @@ public class ProductDB {
 				builtProduct = new Book(resultSet.getString("Title"), resultSet.getString("barcode"),
 						resultSet.getDouble("costPrice"), resultSet.getDouble("recommendedRetailPrice"),
 						resultSet.getInt("amountInStock"), resultSet.getString("publicationDate"),
-						resultSet.getString("description"), resultSet.getDate("receivedInStore"),
-						buildSupplier(resultSet.getInt("supplierCVR")), resultSet.getString("author"),
-						resultSet.getString("genre"), resultSet.getString("ISBN"));
-
-				if (selectedType.equals("Game")) {
-					builtProduct = new Game(resultSet.getString("Title"), resultSet.getString("barcode"),
-							resultSet.getDouble("costPrice"), resultSet.getDouble("recommendedRetailPrice"),
-							resultSet.getInt("amountInStock"), resultSet.getString("publicationDate"),
-							resultSet.getString("description"), resultSet.getDate("receivedInStore"),
-							buildSupplier(resultSet.getInt("supplierCVR")), resultSet.getString("Type"));
-
-				}
+						resultSet.getString("description"),	buildSupplier(resultSet.getInt("supplierCVR")), 
+						resultSet.getString("author"), resultSet.getString("genre"), resultSet.getString("ISBN"));
+						builtProduct.setCopies(buildCopies(builtProduct, resultSet.getString("barcode"), "Book"));
 			}
-		}
 
-		catch (SQLException e) {
+			else if (selectedType.equals("Game")) {
+				builtProduct = new Game(resultSet.getString("Title"), resultSet.getString("barcode"),
+						resultSet.getDouble("costPrice"), resultSet.getDouble("recommendedRetailPrice"),
+						resultSet.getInt("amountInStock"), resultSet.getString("publicationDate"),
+						resultSet.getString("description"), buildSupplier(resultSet.getInt("supplierCVR")), resultSet.getString("Type"));
+						builtProduct.setCopies(buildCopies(builtProduct, resultSet.getString("barcode"), "Game"));
+			}
+			
+		}catch (SQLException e) {
 
 			e.printStackTrace();
 
@@ -45,18 +45,41 @@ public class ProductDB {
 
 	}
 
+	private ArrayList<Copy> buildCopies(Product product, String barcode, String type) throws SQLException {
+		ArrayList<Copy> builtCopies = new ArrayList<Copy>();
+		String selectBookCopies = "SELECT * FROM Book WHERE barcode = '" + barcode + "'";
+		String selectGameCopies = "SELECT * FROM Game WHERE barcode = '" + barcode + "'";
+		Statement statement = DBConnection.getInstance().getConnection().createStatement();
+		ResultSet resultSet = null;
+		if (type.equals("Book")) {
+			resultSet = statement.executeQuery(selectBookCopies);	
+		}
+		else if (type.equals("Game")) {
+			resultSet = statement.executeQuery(selectGameCopies);	
+		}
+		while (resultSet.next()) {
+			try {
+				builtCopies.add(new Copy (resultSet.getString("articleNumber"), product, resultSet.getDate("dateSold"), resultSet.getDate("receivedInStore")));
+			} catch (SQLException e) {
+				e.printStackTrace();
+				
+			}
+		}
+		return builtCopies;
+	}
+	
 	private Supplier buildSupplier(int supplierCVR) throws SQLException {
 		Supplier builtSupplier = null;
-		String SelectSupplier = String.format("SELECT * FROM Supplier WHERE supplierCVR = '" + supplierCVR + "'");
+		String selectSupplier = "SELECT * FROM Supplier WHERE CVR = '" + supplierCVR + "'";
 		Statement statement = DBConnection.getInstance().getConnection().createStatement();
-		ResultSet rs = statement.executeQuery(SelectSupplier);
+		ResultSet resultSet = statement.executeQuery(selectSupplier);
 
-		if (rs.next()) {
+		if (resultSet.next()) {
 			try {
 
-				builtSupplier = new Supplier(rs.getInt("CVR"), rs.getString("name"), rs.getString("contactPerson"),
-						rs.getString("address"), rs.getString("phoneNumber"), rs.getString("email"),
-						rs.getString("productCategory"));
+				builtSupplier = new Supplier(resultSet.getInt("CVR"), resultSet.getString("name"), resultSet.getString("contactPerson"),
+						resultSet.getString("address"), resultSet.getString("phoneNumber"), resultSet.getString("email"),
+						resultSet.getString("productCategory"));
 
 			}
 
@@ -75,10 +98,8 @@ public class ProductDB {
 
 	public ArrayList<Product> getOneProductInformation(String barcode) throws SQLException {
 		ArrayList<Product> foundProducts = new ArrayList<Product>();
-		String selectBooks = String.format(
-				"SELECT * FROM Book JOIN Product ON Book.barcode = Product.barcode WHERE barcode = '" + barcode + "'");
-		String selectGames = String.format(
-				"SELECT * FROM Game JOIN Product ON Game.barcode = Product.barcode WHERE barcode = '" + barcode + "'");
+		String selectBooks = "SELECT * FROM Book JOIN Product ON Book.barcode = Product.barcode WHERE Book.barcode = '" + barcode + "'";
+		String selectGames = "SELECT * FROM Game JOIN Product ON Game.barcode = Product.barcode WHERE Book.barcode = '" + barcode + "'";
 		try {
 			Statement statement = DBConnection.getInstance().getConnection().createStatement();
 
@@ -107,8 +128,8 @@ public class ProductDB {
 	
 	public ArrayList<Product> getProductInformation() throws SQLException {
 		ArrayList<Product> foundProducts = new ArrayList<Product>();
-		String selectBooks = String.format("SELECT * FROM Book JOIN Product ON Book.barcode = Product.barcode");
-		String selectGames = String.format("SELECT * FROM Game JOIN Product ON Game.barcode = Product.barcode");
+		String selectBooks = "SELECT * FROM Book JOIN Product ON Book.barcode = Product.barcode";
+		String selectGames = "SELECT * FROM Game JOIN Product ON Game.barcode = Product.barcode";
 		try {
 			Statement statement = DBConnection.getInstance().getConnection().createStatement();
 

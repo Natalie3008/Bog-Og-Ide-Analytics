@@ -1,6 +1,6 @@
 package modelLayer;
 
-import java.util.Date;
+import java.util.ArrayList;
 
 public abstract class Product {
 	private String title;
@@ -10,12 +10,11 @@ public abstract class Product {
 	private int amountInStock;
 	private String publicationDate;
 	private String description;
-	private Date dateSold;
-	private Date recievedInStore;
 	private Supplier supplier;
+	private ArrayList<Copy> copies;
 
 	public Product(String title, String barcode, double costPrice, double recommendedRetailPrice, int amountInStock,
-			String publicationDate, String description, Date recievedInStore, Supplier supplier)
+			String publicationDate, String description, Supplier supplier)
 
 	{
 		this.title = title;
@@ -24,8 +23,8 @@ public abstract class Product {
 		this.amountInStock = amountInStock;
 		this.publicationDate = publicationDate;
 		this.description = description;
-		this.recievedInStore = recievedInStore;
 		this.supplier = supplier;
+		copies = new ArrayList<Copy>();
 	}
 
 	public Supplier getSupplier() {
@@ -91,21 +90,17 @@ public abstract class Product {
 	public void setDescription(String description) {
 		this.description = description;
 	}
-
-	public Date getDateSold() {
-		return dateSold;
+	
+	public boolean addCopy(Copy copy) {
+		return copies.add(copy);
 	}
-
-	public void setDateSold(Date dateSold) {
-		this.dateSold = dateSold;
+	
+	public ArrayList<Copy> getCopies() {
+		return copies;
 	}
-
-	public Date getRecievedInStore() {
-		return recievedInStore;
-	}
-
-	public void setRecievedInStore(Date recievedInStore) {
-		this.recievedInStore = recievedInStore;
+	
+	public void setCopies(ArrayList<Copy> copies) {
+		this.copies = copies;
 	}
 
 }

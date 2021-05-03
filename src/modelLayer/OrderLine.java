@@ -3,14 +3,12 @@ package modelLayer;
 public class OrderLine {
 	private int ID;
 	private int quantity;
-	private BookCopy bookCopy;
-	private GameCopy gameCopy;
+	private Copy copy;
 
-	public OrderLine(int ID, int quantity, BookCopy bookCopy, GameCopy gameCopy) {
+	public OrderLine(int ID, int quantity, Copy copy) {
 		this.ID = ID;
 		this.quantity = quantity;
-		this.bookCopy = bookCopy;
-		this.gameCopy = gameCopy;
+		this.copy = copy;
 	}
 
 	public int getID() {
@@ -29,20 +27,12 @@ public class OrderLine {
 		this.quantity = quantity;
 	}
 
-	public BookCopy getBookCopy() {
-		return bookCopy;
+	public Copy getCopy() {
+		return copy;
 	}
 
-	public void setBookCopy(BookCopy bookCopy) {
-		this.bookCopy = bookCopy;
-	}
-
-	public GameCopy getGameCopy() {
-		return gameCopy;
-	}
-
-	public void setGameCopy(GameCopy gameCopy) {
-		this.gameCopy = gameCopy;
+	public void setCopy(Copy copy) {
+		this.copy = copy;
 	}
 
 }
