@@ -4,15 +4,15 @@ import java.util.Date;
 
 public class Copy {
 	private String articleNumber;
-	private Product product;
 	private Date dateSold;
 	private Date receivedInStore;
-
-	public Copy(String articleNumber, Product product, Date dateSold, Date receivedInStore) {
+	private Product product;
+	
+	public Copy(String articleNumber, Date dateSold, Date receivedInStore, Product product) {
 		this.articleNumber = articleNumber;
-		this.product = product;
 		this.dateSold = dateSold;
 		this.receivedInStore = receivedInStore;
+		this.product = product;
 	}
 
 	public String getArticleNumber() {
@@ -22,15 +22,6 @@ public class Copy {
 	public void setArticleNumber(String articleNumber) {
 		this.articleNumber = articleNumber;
 	}
-
-	public Product getProduct() {
-		return product;
-	}
-
-	public void setProduct(Product product) {
-		this.product = product;
-	}
-
 	public Date getDateSold() {
 		return dateSold;
 	}
@@ -46,4 +37,13 @@ public class Copy {
 	public void setReceivedInStore(Date receivedInStore) {
 		this.receivedInStore = receivedInStore;
 	}
+
+	public Product getProduct() {
+		return product;
+	}
+
+	public void setProduct(Product product) {
+		this.product = product;
+	}
+
 }

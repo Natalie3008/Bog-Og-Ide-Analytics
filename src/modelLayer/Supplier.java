@@ -18,6 +18,7 @@ public class Supplier {
 		this.address = address;
 		this.phoneNumber = phoneNumber;
 		this.email = email;
+		this.productCategory = productCategory;
 	}
 
 	public int getCVR() {

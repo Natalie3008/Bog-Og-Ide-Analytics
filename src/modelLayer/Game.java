@@ -3,9 +3,9 @@ package modelLayer;
 public class Game extends Product {
 	private String type;
 
-	public Game(String title, String barcode, double costPrice, double recommendedRetailPrice, int amountInStock,
+	public Game(String barcode, String title, String category, double costPrice, double recommendedRetailPrice, int amountInStock,
 			String publicationDate, String description, Supplier supplier, String type) {
-		super(title, barcode, costPrice, recommendedRetailPrice, amountInStock, publicationDate, description, supplier);
+		super(barcode, title, category, costPrice, recommendedRetailPrice, amountInStock, publicationDate, description, supplier);
 		this.type = type;
 	}
 

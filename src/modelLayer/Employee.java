@@ -5,13 +5,15 @@ public class Employee {
 	private String name;
 	private String address;
 	private int phoneNumber;
+	private String email;
 	private String position;
 
-	public Employee(int CPR, String name, String address, int phoneNumber, String position) {
+	public Employee(int CPR, String name, String address, int phoneNumber, String email, String position) {
 		this.CPR = CPR;
 		this.name = name;
 		this.address = address;
 		this.phoneNumber = phoneNumber;
+		this.email = email;
 		this.position = position;
 	}
 
@@ -45,6 +47,14 @@ public class Employee {
 
 	public void setPhoneNumber(int phoneNumber) {
 		this.phoneNumber = phoneNumber;
+	}
+	
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
 	}
 
 	public String getPosition() {

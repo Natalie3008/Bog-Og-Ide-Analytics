@@ -1,22 +1,23 @@
 package modelLayer;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 public class Sale {
 	private int ID;
-	private double amount;
 	private Date date;
 	private String ageCategory;
 	private String paymentMethod;
 	private Employee employee;
+	private ArrayList<OrderLine> orderLines;
 
-	public Sale(int ID, double amount, Date date, String ageCategory, String paymentMethod, Employee employee) {
+	public Sale(int ID, Date date, String ageCategory, String paymentMethod, Employee employee) {
 		this.ID = ID;
-		this.amount = amount;
 		this.date = date;
 		this.ageCategory = ageCategory;
 		this.paymentMethod = paymentMethod;
 		this.employee = employee;
+		orderLines = new ArrayList<OrderLine>();
 	}
 
 	public int getID() {
@@ -25,14 +26,6 @@ public class Sale {
 
 	public void setID(int iD) {
 		ID = iD;
-	}
-
-	public double getAmount() {
-		return amount;
-	}
-
-	public void setAmount(double amount) {
-		this.amount = amount;
 	}
 
 	public Date getDate() {
@@ -65,6 +58,18 @@ public class Sale {
 
 	public void setEmployee(Employee employee) {
 		this.employee = employee;
+	}
+	
+	public void setOrderLines(ArrayList<OrderLine> orderLines) {
+		this.orderLines = orderLines;
+	}
+	
+	public ArrayList<OrderLine> getOrderLines() {
+		return orderLines;
+	}
+	
+	public boolean addOrderLine (OrderLine orderLine) {
+		return orderLines.add(orderLine);
 	}
 
 }
