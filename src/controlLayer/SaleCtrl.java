@@ -31,5 +31,16 @@ public class SaleCtrl {
 		foundSale = saleDb.getOneSaleInformation(ID);
 		return foundSale;
 	}
-
+	
+	public ArrayList<Product> getOneProductInformation(String barcode) {
+		ArrayList<Product> foundProduct = new ArrayList<Product>();
+		foundProduct = productCtrl.getOneProductInformation(barcode);
+		return foundProduct;
+	}
+	
+	public ArrayList<Product> getProductInformation() {
+		ArrayList<Product> foundProducts = new ArrayList<>();
+		foundProducts = productCtrl.getProductInformation();
+		return foundProducts;
+	}
 }

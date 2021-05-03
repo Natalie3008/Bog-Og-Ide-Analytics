@@ -15,15 +15,15 @@ public class ProductCtrl {
 	
 // Method to get the product information by giving the barcode 
 	public ArrayList<Product> getOneProductInformation(String barcode) {
-		ArrayList<Product> foundProducts = new ArrayList<Product>();
+		ArrayList<Product> foundProduct = new ArrayList<Product>();
 		
 		try {
-			foundProducts = productDb.getOneProductInformation(barcode);
+			foundProduct = productDb.getOneProductInformation(barcode);
 		}
 		catch(SQLException e){
 			e.printStackTrace();
 		}
-		return foundProducts;
+		return foundProduct;
 
 	}
 	
