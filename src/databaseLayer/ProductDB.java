@@ -172,6 +172,19 @@ public class ProductDB {
 		int resultBook = DBConnection.getInstance().executeUpdate(sqlBook);
 		int resultGame = DBConnection.getInstance().executeUpdate(sqlGame);
 		return resultProduct > 1 || resultBook > 1 || resultGame > 1;
-		
+	}
+	
+	public Product updateAmountInStock(Product product) throws SQLException {
+		String sql = "UPDATE Product SET amountInStock = '" + product.getAmountInStock() + "' WHERE barcode = " + product.getBarcode();
+		int result = DBConnection.getInstance().executeUpdate(sql);
+		return result == 1 ? product : null;
+	}
+	
+	public Copy updateDateSold(Copy copy) throws SQLException {
+		String sqlGame = "UPDATE Game SET dateSold = '" + copy.getDateSold() + "' WHERE barcode = " + copy.getArticleNumber();
+		String sqlBook = "UPDATE Book SET dateSold = '" + copy.getDateSold() + "' WHERE barcode = " + copy.getArticleNumber();
+		int resultGame = DBConnection.getInstance().executeUpdate(sqlGame);
+		int resultBook = DBConnection.getInstance().executeUpdate(sqlBook);
+		return resultGame == 1 || resultBook == 1 ? copy : null;
 	}
 }
