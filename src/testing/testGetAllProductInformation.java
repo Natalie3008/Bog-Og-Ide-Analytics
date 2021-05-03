@@ -28,8 +28,7 @@ class testGetAllProductInformation {
 	
 	// TODO comment
 	@Before
-	public void setUp() throws Exception 
-	{
+	public void setUp() throws Exception {
 	
 	
 	}
