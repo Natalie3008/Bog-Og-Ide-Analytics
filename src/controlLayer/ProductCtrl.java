@@ -79,35 +79,35 @@ public class ProductCtrl {
 	}
 
 	public boolean updateAmountInStock(Product product) {
-		boolean res = true;
+		boolean result = true;
 		try {
 			productDb.updateAmountInStock(product);
 		} catch (SQLException e) {
 			e.printStackTrace();
-			res = false;
+			result = false;
 		}
-		return res;
+		return result;
 	}
-	
+
 	public boolean updateDateSold(Copy copy) {
-		boolean res = true;
+		boolean result = true;
 		try {
 			productDb.updateDateSold(copy);
 		} catch (SQLException e) {
 			e.printStackTrace();
-			res = false;
+			result = false;
 		}
-		return res;
+		return result;
 	}
-	
+
 	public boolean updateRRP(Product product) {
-		boolean res = true;
+		boolean result = true;
 		try {
 			productDb.updateRRP(product);
 		} catch (SQLException e) {
 			e.printStackTrace();
-			res = false;
+			result = false;
 		}
-		return res;
+		return result;
 	}
 }
