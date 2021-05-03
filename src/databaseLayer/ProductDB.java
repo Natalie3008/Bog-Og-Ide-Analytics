@@ -74,7 +74,7 @@ public class ProductDB {
 		if (resultSet.next()) {
 			try {
 				builtSupplier = new Supplier(resultSet.getInt("CVR"), resultSet.getString("name"), resultSet.getString("contactPerson"),
-						(resultSet.getString("street")+","+resultSet.getString("zipcode")+","+resultSet.getString("city")+", "+resultSet.getString("country")),
+						(resultSet.getString("street")+","+resultSet.getInt("zipcode")+","+resultSet.getString("city")+", "+resultSet.getString("country")),
 						resultSet.getString("phoneNumber"), resultSet.getString("email"), resultSet.getString("category"));
 			} catch (SQLException e) {
 
