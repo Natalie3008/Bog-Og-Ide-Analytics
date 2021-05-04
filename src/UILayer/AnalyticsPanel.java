@@ -45,7 +45,7 @@ public class AnalyticsPanel extends JPanel {
 		setLayout(new BorderLayout(0, 0));
 		add(analyticsMenu, BorderLayout.NORTH);
 		GridBagLayout gbl_analyticsMenu = new GridBagLayout();
-		gbl_analyticsMenu.columnWidths = new int[]{290, 276, 0};
+		gbl_analyticsMenu.columnWidths = new int[]{290, 310, 0};
 		gbl_analyticsMenu.rowHeights = new int[]{45, 0};
 		gbl_analyticsMenu.columnWeights = new double[]{0.0, 0.0, Double.MIN_VALUE};
 		gbl_analyticsMenu.rowWeights = new double[]{0.0, Double.MIN_VALUE};
@@ -77,7 +77,7 @@ public class AnalyticsPanel extends JPanel {
 		
 		JComboBox comboBox = new JComboBox();
 		GridBagConstraints gbc_comboBox = new GridBagConstraints();
-		gbc_comboBox.anchor = GridBagConstraints.WEST;
+		gbc_comboBox.fill = GridBagConstraints.HORIZONTAL;
 		gbc_comboBox.gridx = 1;
 		gbc_comboBox.gridy = 0;
 		analyticsMenu.add(comboBox, gbc_comboBox);

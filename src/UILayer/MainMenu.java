@@ -38,6 +38,7 @@ import java.awt.CardLayout;
 
 public class MainMenu extends JFrame {
 
+	
 	private JPanel contentPane;
 	
 	private TopMenuPanel topMenuPanel;
@@ -63,7 +64,7 @@ public class MainMenu extends JFrame {
 	 * Create the frame.
 	 */
 	public MainMenu() {
-		setMinimumSize(new Dimension(1280, 960));
+		setMinimumSize(new Dimension(1600, 900));
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
@@ -81,7 +82,7 @@ public class MainMenu extends JFrame {
 		logoLabel.setBorder(null);
 		logoLabel.setForeground(Color.WHITE);
 		logoLabel.setBackground(Color.WHITE);
-		logoLabel.setIcon(new ImageIcon("C:\\Users\\itskalu\\Desktop\\UCN\\2nd Semester\\2ndSemesterProject\\Bog-Og-Ide-Analytics\\assets\\Group 124.png"));
+		logoLabel.setIcon(new ImageIcon(MainMenu.class.getResource("/Assets/Logo.png")));
 		GridBagConstraints gbc_logoLabel = new GridBagConstraints();
 		gbc_logoLabel.insets = new Insets(0, 0, 5, 0);
 		gbc_logoLabel.gridx = 0;
