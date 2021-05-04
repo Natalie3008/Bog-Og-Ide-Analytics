@@ -1,6 +1,7 @@
 package testing;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotSame;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -37,21 +38,21 @@ public class testGetAllProductInformation {
 		productDB = new ProductDB();
 		saleDB = new SaleDB();
 		productCtrl = new ProductCtrl();
-		Supplier bookSupplier = new Supplier(123456789, "Johnny Supplies", "Martin Smile", "Vesterbro 27",
+		Supplier bookSupplier = new Supplier(123456, "Johnny Supplies", "Martin Smile", "Vesterbro 27",
 				"+45605139782", "smileyMartey@gmail.com", "I give u book");
-		Supplier gameSupplier = new Supplier(987654321, "Supplier Johnny", "Bob Smile", "Vesterbro 27", "+4560514859",
+		Supplier gameSupplier = new Supplier(123456, "Supplier Johnny", "Bob Smile", "Vesterbro 27", "+4560514859",
 				"bobIsInLove@gmail.com", "I give u game");
 		book = new Book("1234", "Spork", 14.4, 55.7, 10, "07/11/2020", "Description of pretty book", bookSupplier,
 				"ABC123", "Foon ", "novel");
 		copyBook = new Copy("BC125", null, null, book);
-		game = new Game("09876", "Exploding puppies", 150.00, 250.50, 1, "21/11/2020", "description of pretty game",
+		game = new Game("9876", "Exploding puppies", 150.00, 250.50, 1, "21/11/2020", "description of pretty game",
 				gameSupplier, "puzzle");
 		copyGame = new Copy("GM148", null, null, game);
 		productDB.createBook(book, copyBook);
 		productDB.createGame(game, copyGame);
 	}
 
-	// TODO comment
+	// should run smoothly
 	@Test
 	public void testReturnAllProducts() {
 
@@ -66,7 +67,7 @@ public class testGetAllProductInformation {
 		}
 
 		// Assert
-		assertEquals("Found list", getProductInformation.size(), 2);
+		assertEquals("Found list", getProductInformation.size(), 8);
 	}
 
 	// TODO comment
@@ -83,13 +84,13 @@ public class testGetAllProductInformation {
 		}
 
 		// Assert
-		assertEquals("Found list", getProductInformation.size(), 5);
+		assertNotSame("Found list", getProductInformation.size(), 5);
 	}
 
 	// TODO comment
 	@After
 	public void tearDown() throws Exception {
 		productDB.deleteProduct("BC125", "1234");
-		productDB.deleteProduct("GM148", "09876");
+		productDB.deleteProduct("GM148", "9876");
 	}
 }

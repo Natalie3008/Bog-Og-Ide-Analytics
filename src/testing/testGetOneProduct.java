@@ -9,7 +9,7 @@ import org.junit.Test;
 import modelLayer.*;
 import controlLayer.*;
 
-class testGetOneProduct {
+public class testGetOneProduct {
 	private Book book;
 	private Game game;
 	private ProductCtrl productCtrl;
