@@ -19,7 +19,11 @@ public class TargetedCategory {
 		this.other = other;
 		sales = new ArrayList<Sale>();
 	}
-
+	
+	public TargetedCategory(int ID) {
+		this.ID = ID;
+		sales = new ArrayList<Sale>();
+	}
 	public int getID() {
 		return ID;
 	}

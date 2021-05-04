@@ -7,6 +7,7 @@ import java.sql.Statement;
 import java.util.*;
 
 import modelLayer.Sale;
+import modelLayer.TargetedCategory;
 import modelLayer.Employee;
 
 public class SaleDB implements SaleDBIF {
@@ -55,7 +56,7 @@ public class SaleDB implements SaleDBIF {
 		Sale builtSale = null;
 		// Employee is null?
 		builtSale = new Sale(resultSet.getInt("ID"), resultSet.getDate("transactionDate"),
-				resultSet.getString("ageCategory"), resultSet.getString("paymentMethod"),
+				new TargetedCategory(resultSet.getInt("targetedCategoryID")), resultSet.getString("paymentMethod"),
 				resultSet.getDouble("totalPrice"), buildEmployee(resultSet.getInt("EmployeeCPR")));
 		return builtSale;
 	}
