@@ -4,32 +4,42 @@ import java.util.ArrayList;
 
 public class TargetedCategory {
 	private int ID;
+	private String title;
 	private int minimumAge;
 	private int maximumAge;
 	private String gender;
 	private String other;
 	private ArrayList<Sale> sales;
 
-	public TargetedCategory(int ID, int minimumAge, int maximumAge, String gender, String other,
-			ArrayList<Sale> sales) {
+	public TargetedCategory(int ID, String title, int minimumAge, int maximumAge, String gender, String other) {
 		this.ID = ID;
+		this.title = title;
 		this.minimumAge = minimumAge;
 		this.maximumAge = maximumAge;
 		this.gender = gender;
 		this.other = other;
 		sales = new ArrayList<Sale>();
 	}
-	
+
 	public TargetedCategory(int ID) {
 		this.ID = ID;
 		sales = new ArrayList<Sale>();
 	}
+
 	public int getID() {
 		return ID;
 	}
 
 	public void setID(int iD) {
 		ID = iD;
+	}
+
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
 	}
 
 	public int getMinimumAge() {
