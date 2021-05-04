@@ -138,23 +138,59 @@ public class ProductDB {
 	}
 
 	// method to make a book and add it into the db // WIP STILL
+	public Product createBook(Book book, Copy copy) throws SQLException {
+		String sqlProduct = "INSERT INTO Product (barcode, title, costPrice, RRP, amountInStock, publicationDate, description, supplierCVR)"
+				+ " VALUES( " + book.getBarcode() + ", '" + book.getTitle() + "', '" + book.getCostPrice() + "', "
+				+ book.getRecommendedRetailPrice() + ", " + book.getAmountInStock() + ", " + book.getPublicationDate()
+				+ ", '" + book.getDescription() + "', " + book.getSupplier().getCVR() + "')";
+		String sqlBook = "INSERT INTO Book (articleNumber, barcode, ISBN, author, genre, receivedInStore, dateSold) VALUES ( "
+				+ book.getBarcode() + ", " + book.getISBN() + ", '" + book.getAuthor() + ", " + book.getGenre() + ", "
+				+ copy.getReceivedInStore() + ", " + copy.getDateSold() + "')";
+		int resultProduct = DBConnection.getInstance().executeUpdate(sqlProduct);
+		int resultBook = DBConnection.getInstance().executeUpdate(sqlBook);
+		return resultProduct == 1 && resultBook == 1 ? book : null;
+	}
 
-	/*
-	 * public Product createBook(Book book) throws SQLException {
-	 * 
-	 * 
-	 * String sqlProduct =
-	 * "INSERT INTO Product (barcode, title, costPrice, RRP, amountInStock, publicationDate, supplierCVR, description)"
-	 * + " VALUES( " + book.getBarcode() + ", '" + book.getTitle() + "', '" +
-	 * book.getCostPrice() + "', " + book.getRecommendedRetailPrice() + ", " +
-	 * book.getAmountInStock() + ", " + book.getPublicationDate() + ", '" +
-	 * book.getSupplier().getCVR() + "', " + book.getDescription() + "')";
-	 * 
-	 * String sqlBook = "INSERT INTO Book (barcode, ISBN, author, genre) VALUES( " +
-	 * book.getBarcode() + ", " + book.getISBN() + ", '" + book.getAuthor() + ", " +
-	 * book.getGenre() + "')";
-	 * 
-	 * }
-	 */
-
+	public Product createGame(Game game, Copy copy) throws SQLException {
+		String sqlProduct = "INSERT INTO Product (barcode, title, costPrice, RRP, amountInStock, publicationDate, description, supplierCVR)"
+				+ " VALUES( " + game.getBarcode() + ", '" + game.getTitle() + "', '" + game.getCostPrice() + "', "
+				+ game.getRecommendedRetailPrice() + ", " + game.getAmountInStock() + ", " + game.getPublicationDate()
+				+ ", '" + game.getDescription() + "', " + game.getSupplier().getCVR() + "')";
+		String sqlGame = "INSERT INTO Game (articleNumber, barcode, type, receivedInStore, dateSold) VALUES ( "
+				+ game.getBarcode() + ", " + game.getType() + ", " + copy.getReceivedInStore() + ", "
+				+ copy.getDateSold() + "')";
+		int resultProduct = DBConnection.getInstance().executeUpdate(sqlProduct);
+		int resultGame = DBConnection.getInstance().executeUpdate(sqlGame);
+		return resultProduct == 1 && resultGame == 1 ? game : null;
+	}
+	
+	public boolean deleteProduct(String articleNumber, String barcode) throws SQLException {
+		String sqlProduct = "DELETE FROM Producte WHERE barcode = '" + barcode + "'";
+		String sqlBook = "DELETE FROM Book WHERE articleNumber = '" + articleNumber + "'";
+		String sqlGame = "DELETE FROM Game WHERE articleNumber = '" + articleNumber + "'";
+		int resultProduct = DBConnection.getInstance().executeUpdate(sqlProduct);
+		int resultBook = DBConnection.getInstance().executeUpdate(sqlBook);
+		int resultGame = DBConnection.getInstance().executeUpdate(sqlGame);
+		return resultProduct > 1 || resultBook > 1 || resultGame > 1;
+	}
+	
+	public Product updateAmountInStock(Product product) throws SQLException {
+		String sql = "UPDATE Product SET amountInStock = '" + product.getAmountInStock() + "' WHERE barcode = " + product.getBarcode();
+		int result = DBConnection.getInstance().executeUpdate(sql);
+		return result == 1 ? product : null;
+	}
+	
+	public Copy updateDateSold(Copy copy) throws SQLException {
+		String sqlGame = "UPDATE Game SET dateSold = '" + copy.getDateSold() + "' WHERE barcode = " + copy.getArticleNumber();
+		String sqlBook = "UPDATE Book SET dateSold = '" + copy.getDateSold() + "' WHERE barcode = " + copy.getArticleNumber();
+		int resultGame = DBConnection.getInstance().executeUpdate(sqlGame);
+		int resultBook = DBConnection.getInstance().executeUpdate(sqlBook);
+		return resultGame == 1 || resultBook == 1 ? copy : null;
+	}
+	
+	public Product updateRRP(Product product) throws SQLException {
+		String sql = "UPDATE Product SET RRP = '" + product.getRecommendedRetailPrice() + "' WHERE barcode = " + product.getBarcode();
+		int result = DBConnection.getInstance().executeUpdate(sql);
+		return result == 1 ? product : null;
+	}
 }
