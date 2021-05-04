@@ -25,8 +25,6 @@ class testGetOneProduct {
 				"ABC123", "Foon ", "novel");
 		game = new Game("09876", "Exploding puppies", 150.00, 250.50, 1, "21/11/2020", "description of pretty game",
 				gameSupplier, "puzzle");
-		// productCtrl.addProduct(book); - come back to this when cruds have been made
-		// productCtrl.addProduct(game);
 	}
 
 	// expected to run smoothly

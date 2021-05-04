@@ -19,7 +19,7 @@ import modelLayer.Game;
 import modelLayer.Product;
 import modelLayer.Supplier;
 
-class testGetAllProductInformation {
+public class testGetAllProductInformation {
 
 	private ProductDB productDB;
 	private SaleDB saleDB;
@@ -28,7 +28,8 @@ class testGetAllProductInformation {
 	private Employee employee;
 	private ProductCtrl productCtrl;
 	private Product product;
-	private Copy copy;
+	private Copy copyBook;
+	private Copy copyGame;
 
 	// TODO comment
 	@Before
@@ -42,8 +43,12 @@ class testGetAllProductInformation {
 				"bobIsInLove@gmail.com", "I give u game");
 		book = new Book("1234", "Spork", 14.4, 55.7, 10, "07/11/2020", "Description of pretty book", bookSupplier,
 				"ABC123", "Foon ", "novel");
+		copyBook = new Copy("BC125", null, null, book);
 		game = new Game("09876", "Exploding puppies", 150.00, 250.50, 1, "21/11/2020", "description of pretty game",
 				gameSupplier, "puzzle");
+		copyGame = new Copy("GM148", null, null, game);
+		productDB.createBook(book, copyBook);
+		productDB.createGame(game, copyGame);
 	}
 
 	// TODO comment
@@ -84,6 +89,7 @@ class testGetAllProductInformation {
 	// TODO comment
 	@After
 	public void tearDown() throws Exception {
-
+		productDB.deleteProduct("BC125", "1234");
+		productDB.deleteProduct("GM148", "09876");
 	}
 }
