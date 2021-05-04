@@ -6,16 +6,16 @@ import java.util.Date;
 public class Sale {
 	private int ID;
 	private Date date;
-	private String ageCategory;
+	private TargetedCategory targetedCategory;
 	private String paymentMethod;
 	private double totalPrice;
 	private Employee employee;
 	private ArrayList<OrderLine> orderLines;
 
-	public Sale(int ID, Date date, String ageCategory, String paymentMethod, double totalPrice, Employee employee) {
+	public Sale(int ID, Date date, TargetedCategory targetedCategory, String paymentMethod, double totalPrice, Employee employee) {
 		this.ID = ID;
 		this.date = date;
-		this.ageCategory = ageCategory;
+		this.targetedCategory = targetedCategory;
 		this.paymentMethod = paymentMethod;
 		this.totalPrice = totalPrice;
 		this.employee = employee;
@@ -38,12 +38,12 @@ public class Sale {
 		this.date = date;
 	}
 
-	public String getAgeCategory() {
-		return ageCategory;
+	public TargetedCategory getAgeCategory() {
+		return targetedCategory;
 	}
 
-	public void setAgeCategory(String ageCategory) {
-		this.ageCategory = ageCategory;
+	public void setAgeCategory(TargetedCategory targetedCategory) {
+		this.targetedCategory = targetedCategory;
 	}
 
 	public String getPaymentMethod() {
