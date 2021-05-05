@@ -72,7 +72,7 @@ public class SaleDB implements SaleDBIF {
 
 	}
 
-	// TODO comment
+	// TODO comment aaa
 	private Employee buildEmployee(int EmployeeCPR) throws SQLException {
 		Employee builtEmployee = null;
 		String SelectEmployee = String.format("SELECT * FROM Employee WHERE EmployeeCPR = ' " + EmployeeCPR + "'");
