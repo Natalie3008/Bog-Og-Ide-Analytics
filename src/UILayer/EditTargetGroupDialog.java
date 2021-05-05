@@ -8,6 +8,10 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import controlLayer.TargetedCategoryCtrl;
+import modelLayer.TargetedCategory;
+
 import java.awt.Font;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
@@ -17,6 +21,7 @@ import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.SQLException;
 import java.awt.Dialog.ModalExclusionType;
 import java.awt.Dialog.ModalityType;
 
@@ -37,11 +42,18 @@ public class EditTargetGroupDialog extends JDialog {
 	private JTextField genderTextField;
 	private JTextField otherTextField;
 	private JTextField titleTextField;
+	
+	private TargetedCategoryCtrl targetedCategoryCtrl;
 
 	/**
 	 * Create the dialog.
 	 */
-	public EditTargetGroupDialog() {
+	public EditTargetGroupDialog(TargetedCategory targetedCategory) {
+		
+		targetedCategoryCtrl = new TargetedCategoryCtrl();
+		
+		
+		
 		setModalityType(ModalityType.APPLICATION_MODAL);
 		setAlwaysOnTop(true);
 		setBounds(100, 100, 450, 462);
@@ -216,6 +228,14 @@ public class EditTargetGroupDialog extends JDialog {
 				gbc_otherTextField.gridy = 5;
 				panel.add(otherTextField, gbc_otherTextField);
 			}
+			
+			idTextField.setText(String.valueOf(targetedCategory.getID()));
+			titleTextField.setText(targetedCategory.getTitle());
+			minimumAgeTextField.setText(String.valueOf(targetedCategory.getMinimumAge()));
+			maximumAgeTextField.setText(String.valueOf(targetedCategory.getMaximumAge()));
+			genderTextField.setText(targetedCategory.getGender());
+			otherTextField.setText(targetedCategory.getOther());
+			
 		}
 		{
 			JPanel buttonPane = new JPanel();
@@ -254,6 +274,21 @@ public class EditTargetGroupDialog extends JDialog {
 	}
 	
 	protected void saveClick() {	
+		int ID = Integer.parseInt(idTextField.getText());
+		String title = titleTextField.getText();
+		int minimumAge = Integer.parseInt(minimumAgeTextField.getText());
+		int maximumAge = Integer.parseInt(maximumAgeTextField.getText());
+		String gender = genderTextField.getText();
+		String other = otherTextField.getText();
+		
+		TargetedCategory newTargetedCategory = new TargetedCategory(ID, title, minimumAge, maximumAge, gender, other);
+		
+		try {
+			targetedCategoryCtrl.updateTargetedCategory(newTargetedCategory);
+			
+		}catch(SQLException e) {
+		}
+		
 		this.dispose();
 	}
 

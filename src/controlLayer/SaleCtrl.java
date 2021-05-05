@@ -37,10 +37,5 @@ public class SaleCtrl {
 		foundProducts = productCtrl.getProductInformation();
 		return foundProducts;
 	}
-	
-	public ArrayList<TargetedCategory> getAllCategories() throws SQLException {
-		ArrayList<TargetedCategory> foundCategories = new ArrayList<>();
-		foundCategories = saleDb.getAllTargetedCategories();
-		return foundCategories;
-	}
+
 }

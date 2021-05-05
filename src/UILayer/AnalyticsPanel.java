@@ -26,6 +26,7 @@ import java.awt.Font;
 import javax.swing.border.EmptyBorder;
 
 import controlLayer.SaleCtrl;
+import controlLayer.TargetedCategoryCtrl;
 
 import javax.swing.DefaultComboBoxModel;
 import java.awt.event.ActionListener;
@@ -42,10 +43,10 @@ public class AnalyticsPanel extends JPanel {
 	private JComboBox<TargetedCategory> comboBox;
 	private DefaultComboBoxModel<TargetedCategory> comboBoxModel;
 	
-	private SaleCtrl saleCtrl;
+	private TargetedCategoryCtrl targetedCategoryCtrl;
 	
 	public AnalyticsPanel() {
-		saleCtrl = new SaleCtrl();
+		targetedCategoryCtrl = new TargetedCategoryCtrl();
 		
 		initAndShowGUI();
 		
@@ -92,7 +93,7 @@ public class AnalyticsPanel extends JPanel {
 		
 		comboBoxModel = new DefaultComboBoxModel<TargetedCategory>();
 		try {
-			ArrayList<TargetedCategory> targetedCategories = saleCtrl.getAllCategories();
+			ArrayList<TargetedCategory> targetedCategories = targetedCategoryCtrl.getAllCategories();
 			comboBoxModel.addAll(targetedCategories);
 		}catch(SQLException e) {
 			
@@ -203,7 +204,7 @@ public class AnalyticsPanel extends JPanel {
     protected void refreshComboBoxList() {
     	comboBoxModel = new DefaultComboBoxModel<TargetedCategory>();
     	try {
-			ArrayList<TargetedCategory> targetedCategories = saleCtrl.getAllCategories();
+			ArrayList<TargetedCategory> targetedCategories = targetedCategoryCtrl.getAllCategories();
 			comboBoxModel.addAll(targetedCategories);
 		}catch(SQLException e) {
 			

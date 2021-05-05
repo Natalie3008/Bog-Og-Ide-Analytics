@@ -11,6 +11,7 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import controlLayer.SaleCtrl;
+import controlLayer.TargetedCategoryCtrl;
 
 import javax.swing.SwingConstants;
 import java.awt.Font;
@@ -19,6 +20,8 @@ import java.awt.Dialog.ModalityType;
 import java.awt.Point;
 import java.awt.Dimension;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.awt.event.ActionEvent;
@@ -36,8 +39,9 @@ public class ManageTargetCategoryDialog extends JDialog {
 
 	private final JPanel contentPanel = new JPanel();
 	private JList<TargetedCategory> list;
+	DefaultListModel<TargetedCategory> listModel;
 	
-	private SaleCtrl saleCtrl;
+	private TargetedCategoryCtrl targetedCategoryCtrl;
 	
 	
 	// MAIN DARK COLOR: #1A1F20
@@ -49,7 +53,7 @@ public class ManageTargetCategoryDialog extends JDialog {
 	 * Create the dialog.
 	 */
 	public ManageTargetCategoryDialog() {
-		saleCtrl = new SaleCtrl();
+		targetedCategoryCtrl = new TargetedCategoryCtrl();
 		
 		setResizable(false);
 		setBounds(100, 100, 526, 490);
@@ -60,9 +64,9 @@ public class ManageTargetCategoryDialog extends JDialog {
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
 		
 		
-		DefaultListModel<TargetedCategory> listModel = new DefaultListModel<>();
+		listModel = new DefaultListModel<>();
 		try {
-			ArrayList<TargetedCategory> targetedCategories = saleCtrl.getAllCategories();
+			ArrayList<TargetedCategory> targetedCategories = targetedCategoryCtrl.getAllCategories();
 			listModel.addAll(targetedCategories);
 		}catch(SQLException e) {
 			
@@ -154,21 +158,15 @@ public class ManageTargetCategoryDialog extends JDialog {
 			getRootPane().setDefaultButton(doneButton);
 	}
 	
-	protected void deleteTargetGroup() {
-		
-		DefaultListModel<TargetedCategory> model = (DefaultListModel<TargetedCategory>) list.getModel();
-		int index = list.getSelectedIndex();
-		if(index!=-1) {
-			model.remove(index);
-		}else {
-			JOptionPane.showMessageDialog(null, "ERROR", "ERROR", JOptionPane.ERROR_MESSAGE);
-			
-		}
-	}
-	
 	protected void createTargetGroup() {
 		
 		CreateTargetGroupDialog dialog = new CreateTargetGroupDialog();
+		dialog.addWindowListener(new WindowAdapter() {
+    		@Override
+    	    public void windowClosed(WindowEvent e) {
+    	        refreshList();
+    	    }
+    	});
 		dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		dialog.setVisible(true);
 		
@@ -178,8 +176,16 @@ public class ManageTargetCategoryDialog extends JDialog {
 		
 		DefaultListModel<TargetedCategory> model = (DefaultListModel<TargetedCategory>) list.getModel();
 		int index = list.getSelectedIndex();
+		TargetedCategory tcAtSelectedIndex = list.getSelectedValue();
+		
 		if(index!=-1) {
-			EditTargetGroupDialog dialog = new EditTargetGroupDialog();
+			EditTargetGroupDialog dialog = new EditTargetGroupDialog(tcAtSelectedIndex);
+			dialog.addWindowListener(new WindowAdapter() {
+	    		@Override
+	    	    public void windowClosed(WindowEvent e) {
+	    	        refreshList();
+	    	    }
+	    	});
 			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 			dialog.setVisible(true);
 		}else {
@@ -189,9 +195,41 @@ public class ManageTargetCategoryDialog extends JDialog {
 
 	}
 	
+	protected void deleteTargetGroup() {
+		
+		DefaultListModel<TargetedCategory> model = (DefaultListModel<TargetedCategory>) list.getModel();
+		int index = list.getSelectedIndex();
+		TargetedCategory tcAtSelectedIndex = list.getSelectedValue();
+		
+		try {
+			if(index!=-1) {
+				model.remove(index);
+				int selectedTargetedCategoryID = tcAtSelectedIndex.getID();
+				targetedCategoryCtrl.deleteTargetedCategory(selectedTargetedCategoryID);
+			}else {
+				JOptionPane.showMessageDialog(null, "ERROR", "ERROR", JOptionPane.ERROR_MESSAGE);
+				
+			}
+		}catch(SQLException e) {
+			
+		}
+	}
+	
 	protected void cancelClick() {	
 		this.dispose();
 	}
 	
+	protected void refreshList() {
+		
+		listModel = new DefaultListModel<>();
+		try {
+			ArrayList<TargetedCategory> targetedCategories = targetedCategoryCtrl.getAllCategories();
+			listModel.addAll(targetedCategories);
+			list.setModel(listModel);
+		}catch(SQLException e) {
+			
+		}
+		
+	}
 
 }

@@ -9,6 +9,7 @@ import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import controlLayer.TargetedCategoryCtrl;
 import modelLayer.TargetedCategory;
 
 import java.awt.Font;
@@ -20,6 +21,7 @@ import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.SQLException;
 import java.awt.Dialog.ModalityType;
 
 public class CreateTargetGroupDialog extends JDialog {
@@ -39,11 +41,15 @@ public class CreateTargetGroupDialog extends JDialog {
 	private JTextField genderTextField;
 	private JTextField otherTextField;
 	private JTextField titleTextField;
+	
+	private TargetedCategoryCtrl targetedCategoryCtrl;
 
 	/**
 	 * Create the dialog.
 	 */
 	public CreateTargetGroupDialog() {
+		targetedCategoryCtrl = new TargetedCategoryCtrl();
+		
 		setModalityType(ModalityType.APPLICATION_MODAL);
 		setAlwaysOnTop(true);
 		setBounds(100, 100, 450, 462);
@@ -264,6 +270,12 @@ public class CreateTargetGroupDialog extends JDialog {
 		String other = otherTextField.getText();
 		
 		TargetedCategory newTargetedCategory = new TargetedCategory(ID, title, minimumAge, maximumAge, gender, other);
+		
+		try {
+			targetedCategoryCtrl.createTargetedCategory(newTargetedCategory);
+			
+		}catch(SQLException e) {
+		}
 		
 		this.dispose();
 	}
