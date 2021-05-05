@@ -3,14 +3,15 @@ package modelLayer;
 import java.util.ArrayList;
 import java.util.Date;
 
+// Sale class holds information about sales in the system 
 public class Sale {
 	private int ID;
 	private Date date;
-	private TargetedCategory targetedCategory;
+	private TargetedCategory targetedCategory; // as in targeted customer group
 	private String paymentMethod;
 	private double totalPrice;
 	private Employee employee;
-	private ArrayList<OrderLine> orderLines;
+	private ArrayList<OrderLine> orderLines; 
 
 	public Sale(int ID, Date date, TargetedCategory targetedCategory, String paymentMethod, double totalPrice, Employee employee) {
 		this.ID = ID;

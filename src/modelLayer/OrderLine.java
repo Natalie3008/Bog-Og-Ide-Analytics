@@ -1,5 +1,7 @@
 package modelLayer;
 
+// This is Order Line class. It has id, quantity of sold items and particular copies of items that were sold
+
 public class OrderLine {
 	private int ID;
 	private int quantity;
