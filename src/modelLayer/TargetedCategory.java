@@ -85,4 +85,10 @@ public class TargetedCategory {
 	public boolean addToSales(Sale sale) {
 		return sales.add(sale);
 	}
+	
+	@Override 
+	public String toString() {
+		return String.format("TITLE: "+title+", AGE: "+minimumAge+"-"+maximumAge+", GENDER: "+gender);
+	}
+	
 }

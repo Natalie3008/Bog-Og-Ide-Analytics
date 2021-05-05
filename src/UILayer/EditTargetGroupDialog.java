@@ -8,9 +8,6 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
-
-import modelLayer.TargetedCategory;
-
 import java.awt.Font;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
@@ -20,9 +17,10 @@ import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.Dialog.ModalExclusionType;
 import java.awt.Dialog.ModalityType;
 
-public class CreateTargetGroupDialog extends JDialog {
+public class EditTargetGroupDialog extends JDialog {
 
 	private final JPanel contentPanel = new JPanel();
 	
@@ -43,7 +41,7 @@ public class CreateTargetGroupDialog extends JDialog {
 	/**
 	 * Create the dialog.
 	 */
-	public CreateTargetGroupDialog() {
+	public EditTargetGroupDialog() {
 		setModalityType(ModalityType.APPLICATION_MODAL);
 		setAlwaysOnTop(true);
 		setBounds(100, 100, 450, 462);
@@ -53,7 +51,7 @@ public class CreateTargetGroupDialog extends JDialog {
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
 		contentPanel.setLayout(new BorderLayout(0, 0));
 		{
-			JLabel createTargetCategoryLabel = new JLabel("CREATE TARGET CATEGORY");
+			JLabel createTargetCategoryLabel = new JLabel("EDIT TARGETED CATEGORY");
 			createTargetCategoryLabel.setBorder(new EmptyBorder(5, 5, 5, 5));
 			createTargetCategoryLabel.setHorizontalAlignment(SwingConstants.CENTER);
 			createTargetCategoryLabel.setForeground(Color.WHITE);
@@ -226,10 +224,10 @@ public class CreateTargetGroupDialog extends JDialog {
 			getContentPane().add(buttonPane, BorderLayout.SOUTH);
 			buttonPane.setLayout(new BorderLayout(0, 0));
 			{
-				JButton addButton = new CustomButton("ADD");
+				JButton addButton = new CustomButton("SAVE");
 				addButton.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
-						addClick();
+						saveClick();
 					}
 				});
 				
@@ -255,19 +253,8 @@ public class CreateTargetGroupDialog extends JDialog {
 		this.dispose();
 	}
 	
-	protected void addClick() {	
-		int ID = Integer.parseInt(idTextField.getText());
-		String title = titleTextField.getText();
-		int minimumAge = Integer.parseInt(minimumAgeTextField.getText());
-		int maximumAge = Integer.parseInt(maximumAgeTextField.getText());
-		String gender = genderTextField.getText();
-		String other = otherTextField.getText();
-		
-		TargetedCategory newTargetedCategory = new TargetedCategory(ID, title, minimumAge, maximumAge, gender, other);
-		
+	protected void saveClick() {	
 		this.dispose();
 	}
-	
-	
 
 }
