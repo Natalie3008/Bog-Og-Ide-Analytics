@@ -61,5 +61,4 @@ public class SaleCtrl {
 		foundOrderLines = saleDb.getBestSellersProducts();
 		return foundOrderLines;
 	}
-
 }
