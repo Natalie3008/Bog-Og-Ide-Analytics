@@ -37,7 +37,7 @@ public class TargetedCategoryCtrl {
 	}
 	
 	
-	public ArrayList<TargetedCategory> getAllCategories() throws SQLException {
+	public ArrayList<TargetedCategory> getAllTargetedCategories() throws SQLException {
 		ArrayList<TargetedCategory> foundCategories = new ArrayList<>();
 		foundCategories = targetedCategoryDb.getAllTargetedCategories();
 		return foundCategories;

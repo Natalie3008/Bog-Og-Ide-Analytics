@@ -9,6 +9,7 @@ import modelLayer.*;
 public class SaleCtrl {
 	private SaleDB saleDb;
 	private ProductCtrl productCtrl;
+	private TargetedCategoryCtrl categoryCtrl;
 
 	public SaleCtrl() {
 		saleDb = new SaleDB();
@@ -37,25 +38,25 @@ public class SaleCtrl {
 		foundProducts = productCtrl.getProductInformation();
 		return foundProducts;
 	}
-	
+
 	public ArrayList<TargetedCategory> getAllCategories() throws SQLException {
 		ArrayList<TargetedCategory> foundCategories = new ArrayList<>();
-		foundCategories = saleDb.getAllTargetedCategories();
+		foundCategories = categoryCtrl.getAllTargetedCategories();
 		return foundCategories;
 	}
-	
+
 	public ArrayList<Product> getFastSellingProducts(String type) throws SQLException {
 		ArrayList<Product> foundBooks = new ArrayList<Product>();
 		foundBooks = saleDb.getFastSellingProducts(type);
 		return foundBooks;
 	}
-	
+
 	public ArrayList<Product> getSlowSellingProducts(String type) throws SQLException {
 		ArrayList<Product> foundBooks = new ArrayList<Product>();
 		foundBooks = saleDb.getSlowSellingProducts(type);
 		return foundBooks;
 	}
-	
+
 	public ArrayList<OrderLine> getBestSellersProducts() throws SQLException {
 		ArrayList<OrderLine> foundOrderLines = new ArrayList<OrderLine>();
 		foundOrderLines = saleDb.getBestSellersProducts();

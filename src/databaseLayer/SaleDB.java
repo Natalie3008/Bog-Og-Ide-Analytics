@@ -131,19 +131,17 @@ public class SaleDB implements SaleDBIF {
 	private ArrayList<OrderLine> buildOrderLines(ResultSet resultSet) throws SQLException {
 		ArrayList<OrderLine> orderLines = new ArrayList<>();
 		while (resultSet.next()) {
-			OrderLine orderLine = new OrderLine(new Sale(resultSet.getInt("saleID")), resultSet.getInt("quantity"), new Product(resultSet.getString("productBarcode")));
+			OrderLine orderLine = new OrderLine(new Sale(resultSet.getInt("saleID")), resultSet.getInt("quantity"),
+					new Product(resultSet.getString("productBarcode")));
 			orderLines.add(orderLine);
 		}
 		return orderLines;
 	}
-	
-	
+
 	public ArrayList<OrderLine> getBestSellersProducts() throws SQLException {
 		ArrayList<OrderLine> foundOrderLines = new ArrayList<OrderLine>();
 		String selectBarcode = "SELECT y.barcode,y.description,y.title FROM Product y INNER JOIN (SELECT description, COUNT(*) AS CountOf"
-				+ " FROM Product"
-				+ " GROUP BY description"
-				+ " HAVING COUNT(*) > 1"
+				+ " FROM Product" + " GROUP BY description" + " HAVING COUNT(*) > 1"
 				+ " ) dt ON y.description=dt.description";
 		try {
 			Statement statement = DBConnection.getInstance().getConnection().createStatement();
