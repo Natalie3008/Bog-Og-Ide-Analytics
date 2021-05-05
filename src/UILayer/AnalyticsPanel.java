@@ -93,7 +93,7 @@ public class AnalyticsPanel extends JPanel {
 		
 		comboBoxModel = new DefaultComboBoxModel<TargetedCategory>();
 		try {
-			ArrayList<TargetedCategory> targetedCategories = targetedCategoryCtrl.getAllCategories();
+			ArrayList<TargetedCategory> targetedCategories = targetedCategoryCtrl.getAllTargetedCategories();
 			comboBoxModel.addAll(targetedCategories);
 		}catch(SQLException e) {
 			
@@ -204,7 +204,7 @@ public class AnalyticsPanel extends JPanel {
     protected void refreshComboBoxList() {
     	comboBoxModel = new DefaultComboBoxModel<TargetedCategory>();
     	try {
-			ArrayList<TargetedCategory> targetedCategories = targetedCategoryCtrl.getAllCategories();
+			ArrayList<TargetedCategory> targetedCategories = targetedCategoryCtrl.getAllTargetedCategories();
 			comboBoxModel.addAll(targetedCategories);
 		}catch(SQLException e) {
 			

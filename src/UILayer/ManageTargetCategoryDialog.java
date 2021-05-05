@@ -66,7 +66,7 @@ public class ManageTargetCategoryDialog extends JDialog {
 		
 		listModel = new DefaultListModel<>();
 		try {
-			ArrayList<TargetedCategory> targetedCategories = targetedCategoryCtrl.getAllCategories();
+			ArrayList<TargetedCategory> targetedCategories = targetedCategoryCtrl.getAllTargetedCategories();
 			listModel.addAll(targetedCategories);
 		}catch(SQLException e) {
 			
@@ -223,7 +223,7 @@ public class ManageTargetCategoryDialog extends JDialog {
 		
 		listModel = new DefaultListModel<>();
 		try {
-			ArrayList<TargetedCategory> targetedCategories = targetedCategoryCtrl.getAllCategories();
+			ArrayList<TargetedCategory> targetedCategories = targetedCategoryCtrl.getAllTargetedCategories();
 			listModel.addAll(targetedCategories);
 			list.setModel(listModel);
 		}catch(SQLException e) {
