@@ -7,11 +7,11 @@ import java.util.Date;
 public class Sale {
 	private int ID;
 	private Date date;
-	private TargetedCategory targetedCategory; // as in targeted customer group
+	private TargetedCategory targetedCategory; // targeted customer group
 	private String paymentMethod;
 	private double totalPrice;
-	private Employee employee;
-	private ArrayList<OrderLine> orderLines; 
+	private Employee employee; // employee who did the transaction
+	private ArrayList<OrderLine> orderLines; // orderLine class that holds information about what items and how many were sold
 
 	public Sale(int ID, Date date, TargetedCategory targetedCategory, String paymentMethod, double totalPrice, Employee employee) {
 		this.ID = ID;
