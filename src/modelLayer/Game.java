@@ -1,7 +1,13 @@
 package modelLayer;
 
+/* This class holds information on the Game objects in the 
+ * system. A Game is an subclass of Product, meaning it takes 
+ * over the constructor as well as the methods that can be 
+ * found in the Product class. 
+ */
+
 public class Game extends Product {
-	private String type;
+	private String type; //such as board game, card game, puzzle etc.
 
 	public Game(String barcode, String title, double costPrice, double recommendedRetailPrice, int amountInStock,
 			String publicationDate, String description, Supplier supplier, String type) {

@@ -1,12 +1,16 @@
 package modelLayer;
 
+/* This class holds the information on the Employees
+ * in the system. 
+ * 
+ */
 public class Employee {
 	private int CPR;
 	private String name;
 	private String address;
 	private int phoneNumber;
 	private String email;
-	private String position;
+	private String position; //such as manager, store clerk, student aid etc. 
 
 	public Employee(int CPR, String name, String address, int phoneNumber, String email, String position) {
 		this.CPR = CPR;
