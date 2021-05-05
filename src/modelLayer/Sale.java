@@ -22,6 +22,10 @@ public class Sale {
 		this.employee = employee;
 		orderLines = new ArrayList<OrderLine>();
 	}
+	
+	public Sale (int ID) {
+		this.ID = ID;
+	}
 
 	public int getID() {
 		return ID;

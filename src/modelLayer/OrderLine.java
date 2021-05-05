@@ -3,22 +3,26 @@ package modelLayer;
 // This is Order Line class. It has ID, quantity of sold items and particular copies of items that were sold.
 
 public class OrderLine {
-	private int ID;
+	private Sale sale;
 	private int quantity;
-	private Copy copy;
+	private Product product;
 
-	public OrderLine(int ID, int quantity, Copy copy) {
-		this.ID = ID;
+	public OrderLine(Sale sale, int quantity, Product product) {
+		this.sale = sale;
 		this.quantity = quantity;
-		this.copy = copy;
+		this.product = product;
+	}
+	
+	public OrderLine(Product product) {
+		this.product = product;
 	}
 
-	public int getID() {
-		return ID;
+	public Sale getSale() {
+		return sale;
 	}
 
-	public void setID(int iD) {
-		ID = iD;
+	public void setSale(Sale sale) {
+		sale = sale;
 	}
 
 	public int getQuantity() {
@@ -29,12 +33,11 @@ public class OrderLine {
 		this.quantity = quantity;
 	}
 
-	public Copy getCopy() {
-		return copy;
+	public Product getProduct() {
+		return product;
 	}
 
-	public void setCopy(Copy copy) {
-		this.copy = copy;
+	public void setCopy(Product product) {
+		this.product = product;
 	}
-
 }

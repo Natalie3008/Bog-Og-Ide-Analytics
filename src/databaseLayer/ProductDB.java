@@ -9,12 +9,12 @@ import java.sql.*;
 import java.util.ArrayList;
 
 import modelLayer.Supplier;
-//This class holds methods that are for Product management and interact with the database.
+
 public class ProductDB {
-// This it a methods that builds an object from result set and then returns it
-	private Product buildObject(ResultSet resultSet, String selectedType) throws SQLException {
+
+	public Product buildObject(ResultSet resultSet, String selectedType) throws SQLException {
 		Product builtProduct = null;
-// Book and game are two different types because they have different fields
+
 		try {
 			if (selectedType.equals("Book")) {
 
@@ -40,8 +40,8 @@ public class ProductDB {
 
 		return builtProduct;
 	}
-// a method to make an arraylist of Copy Objects based on info from the DB
-	private ArrayList<Copy> buildCopies(Product product, String barcode, String type) throws SQLException {
+
+	public ArrayList<Copy> buildCopies(Product product, String barcode, String type) throws SQLException {
 		ArrayList<Copy> builtCopies = new ArrayList<Copy>();
 		String selectBookCopies = "SELECT * FROM Book WHERE Book.barcode = '" + barcode + "'";
 		String selectGameCopies = "SELECT * FROM Game WHERE Game.barcode = '" + barcode + "'";
@@ -63,8 +63,8 @@ public class ProductDB {
 		}
 		return builtCopies;
 	}
-// creating a supplier object 
-	private Supplier buildSupplier(int supplierCVR) throws SQLException {
+
+	public Supplier buildSupplier(int supplierCVR) throws SQLException {
 		Supplier builtSupplier = null;
 		String selectSupplier = "SELECT * FROM Supplier WHERE CVR = '" + supplierCVR + "'";
 		Statement statement = DBConnection.getInstance().getConnection().createStatement();
@@ -84,15 +84,13 @@ public class ProductDB {
 		}
 		return builtSupplier;
 	}
-	
-	// a method to get information about one object. It accesses the DB, executes statement and based on result it creates an returns an object
 
 	public Product getOneProductInformation(String barcode) throws SQLException {
 		Product foundProduct = null;
 		String selectBooks = "SELECT * FROM Book JOIN Product ON Book.barcode = Product.barcode WHERE Book.barcode = '"
-				+ barcode + "'"; // statements to be executed
+				+ barcode + "'";
 		String selectGames = "SELECT * FROM Game JOIN Product ON Game.barcode = Product.barcode WHERE Game.barcode = '"
-				+ barcode + "'"; // statements to be executed
+				+ barcode + "'";
 		try {
 			Statement statement = DBConnection.getInstance().getConnection().createStatement();
 
@@ -110,7 +108,7 @@ public class ProductDB {
 		}
 		return foundProduct;
 	}
-// a method to get information about all the products from the database
+
 	public ArrayList<Product> getProductInformation() throws SQLException {
 		ArrayList<Product> foundProducts = new ArrayList<Product>();
 		String selectBooks = "SELECT * FROM Book JOIN Product ON Book.barcode = Product.barcode";
@@ -128,9 +126,8 @@ public class ProductDB {
 		}
 		return foundProducts;
 	}
-	
-	// a method to build many object of Product type from the database
-	private ArrayList<Product> buildObjects(ResultSet resultSet, String category) throws SQLException {
+
+	public ArrayList<Product> buildObjects(ResultSet resultSet, String category) throws SQLException {
 		ArrayList<Product> resultProducts = new ArrayList<Product>();
 
 		while (resultSet.next()) {
@@ -140,7 +137,7 @@ public class ProductDB {
 		return resultProducts;
 	}
 
-	// a method to make a book and add it into the database
+	// method to make a book and add it into the db // WIP STILL
 	public Product createBook(Book book, Copy copy) throws SQLException {
 		String sqlProduct = "INSERT INTO Product (barcode, title, costPrice, RRP, amountInStock, publicationDate, description, supplierCVR)"
 				+ " VALUES( " + book.getBarcode() + ", '" + book.getTitle() + "', " + book.getCostPrice() + ", "
@@ -153,7 +150,7 @@ public class ProductDB {
 		int resultBook = DBConnection.getInstance().executeUpdate(sqlBook);
 		return resultProduct == 1 && resultBook == 1 ? book : null;
 	}
-	// a method to make a game and add it into the database
+
 	public Product createGame(Game game, Copy copy) throws SQLException {
 		String sqlProduct = "INSERT INTO Product (barcode, title, costPrice, RRP, amountInStock, publicationDate, description, supplierCVR)"
 				+ " VALUES( " + game.getBarcode() + ", '" + game.getTitle() + "', " + game.getCostPrice() + ", "
@@ -166,7 +163,6 @@ public class ProductDB {
 		int resultGame = DBConnection.getInstance().executeUpdate(sqlGame);
 		return resultProduct == 1 && resultGame == 1 ? game : null;
 	}
-	//CRUD for Product - delete
 
 	public boolean deleteProduct(String articleNumber, String barcode) throws SQLException {
 		String sqlProduct = "DELETE FROM Product WHERE barcode LIKE '" + barcode + "'";
@@ -177,8 +173,6 @@ public class ProductDB {
 		int resultProduct = DBConnection.getInstance().executeUpdate(sqlProduct);
 		return resultProduct > 1 || resultBook > 1 || resultGame > 1;
 	}
-	
-	//CRUD for Product - updating amount in stock
 
 	public Product updateAmountInStock(Product product) throws SQLException {
 		String sql = "UPDATE Product SET amountInStock = '" + product.getAmountInStock() + "' WHERE barcode = "
@@ -186,8 +180,6 @@ public class ProductDB {
 		int result = DBConnection.getInstance().executeUpdate(sql);
 		return result == 1 ? product : null;
 	}
-	
-	//CRUD for Copy - updating date sold
 
 	public Copy updateDateSold(Copy copy) throws SQLException {
 		String sqlGame = "UPDATE Game SET dateSold = '" + copy.getDateSold() + "' WHERE articleNumber = "
@@ -198,8 +190,6 @@ public class ProductDB {
 		int resultBook = DBConnection.getInstance().executeUpdate(sqlBook);
 		return resultGame == 1 || resultBook == 1 ? copy : null;
 	}
-	
-	//CRUD Product - updating recommeded retail price
 
 	public Product updateRRP(Product product) throws SQLException {
 		String sql = "UPDATE Product SET RRP = '" + product.getRecommendedRetailPrice() + "' WHERE barcode = "

@@ -6,7 +6,7 @@ import java.util.ArrayList;
  * This is to make sharing code easier when using common fields between book and game.
 */
 
-public abstract class Product {
+public class Product {
 	private String barcode;
 	private String title;
 	private double costPrice;
@@ -29,6 +29,11 @@ public abstract class Product {
 		this.publicationDate = publicationDate;
 		this.description = description;
 		this.supplier = supplier;
+		copies = new ArrayList<Copy>();
+	}
+	
+	public Product(String barcode) {
+		this.barcode = barcode;
 		copies = new ArrayList<Copy>();
 	}
 
