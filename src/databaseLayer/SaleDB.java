@@ -54,11 +54,22 @@ public class SaleDB implements SaleDBIF {
 	// TODO comment
 	private Sale buildObject(ResultSet resultSet) throws SQLException {
 		Sale builtSale = null;
-		
+
 		builtSale = new Sale(resultSet.getInt("ID"), resultSet.getDate("transactionDate"),
 				new TargetedCategory(resultSet.getInt("targetedCategoryID")), resultSet.getString("paymentMethod"),
 				resultSet.getDouble("totalPrice"), buildEmployee(resultSet.getInt("EmployeeCPR")));
 		return builtSale;
+	}
+
+	private TargetedCategory buildCategory(ResultSet rs) throws SQLException {
+
+		TargetedCategory builtCategory = null;
+
+		builtCategory = new TargetedCategory(rs.getInt("ID"), rs.getString("title"), rs.getInt("minimumAge"),
+				rs.getInt("maximumAge"), rs.getString("gender"), rs.getString("other"));
+
+		return builtCategory;
+
 	}
 
 	// TODO comment
@@ -82,4 +93,26 @@ public class SaleDB implements SaleDBIF {
 		}
 		return builtEmployee;
 	}
+
+	public ArrayList<TargetedCategory> getAllTargetedCategories() throws SQLException {
+
+		ArrayList<TargetedCategory> foundTargetedCategories = new ArrayList<TargetedCategory>();
+		String selectCategories = "SELECT * FROM TargetedCategory";
+
+		try {
+
+			Statement statement = DBConnection.getInstance().getConnection().createStatement();
+			ResultSet rsCategory = statement.executeQuery(selectCategories);
+			foundTargetedCategories.add(buildCategory(rsCategory));
+
+		}
+
+		catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return foundTargetedCategories;
+
+	}
+
 }
