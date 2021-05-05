@@ -9,6 +9,8 @@ import javafx.scene.Scene;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
+import modelLayer.Employee;
+import modelLayer.TargetedCategory;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -23,16 +25,28 @@ import javax.swing.JSeparator;
 import java.awt.Font;
 import javax.swing.border.EmptyBorder;
 
+import controlLayer.SaleCtrl;
 
 import javax.swing.DefaultComboBoxModel;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 import javax.swing.SwingConstants;
 import java.awt.Dimension;
 
 public class AnalyticsPanel extends JPanel {
 
+	private JComboBox<TargetedCategory> comboBox;
+	private DefaultComboBoxModel<TargetedCategory> comboBoxModel;
+	
+	private SaleCtrl saleCtrl;
+	
 	public AnalyticsPanel() {
+		saleCtrl = new SaleCtrl();
+		
 		initAndShowGUI();
 		
 	}
@@ -75,7 +89,17 @@ public class AnalyticsPanel extends JPanel {
 		manageTargetCategoriesButton.setFocusTraversalKeysEnabled(false);
 		manageTargetCategoriesButton.setFont(new Font("Segoe UI", Font.BOLD, 18));
 		
-		JComboBox comboBox = new JComboBox();
+		
+		comboBoxModel = new DefaultComboBoxModel<TargetedCategory>();
+		try {
+			ArrayList<TargetedCategory> targetedCategories = saleCtrl.getAllCategories();
+			comboBoxModel.addAll(targetedCategories);
+		}catch(SQLException e) {
+			
+		}
+		
+		comboBox = new JComboBox<TargetedCategory>(comboBoxModel);
+				
 		GridBagConstraints gbc_comboBox = new GridBagConstraints();
 		gbc_comboBox.fill = GridBagConstraints.HORIZONTAL;
 		gbc_comboBox.gridx = 1;
@@ -84,7 +108,6 @@ public class AnalyticsPanel extends JPanel {
 		comboBox.setBackground(Color.decode("#242A2B"));
 		comboBox.setForeground(Color.WHITE);
 		comboBox.setFont(new Font("Segoe UI", Font.BOLD, 18));
-		comboBox.setModel(new DefaultComboBoxModel(new String[] {"SELECT TARGET CATEGORY"}));
 		comboBox.setName("");
 		comboBox.setToolTipText("");
 		comboBox.setOpaque(false);
@@ -164,11 +187,29 @@ public class AnalyticsPanel extends JPanel {
     {
     	ManageTargetCategoryDialog dialog = new ManageTargetCategoryDialog();
     	
+    	dialog.addWindowListener(new WindowAdapter() {
+    		@Override
+    	    public void windowClosed(WindowEvent e) {
+    	        refreshComboBoxList();
+    	    }
+    	});
     	dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
     	dialog.setLocationRelativeTo(this);
 		dialog.setVisible(true);
     	
     }
   
+    
+    protected void refreshComboBoxList() {
+    	comboBoxModel = new DefaultComboBoxModel<TargetedCategory>();
+    	try {
+			ArrayList<TargetedCategory> targetedCategories = saleCtrl.getAllCategories();
+			comboBoxModel.addAll(targetedCategories);
+		}catch(SQLException e) {
+			
+		}
+		comboBox.setModel(comboBoxModel);
+
+    }
 
 }

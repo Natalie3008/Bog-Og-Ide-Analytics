@@ -17,19 +17,19 @@ import javax.swing.border.EmptyBorder;
 
 import modelLayer.*;
 
-public class TargetCategoryListCellRenderer extends JLabel implements ListCellRenderer<Employee> {
+public class TargetCategoryListCellRenderer extends JLabel implements ListCellRenderer<TargetedCategory> {
 
 	public TargetCategoryListCellRenderer(){
 		setOpaque(true);
 	}
 	
 	@Override
-    public Component getListCellRendererComponent(JList<? extends Employee> list, Employee value, int index,
+    public Component getListCellRendererComponent(JList<? extends TargetedCategory> list, TargetedCategory value, int index,
         boolean isSelected, boolean cellHasFocus) {
           
-        String name = value.getName();
+        String targetedCategoryName = String.format("TITLE: "+value.getTitle()+", AGE: "+value.getMinimumAge()+"-"+value.getMaximumAge()+", GENDER: "+value.getGender());
         
-        setText(name);
+        setText(targetedCategoryName);
         setBorder(new EmptyBorder(10, 10, 10, 10));
         setForeground(Color.WHITE);
         setFont(new Font("Segoe UI", Font.BOLD, 18));
