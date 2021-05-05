@@ -3,12 +3,12 @@ package modelLayer;
 import java.util.ArrayList;
 // This holds information about customer target groups, such as specific age or gender categories. 
 public class TargetedCategory {
-	private int ID;
-	private String title;
-	private int minimumAge;
-	private int maximumAge;
-	private String gender;
-	private String other;
+	private int ID; // ID of the Targeted category
+	private String title; // name of the category
+	private int minimumAge; 
+	private int maximumAge; // expected age ranges for the customer category
+	private String gender; 
+	private String other; //any other important criteria for the TargetedCategory
 	private ArrayList<Sale> sales;
 
 	public TargetedCategory(int ID, String title, int minimumAge, int maximumAge, String gender, String other) {
