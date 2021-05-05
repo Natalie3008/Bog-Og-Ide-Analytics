@@ -189,7 +189,7 @@ public class ManageTargetCategoryDialog extends JDialog {
 			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 			dialog.setVisible(true);
 		}else {
-			JOptionPane.showMessageDialog(null, "ERROR", "ERROR", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(null, "Please select a category to edit", "ERROR", JOptionPane.ERROR_MESSAGE);
 			
 		}
 
@@ -207,7 +207,7 @@ public class ManageTargetCategoryDialog extends JDialog {
 				int selectedTargetedCategoryID = tcAtSelectedIndex.getID();
 				targetedCategoryCtrl.deleteTargetedCategory(selectedTargetedCategoryID);
 			}else {
-				JOptionPane.showMessageDialog(null, "ERROR", "ERROR", JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(null, "Please select a category to delete", "ERROR", JOptionPane.ERROR_MESSAGE);
 				
 			}
 		}catch(SQLException e) {

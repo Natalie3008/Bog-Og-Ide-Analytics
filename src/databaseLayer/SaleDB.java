@@ -140,9 +140,9 @@ public class SaleDB implements SaleDBIF {
 
 	public ArrayList<OrderLine> getBestSellersProducts() throws SQLException {
 		ArrayList<OrderLine> foundOrderLines = new ArrayList<OrderLine>();
-		String selectBarcode = "SELECT y.barcode,y.description,y.title FROM Product y INNER JOIN (SELECT description, COUNT(*) AS CountOf"
-				+ " FROM Product" + " GROUP BY description" + " HAVING COUNT(*) > 1"
-				+ " ) dt ON y.description=dt.description";
+		String selectBarcode = "SELECT y.saleID ,y.productBarcode ,y.quantity FROM OrderLine y INNER JOIN (SELECT productBarcode, COUNT(*) AS CountOf"
+				+ " FROM OrderLine" + " GROUP BY productBarcode" + " HAVING COUNT(*) > 1"
+				+ " ) dt ON y.productBarcode=dt.productBarcode";
 		try {
 			Statement statement = DBConnection.getInstance().getConnection().createStatement();
 			ResultSet resultSet = statement.executeQuery(selectBarcode);
@@ -151,6 +151,112 @@ public class SaleDB implements SaleDBIF {
 			e.printStackTrace();
 		}
 		return foundOrderLines;
+	}
 
+	public ArrayList<Product> getNotSellingProducts(String type) throws SQLException {
+		ArrayList<Product> foundProducts = new ArrayList<Product>();
+		String selectBooks = "SELECT * FROM Book WHERE dateSold IS NULL;";
+		String selectGames = "SELECT * FROM Game WHERE dateSold IS NULL;";
+		try {
+			Statement statement = DBConnection.getInstance().getConnection().createStatement();
+			if (type.equals("Book")) {
+				ResultSet resultSet = statement.executeQuery(selectBooks);
+				foundProducts.addAll(productDb.buildObjects(resultSet, "Book"));
+			} else if (type.equals("Game"))
+				;
+			{
+				ResultSet resultSet = statement.executeQuery(selectGames);
+				foundProducts.addAll(productDb.buildObjects(resultSet, "Game"));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return foundProducts;
+	}
+	
+	public ArrayList<Product> getProductsSoldInYear(int year, String type) throws SQLException {
+		ArrayList<Product> foundProducts = new ArrayList<Product>();
+		String selectBooks = "SELECT * FROM Book WHERE YEAR(dateSold) = " + year + ";";
+		String selectGames = "SELECT * FROM Book WHERE YEAR(dateSold) = " + year + ";";
+		try {
+			Statement statement = DBConnection.getInstance().getConnection().createStatement();
+			if (type.equals("Book")) {
+				ResultSet resultSet = statement.executeQuery(selectBooks);
+				foundProducts.addAll(productDb.buildObjects(resultSet, "Book"));
+			} else if (type.equals("Game"))
+				;
+			{
+				ResultSet resultSet = statement.executeQuery(selectGames);
+				foundProducts.addAll(productDb.buildObjects(resultSet, "Game"));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return foundProducts;
+	}
+	
+	public ArrayList<Product> getProductsSoldInMonth(int month, String type) throws SQLException {
+		ArrayList<Product> foundProducts = new ArrayList<Product>();
+		String selectBooks = "SELECT * FROM Book WHERE MONTH(dateSold) = " + month + ";";
+		String selectGames = "SELECT * FROM Book WHERE MONTH(dateSold) = " + month + ";";
+		try {
+			Statement statement = DBConnection.getInstance().getConnection().createStatement();
+			if (type.equals("Book")) {
+				ResultSet resultSet = statement.executeQuery(selectBooks);
+				foundProducts.addAll(productDb.buildObjects(resultSet, "Book"));
+			} else if (type.equals("Game"))
+				;
+			{
+				ResultSet resultSet = statement.executeQuery(selectGames);
+				foundProducts.addAll(productDb.buildObjects(resultSet, "Game"));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return foundProducts;
+	}
+	
+	public ArrayList<Product> getProductsSoldInDay(int day, String type) throws SQLException {
+		ArrayList<Product> foundProducts = new ArrayList<Product>();
+		String selectBooks = "SELECT * FROM Book WHERE DAY(dateSold) = " + day + ";";
+		String selectGames = "SELECT * FROM Book WHERE DAY(dateSold) = " + day + ";";
+		try {
+			Statement statement = DBConnection.getInstance().getConnection().createStatement();
+			if (type.equals("Book")) {
+				ResultSet resultSet = statement.executeQuery(selectBooks);
+				foundProducts.addAll(productDb.buildObjects(resultSet, "Book"));
+			} else if (type.equals("Game"))
+				;
+			{
+				ResultSet resultSet = statement.executeQuery(selectGames);
+				foundProducts.addAll(productDb.buildObjects(resultSet, "Game"));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return foundProducts;
+	}
+	
+	public ArrayList<Product> mostProfitableProducts() throws SQLException {
+		ArrayList<Product> foundProducts = new ArrayList<Product>();
+		String selectBarcode = "SELECT * FROM ("
+				+ "SELECT [barcode], [title]"
+				+ ",(quantity + COUNT(barcode)) * -(RRP - CostPrice) AS [Total Profit]"
+				+ "FROM [Product]"
+				+ "INNER JOIN [OrderLine]"
+				+ "ON [Product].[barcode] = [OrderLine].[productBarcode]"
+				+ "GROUP BY [barcode], [quantity], [title], [RRP], [CostPrice]"
+				+ ") AS [Derived table]";
+		try {
+			Statement statement = DBConnection.getInstance().getConnection().createStatement();
+			ResultSet resultSet = statement.executeQuery(selectBarcode);
+			while (resultSet.next()) {
+				foundProducts.add(new Product(resultSet.getString("barcode")));
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return foundProducts;
 	}
 }
