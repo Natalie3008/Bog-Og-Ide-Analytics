@@ -28,7 +28,7 @@ public class SaleDB implements SaleDBIF {
 
 	public Sale getOneSaleInformation(int ID) throws SQLException {
 		Sale foundSale = null;
-		String selectSale = "SELECT * FROM Sale WHERE ID = '" + ID + "'";
+		String selectSale = "SELECT * FROM Sale WHERE ID = " + ID + "";
 		try {
 			Statement statement = DBConnection.getInstance().getConnection().createStatement();
 			ResultSet resultSet = statement.executeQuery(selectSale);
@@ -75,7 +75,7 @@ public class SaleDB implements SaleDBIF {
 	// TODO comment aaa
 	private Employee buildEmployee(int EmployeeCPR) throws SQLException {
 		Employee builtEmployee = null;
-		String SelectEmployee = String.format("SELECT * FROM Employee WHERE EmployeeCPR = ' " + EmployeeCPR + "'");
+		String SelectEmployee = String.format("SELECT * FROM Employee WHERE EmployeeCPR = " + EmployeeCPR + "");
 		Statement statement = DBConnection.getInstance().getConnection().createStatement();
 		ResultSet resultSet = statement.executeQuery(SelectEmployee);
 

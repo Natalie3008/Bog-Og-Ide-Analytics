@@ -1,5 +1,10 @@
 package modelLayer;
 
+/* This class holds information on the Book objects in the 
+ * system. A Book is an subclass of Product, meaning it takes 
+ * over the constructor as well as the methods that can be 
+ * found in the Product class. 
+ */
 public class Book extends Product {
 
 	private String ISBN;

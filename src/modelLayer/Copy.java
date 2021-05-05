@@ -1,9 +1,13 @@
 package modelLayer;
 
+/* The Copy class holds information of individual copies
+ * of various Products in the system. These products can
+ * be books or games. 
+ */
 import java.util.Date;
 
 public class Copy {
-	private String articleNumber;
+	private String articleNumber; //unique number for every copy
 	private Date dateSold;
 	private Date receivedInStore;
 	private Product product;
