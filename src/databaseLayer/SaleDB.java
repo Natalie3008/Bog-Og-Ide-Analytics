@@ -88,8 +88,8 @@ public class SaleDB implements SaleDBIF {
 
 	public ArrayList<Product> getFastSellingProducts(String type) throws SQLException {
 		ArrayList<Product> foundProducts = new ArrayList<Product>();
-		String selectBooks = "SELECT *FROM Book WHERE DATEDIFF(day, dateSold, receivedInStore) < 30;";
-		String selectGames = "SELECT *FROM Game WHERE DATEDIFF(day, dateSold, receivedInStore) < 30;";
+		String selectBooks = "SELECT * FROM Book JOIN Product ON Product.barcode = Book.barcode WHERE DATEDIFF(day, dateSold, receivedInStore) < 30;";
+		String selectGames = "SELECT * FROM Game JOIN Product ON Product.barcode = Game.barcode WHERE DATEDIFF(day, dateSold, receivedInStore) < 30;";
 		try {
 			Statement statement = DBConnection.getInstance().getConnection().createStatement();
 			if (type.equals("Book")) {
@@ -109,8 +109,8 @@ public class SaleDB implements SaleDBIF {
 
 	public ArrayList<Product> getSlowSellingProducts(String type) throws SQLException {
 		ArrayList<Product> foundProducts = new ArrayList<Product>();
-		String selectBooks = "SELECT * FROM Book WHERE DATEDIFF(day, dateSold, receivedInStore) > 30;";
-		String selectGames = "SELECT * FROM Game WHERE DATEDIFF(day, dateSold, receivedInStore) > 30;";
+		String selectBooks = "SELECT * FROM Book JOIN Product ON Product.barcode = Book.barcode WHERE DATEDIFF(day, dateSold, receivedInStore) > 30;";
+		String selectGames = "SELECT * FROM Game JOIN Product ON Product.barcode = Game.barcode WHERE DATEDIFF(day, dateSold, receivedInStore) > 30;";
 		try {
 			Statement statement = DBConnection.getInstance().getConnection().createStatement();
 			if (type.equals("Book")) {
