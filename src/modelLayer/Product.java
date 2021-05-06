@@ -2,8 +2,7 @@ package modelLayer;
 
 import java.util.ArrayList;
 
-/*This is a Product abstract/parent class. An item in cannot be a product only, it needs to be a book or a game. 
- * This is to make sharing code easier when using common fields between book and game.
+/*This is a Product class. It was an abstract class, however the team needed to make an instance of product in the database layer. 
 */
 
 public class Product {
