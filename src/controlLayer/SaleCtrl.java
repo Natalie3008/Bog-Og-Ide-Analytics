@@ -45,21 +45,15 @@ public class SaleCtrl {
 		return foundCategories;
 	}
 
-	public ArrayList<Product> getFastSellingProducts(String type) throws SQLException {
+	public ArrayList<Product> getProductsAnalytics(String choice, String type, int year, int month, int day) throws SQLException {
 		ArrayList<Product> foundBooks = new ArrayList<Product>();
-		foundBooks = saleDb.getFastSellingProducts(type);
+		foundBooks = saleDb.getProductsAnalytics(choice, type, year, month, day);
 		return foundBooks;
 	}
 
-	public ArrayList<Product> getSlowSellingProducts(String type) throws SQLException {
-		ArrayList<Product> foundBooks = new ArrayList<Product>();
-		foundBooks = saleDb.getSlowSellingProducts(type);
-		return foundBooks;
-	}
-
-	public ArrayList<OrderLine> getBestSellersProducts() throws SQLException {
+	public ArrayList<OrderLine> getSalesAnalytics() throws SQLException {
 		ArrayList<OrderLine> foundOrderLines = new ArrayList<OrderLine>();
-		foundOrderLines = saleDb.getBestSellersProducts();
+		foundOrderLines = saleDb.getSalesAnalytics();
 		return foundOrderLines;
 	}
 }
