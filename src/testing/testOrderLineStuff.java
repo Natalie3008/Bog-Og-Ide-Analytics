@@ -27,13 +27,14 @@ public class testOrderLineStuff {
 
 	@Test
 	public void testIfOrderLineWorks() throws SQLException {
-		ArrayList<OrderLine> fuckMe = saleDb.getBestSellersProducts();
-		System.out.println(fuckMe.size());
+		ArrayList<OrderLine> fuckMe = saleDb.getSalesAnalytics();
+		System.out.println(fuckMe.get(0).getSale().getTotalPrice());
 	}
 	
 	@Test public void testIfBestProfitsWorks() throws SQLException {
-		ArrayList<Product> fuckMeToo = saleDb.mostProfitableProducts();
+		ArrayList<Product> fuckMeToo = saleDb.getProductsAnalytics("Not sold", "Book", 0, 0, 0);
 		System.out.println(fuckMeToo.size());
 	}
+	
 
 }
