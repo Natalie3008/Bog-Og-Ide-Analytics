@@ -45,7 +45,7 @@ public class SaleDB implements SaleDBIF {
 	}
 
 	// TODO comment
-	private ArrayList<Sale> buildSales(ResultSet resultSet) throws SQLException {
+	public ArrayList<Sale> buildSales(ResultSet resultSet) throws SQLException {
 		ArrayList<Sale> saleInformation = new ArrayList<>();
 		while (resultSet.next()) {
 			Sale saleInfo = buildSale(resultSet);
@@ -55,7 +55,7 @@ public class SaleDB implements SaleDBIF {
 	}
 
 	// TODO comment
-	private Sale buildSale(ResultSet resultSet) throws SQLException {
+	public Sale buildSale(ResultSet resultSet) throws SQLException {
 		Sale builtSale = null;
 
 		builtSale = new Sale(resultSet.getInt("ID"), resultSet.getDate("transactionDate"),
@@ -65,7 +65,7 @@ public class SaleDB implements SaleDBIF {
 	}
 
 	// TODO comment aaaaa
-	private Employee buildEmployee(int EmployeeCPR) throws SQLException {
+	public Employee buildEmployee(int EmployeeCPR) throws SQLException {
 		Employee builtEmployee = null;
 		String SelectEmployee = String.format("SELECT * FROM Employee WHERE EmployeeCPR = " + EmployeeCPR + "");
 		Statement statement = DBConnection.getInstance().getConnection().createStatement();
@@ -86,7 +86,7 @@ public class SaleDB implements SaleDBIF {
 		return builtEmployee;
 	}
 
-	private ArrayList<OrderLine> buildOrderLines(ResultSet resultSet) throws SQLException {
+	public ArrayList<OrderLine> buildOrderLines(ResultSet resultSet) throws SQLException {
 		ArrayList<OrderLine> orderLines = new ArrayList<>();
 		while (resultSet.next()) {
 			OrderLine orderLine = new OrderLine(new Sale(resultSet.getInt("saleID")), resultSet.getInt("quantity"),

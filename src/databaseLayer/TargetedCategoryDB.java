@@ -56,7 +56,7 @@ public class TargetedCategoryDB implements TargetedCategoryDBIF {
 		return result > 1;
 	}
 
-	private TargetedCategory buildCategory(ResultSet resultSet) throws SQLException {
+	public TargetedCategory buildCategory(ResultSet resultSet) throws SQLException {
 		TargetedCategory builtCategory = null;
 		builtCategory = new TargetedCategory(resultSet.getInt("ID"), resultSet.getString("title"),
 				resultSet.getInt("minimumAge"), resultSet.getInt("maximumAge"), resultSet.getString("gender"),
@@ -64,7 +64,7 @@ public class TargetedCategoryDB implements TargetedCategoryDBIF {
 		return builtCategory;
 	}
 
-	private ArrayList<TargetedCategory> buildCategories(ResultSet resultSet) throws SQLException {
+	public ArrayList<TargetedCategory> buildCategories(ResultSet resultSet) throws SQLException {
 		ArrayList<TargetedCategory> foundCategories = new ArrayList<>();
 		while (resultSet.next()) {
 			TargetedCategory category = buildCategory(resultSet);
