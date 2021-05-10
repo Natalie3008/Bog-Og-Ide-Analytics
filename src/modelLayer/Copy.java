@@ -10,12 +10,12 @@ public class Copy {
 	private String articleNumber; //unique number for every copy
 	private Date dateSold;
 	private Date receivedInStore;
-	private int daysInStock;
+	private long daysInStock;
 	
 
 	private Product product;
 
-	public Copy(String articleNumber, Date dateSold, Date receivedInStore, int daysInStock, Product product) {
+	public Copy(String articleNumber, Date dateSold, Date receivedInStore, long daysInStock, Product product) {
 		this.articleNumber = articleNumber;
 		this.dateSold = dateSold;
 		this.receivedInStore = receivedInStore;
@@ -55,12 +55,12 @@ public class Copy {
 		this.product = product;
 	}
 
-	public int getDaysInStock() {
+	public long getDaysInStock() {
 		return daysInStock;
 	}
 
-	public void setDaysInStock(int dateDifference) {
-		this.daysInStock = dateDifference;
+	public void setDaysInStock(long daysInStock) {
+		this.daysInStock = daysInStock;
 	}
 	
 }

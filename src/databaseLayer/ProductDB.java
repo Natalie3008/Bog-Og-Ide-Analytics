@@ -6,6 +6,8 @@ import modelLayer.Copy;
 import modelLayer.Game;
 
 import java.sql.*;
+import java.time.Duration;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 
 import modelLayer.Supplier;
@@ -20,7 +22,7 @@ public class ProductDB {
 
 				builtProduct = new Book(resultSet.getString("barcode"), resultSet.getString("title"),
 						resultSet.getDouble("costPrice"), resultSet.getDouble("RRP"), resultSet.getInt("amountInStock"),
-						resultSet.getString("publicationDate"), resultSet.getString("description"),
+						resultSet.getString("publicationDate"), resultSet.getString("description"), resultSet.getString("language"),
 						buildSupplier(resultSet.getInt("supplierCVR")), resultSet.getString("ISBN"),
 						resultSet.getString("author"), resultSet.getString("genre"));
 				builtProduct.setCopies(buildCopies(builtProduct, resultSet.getString("barcode"), "Book"));
@@ -29,7 +31,7 @@ public class ProductDB {
 			else if (selectedType.equals("Game")) {
 				builtProduct = new Game(resultSet.getString("barcode"), resultSet.getString("title"),
 						resultSet.getDouble("costPrice"), resultSet.getDouble("RRP"), resultSet.getInt("amountInStock"),
-						resultSet.getString("publicationDate"), resultSet.getString("description"),
+						resultSet.getString("publicationDate"), resultSet.getString("description"), resultSet.getString("language"),
 						buildSupplier(resultSet.getInt("supplierCVR")), resultSet.getString("type"));
 				builtProduct.setCopies(buildCopies(builtProduct, resultSet.getString("barcode"), "Game"));
 			}
@@ -55,7 +57,7 @@ public class ProductDB {
 		while (resultSet.next()) {
 			try {
 				builtCopies.add(new Copy(resultSet.getString("articleNumber"), resultSet.getDate("dateSold"),
-						resultSet.getDate("receivedInStore"), product));
+						resultSet.getDate("receivedInStore"), ChronoUnit.DAYS.between(resultSet.getDate("receivedInStore").toInstant(), resultSet.getDate("dateSold").toInstant()), product));
 
 			} catch (SQLException e) {
 				e.printStackTrace();
