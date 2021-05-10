@@ -38,6 +38,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 import java.awt.event.ActionEvent;
 import javax.swing.SwingConstants;
 import java.awt.Dimension;
@@ -162,23 +163,23 @@ public class AnalyticsPanel extends JPanel {
 	        final NumberAxis yAxis = new NumberAxis();
 	        xAxis.setLabel("Number of Month");
 	        //creating the chart
-	        final BarChart<String,Number> lineChart = 
-	                new BarChart<String,Number>(xAxis,yAxis);
+	        final BarChart<String,Number> lineChart = new BarChart<String,Number>(xAxis,yAxis);
 	                
 	        lineChart.setTitle("Stock Monitoring, 2010");
-	        
-	        //defining a series
 	        XYChart.Series series = new XYChart.Series();
 	        series.setName("My portfolio");
-	        //populating the series with data;
 	        
-	        series.getData().add(new XYChart.Data(products.get(1).getTitle(), 5));
-	        series.getData().add(new XYChart.Data("Yes", 14));
-	        series.getData().add(new XYChart.Data("No", 14));
-	        series.getData().add(new XYChart.Data("5", 24));
-	        series.getData().add(new XYChart.Data("7", 34));
-	        series.getData().add(new XYChart.Data("8", 36));
-	        series.getData().add(new XYChart.Data("3", 22));
+	        try {
+				List<Product> res = saleCtrl.getProductsAnalytics(null, "Game", 2021, 12, 10);
+				if(!res.isEmpty()) {
+					for(Product p : res) {
+						series.getData().add(new XYChart.Data(p.getTitle(), p.getCopies().size()));			
+					}
+				}
+			} catch (SQLException e) {
+				
+				e.printStackTrace();
+			}
 	        
 	        
 	        lineChart.getData().add(series);
