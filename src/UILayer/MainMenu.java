@@ -13,6 +13,8 @@ import javax.swing.JPopupMenu;
 import java.awt.Component;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.sql.SQLException;
+
 import javax.swing.JMenuItem;
 import java.awt.Color;
 import java.awt.Canvas;
@@ -102,7 +104,12 @@ public class MainMenu extends JFrame {
 		contentPane.add(panelCardLayout, gbc_cardLayout);
 		
 		
-		analyticsPanel = new AnalyticsPanel();
+		try {
+			analyticsPanel = new AnalyticsPanel();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		panelCardLayout.add(analyticsPanel, "analytics");
 		
 		JPanel productsPanel = new JPanel();

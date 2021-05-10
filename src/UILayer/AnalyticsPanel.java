@@ -6,10 +6,14 @@ import javafx.application.Platform;
 import javafx.embed.swing.JFXPanel;
 import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.chart.BarChart;
+import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import modelLayer.Employee;
+import modelLayer.OrderLine;
+import modelLayer.Product;
 import modelLayer.TargetedCategory;
 
 import java.awt.BorderLayout;
@@ -42,13 +46,17 @@ public class AnalyticsPanel extends JPanel {
 
 	private JComboBox<TargetedCategory> comboBox;
 	private DefaultComboBoxModel<TargetedCategory> comboBoxModel;
+	private SaleCtrl saleCtrl = new SaleCtrl();
 	
 	private TargetedCategoryCtrl targetedCategoryCtrl;
+	private ArrayList<Product> products = new ArrayList<>();
 	
-	public AnalyticsPanel() {
+	public AnalyticsPanel() throws SQLException {
 		targetedCategoryCtrl = new TargetedCategoryCtrl();
+		products = saleCtrl.getProductsAnalytics("Not sold", "Book", 0, 0, 0);
 		
 		initAndShowGUI();
+		
 		
 	}
 	
@@ -109,7 +117,7 @@ public class AnalyticsPanel extends JPanel {
 		comboBox.setBackground(Color.decode("#242A2B"));
 		comboBox.setForeground(Color.WHITE);
 		comboBox.setFont(new Font("Segoe UI", Font.BOLD, 18));
-		comboBox.setName("Select Category");
+		comboBox.setName("");
 		comboBox.setToolTipText("");
 		comboBox.setOpaque(false);
 		comboBox.setFocusable(false);
@@ -136,34 +144,41 @@ public class AnalyticsPanel extends JPanel {
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
-                initFX(fxPanel);
+                try {
+					initFX(fxPanel);
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
             }
         });
     }
 
-	 private Scene createScene() {
+	 @SuppressWarnings("unchecked")
+	private Scene createScene() {
 	        Group  root  =  new  Group();
 	        Scene  scene  =  new  Scene(root,100,100, javafx.scene.paint.Color.TRANSPARENT);
-
-	        final NumberAxis xAxis = new NumberAxis();
+	        String trying = products.get(1).getTitle();
+	        final CategoryAxis xAxis = new CategoryAxis();
 	        final NumberAxis yAxis = new NumberAxis();
 	        xAxis.setLabel("Number of Month");
 	        //creating the chart
-	        final LineChart<Number,Number> lineChart = 
-	                new LineChart<Number,Number>(xAxis,yAxis);
+	        final BarChart<String,Number> lineChart = 
+	                new BarChart<String,Number>(xAxis,yAxis);
 	                
 	        lineChart.setTitle("Stock Monitoring, 2010");
+	        
 	        //defining a series
 	        XYChart.Series series = new XYChart.Series();
 	        series.setName("My portfolio");
-	        //populating the series with data
-	        series.getData().add(new XYChart.Data(1, 23));
-	        series.getData().add(new XYChart.Data(2, 14));
-	        series.getData().add(new XYChart.Data(3, 15));
-	        series.getData().add(new XYChart.Data(4, 24));
-	        series.getData().add(new XYChart.Data(5, 34));
-	        series.getData().add(new XYChart.Data(6, 36));
-	        series.getData().add(new XYChart.Data(7, 22));
+	        //populating the series with data;
+	        
+	        series.getData().add(new XYChart.Data(products.get(1).getTitle(), 5));
+	        series.getData().add(new XYChart.Data("Yes", 14));
+	        series.getData().add(new XYChart.Data("No", 14));
+	        series.getData().add(new XYChart.Data("5", 24));
+	        series.getData().add(new XYChart.Data("7", 34));
+	        series.getData().add(new XYChart.Data("8", 36));
+	        series.getData().add(new XYChart.Data("3", 22));
 	        
 	        
 	        lineChart.getData().add(series);
@@ -173,7 +188,7 @@ public class AnalyticsPanel extends JPanel {
 	        return (scene);
 	    }
 	 
-    private void initFX(JFXPanel fxPanel) {
+    private void initFX(JFXPanel fxPanel) throws SQLException {
         // This method is invoked on JavaFX thread
         Scene scene = createScene();
         fxPanel.setScene(scene);
