@@ -109,7 +109,7 @@ public class AnalyticsPanel extends JPanel {
 		comboBox.setBackground(Color.decode("#242A2B"));
 		comboBox.setForeground(Color.WHITE);
 		comboBox.setFont(new Font("Segoe UI", Font.BOLD, 18));
-		comboBox.setName("");
+		comboBox.setName("Select Category");
 		comboBox.setToolTipText("");
 		comboBox.setOpaque(false);
 		comboBox.setFocusable(false);
@@ -164,11 +164,7 @@ public class AnalyticsPanel extends JPanel {
 	        series.getData().add(new XYChart.Data(5, 34));
 	        series.getData().add(new XYChart.Data(6, 36));
 	        series.getData().add(new XYChart.Data(7, 22));
-	        series.getData().add(new XYChart.Data(8, 45));
-	        series.getData().add(new XYChart.Data(9, 43));
-	        series.getData().add(new XYChart.Data(10, 17));
-	        series.getData().add(new XYChart.Data(11, 29));
-	        series.getData().add(new XYChart.Data(12, 25));
+	        
 	        
 	        lineChart.getData().add(series);
 

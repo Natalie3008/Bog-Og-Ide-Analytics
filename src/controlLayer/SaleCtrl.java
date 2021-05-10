@@ -56,4 +56,31 @@ public class SaleCtrl {
 		foundOrderLines = saleDb.getSalesAnalytics();
 		return foundOrderLines;
 	}
+	
+	//Sale CRUD in the section below
+	
+		//Create Sale
+		public boolean createSale(Sale sale) {
+		boolean result = true;
+
+		try {
+			saleDb.createSale(sale);
+		} catch (SQLException e) {
+			e.printStackTrace();
+			result = false;
+		}
+		return result;
+		}
+		
+		//Delete Sale
+		public boolean deleteSale(int ID) {
+			boolean result = true;
+			try {
+				saleDb.deleteSale(ID);
+			} catch (SQLException e) {
+				e.printStackTrace();
+				result = false;
+			}
+			return result;
+		}
 }

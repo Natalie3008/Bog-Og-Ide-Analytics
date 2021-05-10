@@ -103,14 +103,14 @@ public class SaleDB implements SaleDBIF {
 		String selectGamesFast = "SELECT * FROM Game JOIN Product ON Product.barcode = Game.barcode WHERE DATEDIFF(day, dateSold, receivedInStore) < 30;";
 		String selectBooksSlow = "SELECT * FROM Book JOIN Product ON Product.barcode = Book.barcode WHERE DATEDIFF(day, dateSold, receivedInStore) > 30;";
 		String selectGamesSlow = "SELECT * FROM Game JOIN Product ON Product.barcode = Game.barcode WHERE DATEDIFF(day, dateSold, receivedInStore) > 30;";
-		String selectBooksNotSold = "SELECT * FROM Book WHERE dateSold IS NULL;";
-		String selectGamesNotSold = "SELECT * FROM Game WHERE dateSold IS NULL;";
-		String selectBooksYear = "SELECT * FROM Book WHERE YEAR(dateSold) = " + year + ";";
-		String selectGamesYear = "SELECT * FROM Book WHERE YEAR(dateSold) = " + year + ";";
-		String selectBooksMonth = "SELECT * FROM Book WHERE MONTH(dateSold) = " + month + ";";
-		String selectGamesMonth = "SELECT * FROM Book WHERE MONTH(dateSold) = " + month + ";";
-		String selectBooksDay = "SELECT * FROM Book WHERE DAY(dateSold) = " + day + ";";
-		String selectGamesDay = "SELECT * FROM Book WHERE DAY(dateSold) = " + day + ";";
+		String selectBooksNotSold = "SELECT * FROM Book JOIN Product ON Product.barcode = Book.barcodeWHERE dateSold IS NULL;";
+		String selectGamesNotSold = "SELECT * FROM Game JOIN Product ON Product.barcode = Game.barcode WHERE dateSold IS NULL;";
+		String selectBooksYear = "SELECT * FROM Book JOIN Product ON Product.barcode = Book.barcode WHERE YEAR(dateSold) = " + year + ";";
+		String selectGamesYear = "SELECT * FROM Game JOIN Product ON Product.barcode = Game.barcode WHERE YEAR(dateSold) = " + year + ";";
+		String selectBooksMonth = "SELECT * FROM Book JOIN Product ON Product.barcode = Book.barcode WHERE MONTH(dateSold) = " + month + ";";
+		String selectGamesMonth = "SELECT * FROM Game JOIN Product ON Product.barcode = Game.barcode WHERE MONTH(dateSold) = " + month + ";";
+		String selectBooksDay = "SELECT * FROM Book JOIN Product ON Product.barcode = Book.barcode WHERE DAY(dateSold) = " + day + ";";
+		String selectGamesDay = "SELECT * FROM Game JOIN Product ON Product.barcode = Game.barcode WHERE DAY(dateSold) = " + day + ";";
 		String selectBarcodeMostProfit = "SELECT * FROM (" + "SELECT [barcode], [title]"
 				+ ",(quantity + COUNT(barcode)) * -(RRP - CostPrice) AS [Total Profit]" + "FROM [Product]"
 				+ "INNER JOIN [OrderLine]" + "ON [Product].[barcode] = [OrderLine].[productBarcode]"
@@ -121,9 +121,7 @@ public class SaleDB implements SaleDBIF {
 				if (type.equals("Book")) {
 					ResultSet resultSet = statement.executeQuery(selectBooksYear);
 					foundProducts.addAll(productDb.buildObjects(resultSet, "Book"));
-				} else if (type.equals("Game"))
-					;
-				{
+				} else if (type.equals("Game"))	{
 					ResultSet resultSet = statement.executeQuery(selectGamesYear);
 					foundProducts.addAll(productDb.buildObjects(resultSet, "Game"));
 				}
@@ -247,4 +245,21 @@ public class SaleDB implements SaleDBIF {
 		}
 		return foundOrderLines;
 	}
+	
+	//CRUD Sale
+	
+		//Create Sale by implementing into DB
+		public boolean createSale(Sale sale) throws SQLException {
+			String sqlSale = "INSERT INTO Sale (ID, transactionDate, tragetedCategoryID, paymentMethod, totalPrice, employeeCPR)"
+				+ " VALUES( " + sale.getID() + ", " + sale.getDate() + ", " + sale.getAgeCategory() + ", " + sale.getPaymentMethod() + ", " + sale.getTotalPrice() + ", " + sale.getTotalPrice() + ", " +  sale.getEmployee() + ")";
+			int resultSale = DBConnection.getInstance().executeUpdate(sqlSale);
+			return resultSale > 1;
+		}
+		
+		//Delete Sale by going into the DB
+		public boolean deleteSale(int ID) throws SQLException {
+			String sqlSale = "DELETE FROM Sale WHERE ID like '" + ID + "'";
+			int resultSale = DBConnection.getInstance().executeUpdate(sqlSale);
+			return resultSale > 1;
+		}
 }
