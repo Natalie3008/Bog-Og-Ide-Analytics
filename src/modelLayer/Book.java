@@ -12,8 +12,8 @@ public class Book extends Product {
 	private String genre;
 
 	public Book(String barcode, String title, double costPrice, double recommendedRetailPrice, int amountInStock,
-			String publicationDate, String description, Supplier supplier, String ISBN, String author, String genre) {
-		super(barcode, title, costPrice, recommendedRetailPrice, amountInStock, publicationDate, description, supplier);
+			String publicationDate, String description, String language, Supplier supplier, String ISBN, String author, String genre) {
+		super(barcode, title, costPrice, recommendedRetailPrice, amountInStock, publicationDate, description, language, supplier);
 		this.ISBN = ISBN;
 		this.author = author;
 		this.genre = genre;
