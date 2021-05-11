@@ -2,7 +2,7 @@ package modelLayer;
 
 public class Supplier {
 
-	private int CVR;
+	private long CVR;
 	private String name;
 	private String contactPerson;
 	private String address;
@@ -10,7 +10,7 @@ public class Supplier {
 	private String email;
 	private String productCategory;
 
-	public Supplier(int CVR, String name, String contactPerson, String address, String phoneNumber, String email,
+	public Supplier(long CVR, String name, String contactPerson, String address, String phoneNumber, String email,
 			String productCategory) {
 		this.CVR = CVR;
 		this.name = name;
@@ -21,12 +21,12 @@ public class Supplier {
 		this.productCategory = productCategory;
 	}
 
-	public int getCVR() {
+	public long getCVR() {
 		return CVR;
 	}
 
-	public void setCVR(int cVR) {
-		CVR = cVR;
+	public void setCVR(long CVR) {
+		this.CVR = CVR;
 	}
 
 	public String getName() {

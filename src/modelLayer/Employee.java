@@ -5,14 +5,14 @@ package modelLayer;
  * 
  */
 public class Employee {
-	private int CPR;
+	private long CPR;
 	private String name;
 	private String address;
 	private int phoneNumber;
 	private String email;
 	private String position; //such as manager, store clerk, student aid etc. 
 
-	public Employee(int CPR, String name, String address, int phoneNumber, String email, String position) {
+	public Employee(long CPR, String name, String address, int phoneNumber, String email, String position) {
 		this.CPR = CPR;
 		this.name = name;
 		this.address = address;
@@ -21,11 +21,11 @@ public class Employee {
 		this.position = position;
 	}
 
-	public int getCPR() {
+	public long getCPR() {
 		return CPR;
 	}
 
-	public void setCPR(int cPR) {
+	public void setCPR(long cPR) {
 		CPR = cPR;
 	}
 
