@@ -15,20 +15,20 @@ public interface SaleDBIF {
 	
 	ArrayList<Sale> buildSales(ResultSet resultSet) throws SQLException;
 	
-	 Sale buildSale(ResultSet resultSet) throws SQLException;
+	Sale buildSale(ResultSet resultSet) throws SQLException;
 	 
-	 Employee buildEmployee(int EmployeeCPR) throws SQLException;
+	Employee buildEmployee(int EmployeeCPR) throws SQLException;
 	 
-	 ArrayList<OrderLine> buildOrderLines(ResultSet resultSet) throws SQLException;
+	ArrayList<OrderLine> buildOrderLines(ResultSet resultSet) throws SQLException;
 	 
-	 ArrayList<Product> getProductsAnalytics(String choice, String type, int year, int month, int day)
+	ArrayList<Product> getProductsAnalytics(String choice, String type, int year, int month, int day)
 				throws SQLException;
 	 
-	 ArrayList<OrderLine> getSalesAnalytics();
+	ArrayList<OrderLine> getSalesAnalytics();
 	 
-	 Sale createSale(Sale sale, Copy copy) throws SQLException;
+	Sale createSale(Sale sale, Copy copy) throws SQLException;
 	 
-	 boolean deleteSale(int ID) throws SQLException;
+	boolean deleteSale(int ID) throws SQLException;
 	
 	
 }

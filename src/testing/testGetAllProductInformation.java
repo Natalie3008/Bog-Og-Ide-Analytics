@@ -4,7 +4,10 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotSame;
 
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 import org.junit.After;
 import org.junit.Before;
@@ -52,6 +55,13 @@ public class testGetAllProductInformation {
 		productDB.createGame(game, copyGame);
 	}
 
+	@Test
+	public void testDatesStuff() {
+
+		// Arrange
+		System.out.println("no");
+	}
+	
 	// should run smoothly
 	@Test
 	public void testReturnAllProducts() {
