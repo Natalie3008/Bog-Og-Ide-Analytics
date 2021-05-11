@@ -60,11 +60,11 @@ public class SaleCtrl {
 	//Sale CRUD in the section below
 	
 		//Create Sale
-		public boolean createSale(Sale sale) {
+		public boolean createSale(Sale sale, Copy copy) {
 		boolean result = true;
 
 		try {
-			saleDb.createSale(sale);
+			saleDb.createSale(sale, copy);
 		} catch (SQLException e) {
 			e.printStackTrace();
 			result = false;
