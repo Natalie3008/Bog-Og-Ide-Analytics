@@ -26,7 +26,7 @@ public interface SaleDBIF {
 	 
 	 ArrayList<OrderLine> getSalesAnalytics();
 	 
-	 boolean createSale(Sale sale) throws SQLException;
+	 boolean createSale(Sale sale, Copy copy) throws SQLException;
 	 
 	 boolean deleteSale(int ID) throws SQLException;
 	
