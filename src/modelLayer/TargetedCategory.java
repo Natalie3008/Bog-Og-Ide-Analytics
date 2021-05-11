@@ -88,7 +88,7 @@ public class TargetedCategory {
 	
 	@Override 
 	public String toString() {
-		return String.format("TITLE: "+title+", AGE: "+minimumAge+"-"+maximumAge+", GENDER: "+gender);
+		return String.format("TITLE: "+title);
 	}
 	
 }

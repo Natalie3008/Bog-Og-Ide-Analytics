@@ -7,6 +7,8 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JToolBar;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
 import javax.swing.JPopupMenu;
@@ -50,6 +52,8 @@ public class MainMenu extends JFrame {
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
+	
+		
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
