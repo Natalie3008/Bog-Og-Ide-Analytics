@@ -38,16 +38,16 @@ public class testGetAllProductInformation {
 		productDB = new ProductDB();
 		saleDB = new SaleDB();
 		productCtrl = new ProductCtrl();
-		Supplier bookSupplier = new Supplier(123456, "Johnny Supplies", "Martin Smile", "Vesterbro 27",
-				"+45605139782", "smileyMartey@gmail.com", "I give u book");
+		Supplier bookSupplier = new Supplier(123456, "Johnny Supplies", "Martin Smile", "Vesterbro 27", "+45605139782",
+				"smileyMartey@gmail.com", "I give u book");
 		Supplier gameSupplier = new Supplier(123456, "Supplier Johnny", "Bob Smile", "Vesterbro 27", "+4560514859",
 				"bobIsInLove@gmail.com", "I give u game");
-		book = new Book("1234", "Spork", 14.4, 55.7, 10, "07/11/2020", "Description of pretty book", bookSupplier,
-				"ABC123", "Foon ", "novel");
-		copyBook = new Copy("BC125", null, null, book);
+		book = new Book("1234", "Spork", 14.4, 55.7, 10, "07/11/2020", "Description of pretty book", "English",
+				bookSupplier, "ABC123", "Foon ", "novel");
+		copyBook = new Copy("BC125", null, null, 15, book);
 		game = new Game("9876", "Exploding puppies", 150.00, 250.50, 1, "21/11/2020", "description of pretty game",
-				gameSupplier, "puzzle");
-		copyGame = new Copy("GM148", null, null, game);
+				"English", gameSupplier, "puzzle");
+		copyGame = new Copy("GM148", null, null, 12, game);
 		productDB.createBook(book, copyBook);
 		productDB.createGame(game, copyGame);
 	}

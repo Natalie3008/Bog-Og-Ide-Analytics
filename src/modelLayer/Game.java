@@ -10,8 +10,8 @@ public class Game extends Product {
 	private String type; //such as board game, card game, puzzle etc.
 
 	public Game(String barcode, String title, double costPrice, double recommendedRetailPrice, int amountInStock,
-			String publicationDate, String description, Supplier supplier, String type) {
-		super(barcode, title, costPrice, recommendedRetailPrice, amountInStock, publicationDate, description, supplier);
+			String publicationDate, String description, String language, Supplier supplier, String type) {
+		super(barcode, title, costPrice, recommendedRetailPrice, amountInStock, publicationDate, description, language, supplier);
 		this.type = type;
 	}
 

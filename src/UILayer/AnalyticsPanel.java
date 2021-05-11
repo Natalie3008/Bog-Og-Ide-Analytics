@@ -154,7 +154,7 @@ public class AnalyticsPanel extends JPanel {
 
 	private Scene createScene() {
 	        Group  root  =  new  Group();
-	        Scene  scene  =  new  Scene(root,300,300, javafx.scene.paint.Color.TRANSPARENT);
+	        Scene  scene  =  new  Scene(root,100,100, javafx.scene.paint.Color.TRANSPARENT);
 	        final CategoryAxis xAxis = new CategoryAxis();
 	        final NumberAxis yAxis = new NumberAxis();
 	        xAxis.setLabel("Number of Month");

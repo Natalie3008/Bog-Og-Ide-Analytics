@@ -14,12 +14,11 @@ public class Product {
 	private String publicationDate;
 	private String description;
 	private Supplier supplier;
+	private String language;
 	private ArrayList<Copy> copies;
 
 	public Product(String barcode, String title, double costPrice, double recommendedRetailPrice, int amountInStock,
-			String publicationDate, String description, Supplier supplier)
-
-	{
+			String publicationDate, String description, String language, Supplier supplier) {
 		this.barcode = barcode;
 		this.title = title;
 		this.costPrice = costPrice;
@@ -27,6 +26,7 @@ public class Product {
 		this.amountInStock = amountInStock;
 		this.publicationDate = publicationDate;
 		this.description = description;
+		this.language = language;
 		this.supplier = supplier;
 		copies = new ArrayList<Copy>();
 	}
@@ -90,6 +90,14 @@ public class Product {
 
 	public void setDescription(String description) {
 		this.description = description;
+	}
+	
+	public String getLanguage() {
+		return language;
+	}
+	
+	public void setLanguage(String language) {
+		this.language = language;
 	}
 
 	public Supplier getSupplier() {
