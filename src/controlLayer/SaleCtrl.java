@@ -46,9 +46,9 @@ public class SaleCtrl {
 	}
 
 	public ArrayList<Product> getProductsAnalytics(String choice, String type, int year, int month, int day) throws SQLException {
-		ArrayList<Product> foundBooks = new ArrayList<Product>();
-		foundBooks = saleDb.getProductsAnalytics(choice, type, year, month, day);
-		return foundBooks;
+		ArrayList<Product> foundProducts = new ArrayList<Product>();
+		foundProducts = saleDb.getProductsAnalytics(choice, type, year, month, day);
+		return foundProducts;
 	}
 
 	public ArrayList<OrderLine> getSalesAnalytics() throws SQLException {
