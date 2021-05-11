@@ -8,6 +8,7 @@ import java.util.*;
 
 import modelLayer.Sale;
 import modelLayer.TargetedCategory;
+import modelLayer.Copy;
 import modelLayer.Employee;
 import modelLayer.OrderLine;
 import modelLayer.Product;
@@ -248,13 +249,16 @@ public class SaleDB implements SaleDBIF {
 	
 	//CRUD Sale
 	
-		//Create Sale by implementing into DB
-		public boolean createSale(Sale sale) throws SQLException {
-			String sqlSale = "INSERT INTO Sale (ID, transactionDate, tragetedCategoryID, paymentMethod, totalPrice, employeeCPR)"
-				+ " VALUES( " + sale.getID() + ", " + sale.getDate() + ", " + sale.getAgeCategory() + ", " + sale.getPaymentMethod() + ", " + sale.getTotalPrice() + ", " + sale.getTotalPrice() + ", " +  sale.getEmployee() + ")";
-			int resultSale = DBConnection.getInstance().executeUpdate(sqlSale);
-			return resultSale > 1;
-		}
+	 //Create Sale by implementing into DB and updating dateSold via articleNumber in Copy
+    public Sale createSale(Sale sale, Copy copy) throws SQLException {
+        String sqlSale = "INSERT INTO Sale (ID, transactionDate, targetedCategoryID, paymentMethod, totalPrice, employeeCPR)"
+            + " VALUES( " + sale.getID() + ", " + sale.getDate() + ", " + sale.getAgeCategory() + ", " + sale.getPaymentMethod() + ", " + sale.getTotalPrice() + ", " + sale.getTotalPrice() + ", " +  sale.getEmployee() + ")";
+        String sqlCopy = "UPDATE Copy SET dateSold = '" + sale.getDate() + "' WHERE articleNumber = "
+                + copy.getArticleNumber();
+        int resultCopy = DBConnection.getInstance().executeUpdate(sqlCopy);
+        int resultSale = DBConnection.getInstance().executeUpdate(sqlSale);
+        return resultSale == 1 && resultCopy == 1 ? sale : null;
+        }
 		
 		//Delete Sale by going into the DB
 		public boolean deleteSale(int ID) throws SQLException {
