@@ -139,7 +139,6 @@ public class SaleDB implements SaleDBIF {
 					ResultSet resultSet = statement.executeQuery(selectBooksSlow);
 					foundProducts.addAll(productDb.buildObjects(resultSet, "Book"));
 				} else if (type.equals("Game"))
-					;
 				{
 					ResultSet resultSet = statement.executeQuery(selectGamesSlow);
 					foundProducts.addAll(productDb.buildObjects(resultSet, "Game"));
@@ -156,7 +155,6 @@ public class SaleDB implements SaleDBIF {
 					ResultSet resultSet = statement.executeQuery(selectBooksFast);
 					foundProducts.addAll(productDb.buildObjects(resultSet, "Book"));
 				} else if (type.equals("Game"))
-					;
 				{
 					ResultSet resultSet = statement.executeQuery(selectGamesFast);
 					foundProducts.addAll(productDb.buildObjects(resultSet, "Game"));
@@ -173,7 +171,6 @@ public class SaleDB implements SaleDBIF {
 					ResultSet resultSet = statement.executeQuery(selectBooksMonth);
 					foundProducts.addAll(productDb.buildObjects(resultSet, "Book"));
 				} else if (type.equals("Game"))
-					;
 				{
 					ResultSet resultSet = statement.executeQuery(selectGamesMonth);
 					foundProducts.addAll(productDb.buildObjects(resultSet, "Game"));
@@ -190,7 +187,6 @@ public class SaleDB implements SaleDBIF {
 					ResultSet resultSet = statement.executeQuery(selectBooksNotSold);
 					foundProducts.addAll(productDb.buildObjects(resultSet, "Book"));
 				} else if (type.equals("Game"))
-					;
 				{
 					ResultSet resultSet = statement.executeQuery(selectGamesNotSold);
 					foundProducts.addAll(productDb.buildObjects(resultSet, "Game"));
@@ -207,7 +203,6 @@ public class SaleDB implements SaleDBIF {
 					ResultSet resultSet = statement.executeQuery(selectBooksDay);
 					foundProducts.addAll(productDb.buildObjects(resultSet, "Book"));
 				} else if (type.equals("Game"))
-					;
 				{
 					ResultSet resultSet = statement.executeQuery(selectGamesDay);
 					foundProducts.addAll(productDb.buildObjects(resultSet, "Game"));
