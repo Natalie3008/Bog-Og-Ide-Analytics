@@ -24,6 +24,32 @@ public class CustomButton extends JButton{
 		
 	}
 	
+	public CustomButton(String name, String color) {
+		
+		setBorder(new EmptyBorder(5, 20, 5, 20));
+		setFocusable(false);
+		setFocusTraversalKeysEnabled(false);
+		setFocusPainted(false);
+		setFont(new Font("Segoe UI", Font.BOLD, 14));
+		setForeground(Color.WHITE);
+		setBackground(Color.decode(color));
+		setText(name);
+		
+	}
+	
+public CustomButton(String name, String color, int fontSize) {
+		
+		setBorder(new EmptyBorder(5, 20, 5, 20));
+		setFocusable(false);
+		setFocusTraversalKeysEnabled(false);
+		setFocusPainted(false);
+		setFont(new Font("Segoe UI", Font.BOLD, fontSize));
+		setForeground(Color.WHITE);
+		setBackground(Color.decode(color));
+		setText(name);
+		
+	}
+	
 	
 
 }
