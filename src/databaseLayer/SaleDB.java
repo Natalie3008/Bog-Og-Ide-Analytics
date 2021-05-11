@@ -247,7 +247,7 @@ public class SaleDB implements SaleDBIF {
 	 //Create Sale by implementing into DB and updating dateSold via articleNumber in Copy
     public Sale createSale(Sale sale, Copy copy) throws SQLException {
         String sqlSale = "INSERT INTO Sale (ID, transactionDate, targetedCategoryID, paymentMethod, totalPrice, employeeCPR)"
-            + " VALUES( " + sale.getID() + ", " + sale.getDate() + ", " + sale.getAgeCategory() + ", " + sale.getPaymentMethod() + ", " + sale.getTotalPrice() + ", " + sale.getTotalPrice() + ", " +  sale.getEmployee() + ")";
+            + " VALUES( " + sale.getID() + ", " + sale.getDate() + ", " + sale.getAgeCategory() + ", " + sale.getPaymentMethod() + ", "+ sale.getTotalPrice() + ", " +  sale.getEmployee() + ")";
         String sqlCopy = "UPDATE Copy SET dateSold = '" + sale.getDate() + "' WHERE articleNumber = "
                 + copy.getArticleNumber();
         int resultCopy = DBConnection.getInstance().executeUpdate(sqlCopy);
