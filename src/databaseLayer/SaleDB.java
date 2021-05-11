@@ -111,10 +111,10 @@ public class SaleDB implements SaleDBIF {
 		String selectGamesMonth = "SELECT * FROM Game JOIN Product ON Product.barcode = Game.barcode WHERE MONTH(dateSold) = " + month + ";";
 		String selectBooksDay = "SELECT * FROM Book JOIN Product ON Product.barcode = Book.barcode WHERE DAY(dateSold) = " + day + ";";
 		String selectGamesDay = "SELECT * FROM Game JOIN Product ON Product.barcode = Game.barcode WHERE DAY(dateSold) = " + day + ";";
-		String selectBarcodeMostProfit = "SELECT * FROM (" + "SELECT [barcode], [title]"
-				+ ",(quantity + COUNT(barcode)) * (RRP - CostPrice) AS [Total Profit]" + "FROM [Product]"
-				+ "INNER JOIN [OrderLine]" + "ON [Product].[barcode] = [OrderLine].[productBarcode]"
-				+ "GROUP BY [barcode], [quantity], [title], [RRP], [CostPrice]" + ") AS [Derived table]";
+		String selectBarcodeMostProfit = "SELECT * FROM (SELECT [barcode], [title]"
+				+ ",(quantity + COUNT(barcode)) * (RRP - CostPrice) AS [Total Profit] FROM [Product]"
+				+ "INNER JOIN [OrderLine] ON [Product].[barcode] = [OrderLine].[productBarcode]"
+				+ "GROUP BY [barcode], [quantity], [title], [RRP], [CostPrice]) AS [Derived table]";
 		if (year > 0) {
 			try {
 				Statement statement = DBConnection.getInstance().getConnection().createStatement();
