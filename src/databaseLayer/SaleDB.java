@@ -8,6 +8,7 @@ import java.util.*;
 
 import modelLayer.Sale;
 import modelLayer.TargetedCategory;
+import modelLayer.Copy;
 import modelLayer.Employee;
 import modelLayer.OrderLine;
 import modelLayer.Product;
@@ -99,10 +100,10 @@ public class SaleDB implements SaleDBIF {
 	public ArrayList<Product> getProductsAnalytics(String choice, String type, int year, int month, int day)
 			throws SQLException {
 		ArrayList<Product> foundProducts = new ArrayList<Product>();
-		String selectBooksFast = "SELECT * FROM Book JOIN Product ON Product.barcode = Book.barcode WHERE DATEDIFF(day, dateSold, receivedInStore) < 30;";
-		String selectGamesFast = "SELECT * FROM Game JOIN Product ON Product.barcode = Game.barcode WHERE DATEDIFF(day, dateSold, receivedInStore) < 30;";
-		String selectBooksSlow = "SELECT * FROM Book JOIN Product ON Product.barcode = Book.barcode WHERE DATEDIFF(day, dateSold, receivedInStore) > 30;";
-		String selectGamesSlow = "SELECT * FROM Game JOIN Product ON Product.barcode = Game.barcode WHERE DATEDIFF(day, dateSold, receivedInStore) > 30;";
+		String selectBooksFast = "SELECT *, DATEDIFF(day, receivedInStore, dateSold) AS dateDifference FROM Book JOIN Product ON Product.barcode = Book.barcode WHERE DATEDIFF(day, dateSold, receivedInStore) < 30;";
+		String selectGamesFast = "SELECT *, DATEDIFF(day, receivedInStore, dateSold) AS dateDifference FROM Game JOIN Product ON Product.barcode = Game.barcode WHERE DATEDIFF(day, dateSold, receivedInStore) < 30;";
+		String selectBooksSlow = "SELECT *, DATEDIFF(day, receivedInStore, dateSold) AS dateDifference FROM Book JOIN Product ON Product.barcode = Book.barcode WHERE DATEDIFF(day, dateSold, receivedInStore) > 30;";
+		String selectGamesSlow = "SELECT *, DATEDIFF(day, receivedInStore, dateSold) AS dateDifference FROM Game JOIN Product ON Product.barcode = Game.barcode WHERE DATEDIFF(day, dateSold, receivedInStore) > 30;";
 		String selectBooksNotSold = "SELECT * FROM Book JOIN Product ON Product.barcode = Book.barcode WHERE dateSold IS NULL;";
 		String selectGamesNotSold = "SELECT * FROM Game JOIN Product ON Product.barcode = Game.barcode WHERE dateSold IS NULL;";
 		String selectBooksYear = "SELECT * FROM Book JOIN Product ON Product.barcode = Book.barcode WHERE YEAR(dateSold) = " + year + ";";
@@ -111,10 +112,10 @@ public class SaleDB implements SaleDBIF {
 		String selectGamesMonth = "SELECT * FROM Game JOIN Product ON Product.barcode = Game.barcode WHERE MONTH(dateSold) = " + month + ";";
 		String selectBooksDay = "SELECT * FROM Book JOIN Product ON Product.barcode = Book.barcode WHERE DAY(dateSold) = " + day + ";";
 		String selectGamesDay = "SELECT * FROM Game JOIN Product ON Product.barcode = Game.barcode WHERE DAY(dateSold) = " + day + ";";
-		String selectBarcodeMostProfit = "SELECT * FROM (" + "SELECT [barcode], [title]"
-				+ ",(quantity + COUNT(barcode)) * (RRP - CostPrice) AS [Total Profit]" + "FROM [Product]"
-				+ "INNER JOIN [OrderLine]" + "ON [Product].[barcode] = [OrderLine].[productBarcode]"
-				+ "GROUP BY [barcode], [quantity], [title], [RRP], [CostPrice]" + ") AS [Derived table]";
+		String selectBarcodeMostProfit = "SELECT * FROM (SELECT [barcode], [title]"
+				+ ",(quantity + COUNT(barcode)) * (RRP - CostPrice) AS [Total Profit] FROM [Product]"
+				+ "INNER JOIN [OrderLine] ON [Product].[barcode] = [OrderLine].[productBarcode]"
+				+ "GROUP BY [barcode], [quantity], [title], [RRP], [CostPrice]) AS [Derived table]";
 		if (year > 0) {
 			try {
 				Statement statement = DBConnection.getInstance().getConnection().createStatement();
@@ -248,13 +249,16 @@ public class SaleDB implements SaleDBIF {
 	
 	//CRUD Sale
 	
-		//Create Sale by implementing into DB
-		public boolean createSale(Sale sale) throws SQLException {
-			String sqlSale = "INSERT INTO Sale (ID, transactionDate, tragetedCategoryID, paymentMethod, totalPrice, employeeCPR)"
-				+ " VALUES( " + sale.getID() + ", " + sale.getDate() + ", " + sale.getAgeCategory() + ", " + sale.getPaymentMethod() + ", " + sale.getTotalPrice() + ", " + sale.getTotalPrice() + ", " +  sale.getEmployee() + ")";
-			int resultSale = DBConnection.getInstance().executeUpdate(sqlSale);
-			return resultSale > 1;
-		}
+	 //Create Sale by implementing into DB and updating dateSold via articleNumber in Copy
+    public Sale createSale(Sale sale, Copy copy) throws SQLException {
+        String sqlSale = "INSERT INTO Sale (ID, transactionDate, targetedCategoryID, paymentMethod, totalPrice, employeeCPR)"
+            + " VALUES( " + sale.getID() + ", " + sale.getDate() + ", " + sale.getAgeCategory() + ", " + sale.getPaymentMethod() + ", " + sale.getTotalPrice() + ", " + sale.getTotalPrice() + ", " +  sale.getEmployee() + ")";
+        String sqlCopy = "UPDATE Copy SET dateSold = '" + sale.getDate() + "' WHERE articleNumber = "
+                + copy.getArticleNumber();
+        int resultCopy = DBConnection.getInstance().executeUpdate(sqlCopy);
+        int resultSale = DBConnection.getInstance().executeUpdate(sqlSale);
+        return resultSale == 1 && resultCopy == 1 ? sale : null;
+        }
 		
 		//Delete Sale by going into the DB
 		public boolean deleteSale(int ID) throws SQLException {
