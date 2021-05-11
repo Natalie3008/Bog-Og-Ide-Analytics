@@ -57,7 +57,7 @@ public class ProductDB {
 		while (resultSet.next()) {
 			try {
 				builtCopies.add(new Copy(resultSet.getString("articleNumber"), resultSet.getDate("dateSold"),
-						resultSet.getDate("receivedInStore"), ChronoUnit.DAYS.between(resultSet.getDate("receivedInStore").toInstant(), resultSet.getDate("dateSold").toInstant()), product));
+						resultSet.getDate("receivedInStore"), product));
 
 			} catch (SQLException e) {
 				e.printStackTrace();
