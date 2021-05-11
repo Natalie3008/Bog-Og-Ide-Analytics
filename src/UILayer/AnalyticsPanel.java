@@ -110,6 +110,11 @@ public class AnalyticsPanel extends JPanel {
 		booksButtonPanel.add(fastSellingBooksBtn);
 		
 		CustomButton slowSellingBooksBtn = new CustomButton("SLOW SELLING BOOKS", "#1A1F20",18);
+		slowSellingBooksBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {	
+				getSlowestSellingBooks(booksFxPanel);
+			}
+		});
 		booksButtonPanel.add(slowSellingBooksBtn);
 		tabbedPane.setForegroundAt(0, Color.WHITE);
 		tabbedPane.setBackgroundAt(0, Color.decode("#1A1F20"));
@@ -131,9 +136,19 @@ public class AnalyticsPanel extends JPanel {
 		Games.add(gamesButtonPanel, BorderLayout.NORTH);
 		
 		CustomButton fastSellingGamesBtn = new CustomButton("FAST SELLING GAMES", "#1A1F20",18);
+		fastSellingGamesBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {	
+				getFastestSellingGames(gamesFxPanel);
+			}
+		});
 		gamesButtonPanel.add(fastSellingGamesBtn);
 		
 		CustomButton slowSellingGamesBtn = new CustomButton("SLOW SELLING GAMES", "#1A1F20",18);
+		slowSellingGamesBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {	
+				getSlowestSellingGames(gamesFxPanel);
+			}
+		});
 		gamesButtonPanel.add(slowSellingGamesBtn);
 		tabbedPane.setForegroundAt(1, Color.WHITE);
 		tabbedPane.setBackgroundAt(1, Color.decode("#1A1F20"));
@@ -241,23 +256,71 @@ public class AnalyticsPanel extends JPanel {
     
     protected void getFastestSellingBooks(JFXPanel fxPanel) {
     		
-    	/*try {
-			//List<Product> res = saleCtrl.getProductsAnalytics("Fast", "Book", 0, 0, 0);
-			initChart(fxPanel,"FASTEST SELLING BOOKS", res);
+    	try {
+			List<Product> res = saleCtrl.getProductsAnalytics("Fast", "Book", 0, 0, 0);
 			
+			Platform.runLater(new Runnable() {
+	            @Override
+	            public void run() {          
+	            	Scene scene = jfxChart.updateChart(fxPanel,"FASTEST SELLING BOOKS", res);
+	            	fxPanel.setScene(scene);
+	            }
+	        });
 		} catch (SQLException e) {
 			e.printStackTrace();
-		}*/
-    	List<Product> res = new ArrayList<Product>();
-    	
-    	Platform.runLater(new Runnable() {
-            @Override
-            public void run() {          
-            	Scene scene = jfxChart.updateChart(fxPanel,"FASTEST SELLING BOOKS", res);
-            	fxPanel.setScene(scene);
-            }
-        });
-    	
+		}	
+    }
+    
+    protected void getSlowestSellingBooks(JFXPanel fxPanel) {
+		
+    	try {
+			List<Product> res = saleCtrl.getProductsAnalytics("Slow", "Book", 0, 0, 0);
+			
+			Platform.runLater(new Runnable() {
+	            @Override
+	            public void run() {          
+	            	Scene scene = jfxChart.updateChart(fxPanel,"SLOWEST SELLING BOOKS", res);
+	            	fxPanel.setScene(scene);
+	            }
+	        });
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}	
+    }
+    
+    protected void getFastestSellingGames(JFXPanel fxPanel) {
+		
+    	try {
+			List<Product> res = saleCtrl.getProductsAnalytics("Fast", "Game", 0, 0, 0);
+			
+			Platform.runLater(new Runnable() {
+	            @Override
+	            public void run() {          
+	            	Scene scene = jfxChart.updateChart(fxPanel,"FASTEST SELLING GAMES", res);
+	            	fxPanel.setScene(scene);
+	            }
+	        });
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}	
+    }
+    
+    protected void getSlowestSellingGames(JFXPanel fxPanel) {
+		
+    	try {
+			List<Product> res = saleCtrl.getProductsAnalytics("Slow", "Game", 0, 0, 0);
+			
+			Platform.runLater(new Runnable() {
+	            @Override
+	            public void run() {          
+	            	Scene scene = jfxChart.updateChart(fxPanel,"SLOWEST SELLING GAMES", res);
+	            	fxPanel.setScene(scene);
+	            }
+	        });
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}	
     }
 
+    
 }

@@ -38,6 +38,8 @@ public class JFXChart{
         
         barChart.getData().add(series);
 
+        String cssPath = this.getClass().getResource("chartStyle.css").toExternalForm();
+        scene.getStylesheets().add(cssPath);
         root.getChildren().add(barChart);  
         
         return (scene);
@@ -55,25 +57,26 @@ public class JFXChart{
         barChart.setTitle(chartName);
         
         XYChart.Series series = new XYChart.Series();
-        series.getData().add(new XYChart.Data("Placeholder 3", 300));
-       /* try {
+        try {
 	        List<Product> res = products;
 	        if(!res.isEmpty()) {
 	        	int index = 0;
 	        	for(Product p : res) {
 	        		if(series.getData().size()<10) {
 	        			String title = p.getTitle();
-	        			int dateDiff = 1;
+	        			long dateDiff = p.getCopies().get(index).getDaysInStock();
 	        			series.getData().add(new XYChart.Data(title, dateDiff));	
 	        		}
 	        	}
 	        }
         } catch (Exception e) {
 
-        }*/
+  
+        }
         
         barChart.getData().add(series);
-
+        String cssPath = this.getClass().getResource("chartStyle.css").toExternalForm();
+        scene.getStylesheets().add(cssPath);
         root.getChildren().add(barChart);  
         
         return (scene);

@@ -139,7 +139,6 @@ public class SaleDB implements SaleDBIF {
 					ResultSet resultSet = statement.executeQuery(selectBooksSlow);
 					foundProducts.addAll(productDb.buildObjects(resultSet, "Book"));
 				} else if (type.equals("Game"))
-					;
 				{
 					ResultSet resultSet = statement.executeQuery(selectGamesSlow);
 					foundProducts.addAll(productDb.buildObjects(resultSet, "Game"));
@@ -156,7 +155,6 @@ public class SaleDB implements SaleDBIF {
 					ResultSet resultSet = statement.executeQuery(selectBooksFast);
 					foundProducts.addAll(productDb.buildObjects(resultSet, "Book"));
 				} else if (type.equals("Game"))
-					;
 				{
 					ResultSet resultSet = statement.executeQuery(selectGamesFast);
 					foundProducts.addAll(productDb.buildObjects(resultSet, "Game"));
@@ -173,7 +171,6 @@ public class SaleDB implements SaleDBIF {
 					ResultSet resultSet = statement.executeQuery(selectBooksMonth);
 					foundProducts.addAll(productDb.buildObjects(resultSet, "Book"));
 				} else if (type.equals("Game"))
-					;
 				{
 					ResultSet resultSet = statement.executeQuery(selectGamesMonth);
 					foundProducts.addAll(productDb.buildObjects(resultSet, "Game"));
@@ -190,7 +187,6 @@ public class SaleDB implements SaleDBIF {
 					ResultSet resultSet = statement.executeQuery(selectBooksNotSold);
 					foundProducts.addAll(productDb.buildObjects(resultSet, "Book"));
 				} else if (type.equals("Game"))
-					;
 				{
 					ResultSet resultSet = statement.executeQuery(selectGamesNotSold);
 					foundProducts.addAll(productDb.buildObjects(resultSet, "Game"));
@@ -207,7 +203,6 @@ public class SaleDB implements SaleDBIF {
 					ResultSet resultSet = statement.executeQuery(selectBooksDay);
 					foundProducts.addAll(productDb.buildObjects(resultSet, "Book"));
 				} else if (type.equals("Game"))
-					;
 				{
 					ResultSet resultSet = statement.executeQuery(selectGamesDay);
 					foundProducts.addAll(productDb.buildObjects(resultSet, "Game"));
@@ -252,7 +247,7 @@ public class SaleDB implements SaleDBIF {
 	 //Create Sale by implementing into DB and updating dateSold via articleNumber in Copy
     public Sale createSale(Sale sale, Copy copy) throws SQLException {
         String sqlSale = "INSERT INTO Sale (ID, transactionDate, targetedCategoryID, paymentMethod, totalPrice, employeeCPR)"
-            + " VALUES( " + sale.getID() + ", " + sale.getDate() + ", " + sale.getAgeCategory() + ", " + sale.getPaymentMethod() + ", " + sale.getTotalPrice() + ", " + sale.getTotalPrice() + ", " +  sale.getEmployee() + ")";
+            + " VALUES( " + sale.getID() + ", " + sale.getDate() + ", " + sale.getAgeCategory() + ", " + sale.getPaymentMethod() + ", "+ sale.getTotalPrice() + ", " +  sale.getEmployee() + ")";
         String sqlCopy = "UPDATE Copy SET dateSold = '" + sale.getDate() + "' WHERE articleNumber = "
                 + copy.getArticleNumber();
         int resultCopy = DBConnection.getInstance().executeUpdate(sqlCopy);

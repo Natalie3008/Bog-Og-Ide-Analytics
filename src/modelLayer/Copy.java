@@ -1,10 +1,12 @@
 package modelLayer;
 
+import static java.time.temporal.ChronoUnit.DAYS;
+import java.sql.Date;
 /* The Copy class holds information of individual copies
  * of various Products in the system. These products can
  * be books or games. 
  */
-import java.util.Date;
+
 
 public class Copy {
 	private String articleNumber; //unique number for every copy
@@ -15,12 +17,12 @@ public class Copy {
 
 	private Product product;
 
-	public Copy(String articleNumber, Date dateSold, Date receivedInStore, long daysInStock, Product product) {
+	public Copy(String articleNumber, Date dateSold, Date receivedInStore, Product product) {
 		this.articleNumber = articleNumber;
 		this.dateSold = dateSold;
 		this.receivedInStore = receivedInStore;
 		this.product = product;
-		this.daysInStock = daysInStock;
+		this.daysInStock = DAYS.between(receivedInStore.toLocalDate(), dateSold.toLocalDate());
 	}
 
 	public String getArticleNumber() {
