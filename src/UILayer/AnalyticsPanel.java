@@ -54,7 +54,6 @@ public class AnalyticsPanel extends JPanel {
 	
 	public AnalyticsPanel() throws SQLException {
 		targetedCategoryCtrl = new TargetedCategoryCtrl();
-		products = saleCtrl.getProductsAnalytics("Not sold", "Book", 0, 0, 0);
 		
 		initAndShowGUI();
 		
@@ -75,14 +74,22 @@ public class AnalyticsPanel extends JPanel {
 		gbl_analyticsMenu.rowWeights = new double[]{0.0, Double.MIN_VALUE};
 		analyticsMenu.setLayout(gbl_analyticsMenu);
 		
+		
+		comboBoxModel = new DefaultComboBoxModel<TargetedCategory>();
+		try {
+			ArrayList<TargetedCategory> targetedCategories = targetedCategoryCtrl.getAllTargetedCategories();
+			comboBoxModel.addAll(targetedCategories);
+		}catch(SQLException e) {
+			
+		}
+		
 		JButton manageTargetCategoriesButton = new JButton("MANAGE TARGET CATEGORIES");
-		manageTargetCategoriesButton.setHorizontalAlignment(SwingConstants.LEFT);
 		GridBagConstraints gbc_manageTargetCategoriesButton = new GridBagConstraints();
-		gbc_manageTargetCategoriesButton.anchor = GridBagConstraints.NORTHWEST;
 		gbc_manageTargetCategoriesButton.insets = new Insets(0, 0, 0, 5);
 		gbc_manageTargetCategoriesButton.gridx = 0;
 		gbc_manageTargetCategoriesButton.gridy = 0;
 		analyticsMenu.add(manageTargetCategoriesButton, gbc_manageTargetCategoriesButton);
+		manageTargetCategoriesButton.setHorizontalAlignment(SwingConstants.LEFT);
 		manageTargetCategoriesButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				manageTargetCategoryDialog();
@@ -98,15 +105,6 @@ public class AnalyticsPanel extends JPanel {
 		manageTargetCategoriesButton.setFocusPainted(false);
 		manageTargetCategoriesButton.setFocusTraversalKeysEnabled(false);
 		manageTargetCategoriesButton.setFont(new Font("Segoe UI", Font.BOLD, 18));
-		
-		
-		comboBoxModel = new DefaultComboBoxModel<TargetedCategory>();
-		try {
-			ArrayList<TargetedCategory> targetedCategories = targetedCategoryCtrl.getAllTargetedCategories();
-			comboBoxModel.addAll(targetedCategories);
-		}catch(SQLException e) {
-			
-		}
 		
 		comboBox = new JComboBox<TargetedCategory>(comboBoxModel);
 				
@@ -125,20 +123,20 @@ public class AnalyticsPanel extends JPanel {
 		comboBox.setFocusTraversalKeysEnabled(false);
 		comboBox.setBorder(new EmptyBorder(5, 5, 5, 0));
 		
-		final JFXPanel fxPanel = new JFXPanel();
-        fxPanel.setLayout(new BorderLayout());
-        fxPanel.setVisible(true);
-		
 		JPanel analyticsPanel = new JPanel();
 		analyticsPanel.setBackground(Color.decode("#242A2B"));
 		add(analyticsPanel, BorderLayout.CENTER);
 		analyticsPanel.setLayout(new BorderLayout(0, 0));
-		analyticsPanel.add(fxPanel);
 		
 		JSeparator separator = new JSeparator();
 		separator.setBorder(new EmptyBorder(0, 30, 0, 30));
 		separator.setPreferredSize(new Dimension(0, 3));
-		analyticsPanel.add(separator, BorderLayout.NORTH);
+		analyticsPanel.add(separator, BorderLayout.WEST);
+		
+		final JFXPanel fxPanel = new JFXPanel();
+		fxPanel.setLayout(new BorderLayout());
+		fxPanel.setVisible(true);
+		analyticsPanel.add(fxPanel, BorderLayout.NORTH);
         
         
 
@@ -154,7 +152,6 @@ public class AnalyticsPanel extends JPanel {
         });
     }
 
-	 @SuppressWarnings("unchecked")
 	private Scene createScene() {
 	        Group  root  =  new  Group();
 	        Scene  scene  =  new  Scene(root,100,100, javafx.scene.paint.Color.TRANSPARENT);
@@ -169,10 +166,15 @@ public class AnalyticsPanel extends JPanel {
 	        series.setName("My portfolio");
 	        
 	        try {
-				List<Product> res = saleCtrl.getProductsAnalytics(null, "Game", 2021, 12, 10);
+				List<Product> res = saleCtrl.getProductsAnalytics("Fast", "Game", 0, 0, 0);
 				if(!res.isEmpty()) {
+					int index = 0;
 					for(Product p : res) {
-						series.getData().add(new XYChart.Data(p.getTitle(), p.getCopies().size()));			
+						if(series.getData().size()<10) {
+							String title = p.getTitle();
+							int dateDiff = p.getCopies().get(index).getDaysInStock();
+							series.getData().add(new XYChart.Data(title, dateDiff));	
+						}
 					}
 				}
 			} catch (SQLException e) {
