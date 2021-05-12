@@ -39,6 +39,7 @@ import java.awt.Font;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.CardLayout;
+import java.awt.Toolkit;
 
 public class MainMenu extends JFrame {
 
@@ -70,6 +71,8 @@ public class MainMenu extends JFrame {
 	 * Create the frame.
 	 */
 	public MainMenu() {
+		setTitle("Bog-Og-Id\u00E9 Analytics");
+		setIconImage(Toolkit.getDefaultToolkit().getImage(MainMenu.class.getResource("/Assets/logo-icon.png")));
 		setMinimumSize(new Dimension(1600, 900));
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
