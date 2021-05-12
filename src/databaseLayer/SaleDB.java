@@ -100,10 +100,10 @@ public class SaleDB implements SaleDBIF {
 	public ArrayList<Product> getProductsAnalytics(String choice, String type, int year, int month, int day)
 			throws SQLException {
 		ArrayList<Product> foundProducts = new ArrayList<Product>();
-		String selectBooksFast = "SELECT *, DATEDIFF(day, receivedInStore, dateSold) AS dateDifference FROM Book JOIN Product ON Product.barcode = Book.barcode WHERE DATEDIFF(day, dateSold, receivedInStore) < 30;";
-		String selectGamesFast = "SELECT *, DATEDIFF(day, receivedInStore, dateSold) AS dateDifference FROM Game JOIN Product ON Product.barcode = Game.barcode WHERE DATEDIFF(day, dateSold, receivedInStore) < 30;";
-		String selectBooksSlow = "SELECT *, DATEDIFF(day, receivedInStore, dateSold) AS dateDifference FROM Book JOIN Product ON Product.barcode = Book.barcode WHERE DATEDIFF(day, dateSold, receivedInStore) > 30;";
-		String selectGamesSlow = "SELECT *, DATEDIFF(day, receivedInStore, dateSold) AS dateDifference FROM Game JOIN Product ON Product.barcode = Game.barcode WHERE DATEDIFF(day, dateSold, receivedInStore) > 30;";
+		String selectBooksFast = "SELECT * FROM Book JOIN Product ON Product.barcode = Book.barcode WHERE DATEDIFF(day, receivedInStore, dateSold) < 30;";
+		String selectGamesFast = "SELECT * FROM Game JOIN Product ON Product.barcode = Game.barcode WHERE DATEDIFF(day, receivedInStore, dateSold) < 30;";
+		String selectBooksSlow = "SELECT * FROM Book JOIN Product ON Product.barcode = Book.barcode WHERE DATEDIFF(day, receivedInStore, dateSold) > 30;";
+		String selectGamesSlow = "SELECT * FROM Game JOIN Product ON Product.barcode = Game.barcode WHERE DATEDIFF(day, receivedInStore, dateSold) > 30;";
 		String selectBooksNotSold = "SELECT * FROM Book JOIN Product ON Product.barcode = Book.barcode WHERE dateSold IS NULL;";
 		String selectGamesNotSold = "SELECT * FROM Game JOIN Product ON Product.barcode = Game.barcode WHERE dateSold IS NULL;";
 		String selectBooksYear = "SELECT * FROM Book JOIN Product ON Product.barcode = Book.barcode WHERE YEAR(dateSold) = " + year + ";";
