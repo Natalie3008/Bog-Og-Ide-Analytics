@@ -1,7 +1,7 @@
 package modelLayer;
 
 import java.util.ArrayList;
-import java.util.Date;
+import java.sql.Date;
 
 // Sale class holds information about sales in the system 
 public class Sale {
