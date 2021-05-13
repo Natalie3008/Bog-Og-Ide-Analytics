@@ -1,5 +1,6 @@
 package databaseLayer;
 
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 import modelLayer.*;
@@ -8,8 +9,26 @@ public class EmployeeDB {
 
 	//Create an employee in DB
 	public boolean createEmployee(Employee employee) throws SQLException {
-		String sqlEmployee = ")";
-		int resultEmployee = DBConnection.getInstance().executeUpdate(sqlEmployee);
+		String sqlEmployee = "INSERT INTO Employee (CPR, name, address, phoneNumber, email, position)" + " VALUES(?, ?, ?, ?, ?, ?)";
+		int resultEmployee = 0;
+		try {
+			DBConnection.getInstance().getConnection().setAutoCommit(false);
+			PreparedStatement statementEmployee = DBConnection.getInstance().getConnection().prepareStatement(sqlEmployee);
+			statementEmployee.setLong(1, employee.getCPR());
+			statementEmployee.setString(2, employee.getName());
+			statementEmployee.setString(3, employee.getAddress());
+			statementEmployee.setInt(4,  employee.getPhoneNumber());
+			statementEmployee.setString(5, employee.getEmail());
+			statementEmployee.setString(6, employee.getPosition());
+			resultEmployee = statementEmployee.executeUpdate();
+			statementEmployee.close();
+			DBConnection.getInstance().getConnection().commit();
+		}
+		catch (SQLException e) {
+			e.printStackTrace();
+			DBConnection.getInstance().getConnection().rollback();
+			throw e;
+		}
 		return resultEmployee > 1;
 	}
 		
