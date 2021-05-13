@@ -269,7 +269,6 @@ public class SaleDB implements SaleDBIF {
 		} catch (SQLException e) {
 			e.printStackTrace();
 			DBConnection.getInstance().getConnection().rollback();
-			throw e;
 			
 		}
 		try {
@@ -289,8 +288,19 @@ public class SaleDB implements SaleDBIF {
 
 	// Delete Sale by going into the DB
 	public boolean deleteSale(int ID) throws SQLException {
-		String sqlSale = "DELETE FROM Sale WHERE ID = " + ID;
-		int resultSale = DBConnection.getInstance().executeUpdate(sqlSale);
+		String sqlSale = "DELETE FROM Sale WHERE ID = ?";
+		int resultSale = 0;
+		try {
+			DBConnection.getInstance().getConnection().setAutoCommit(false);
+		PreparedStatement statement = DBConnection.getInstance().getConnection().prepareStatement(sqlSale);
+		statement.setInt(1, ID);
+		resultSale = statement.executeUpdate();
+		DBConnection.getInstance().getConnection().commit();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			DBConnection.getInstance().getConnection().rollback();
+			throw e;
+		}
 		return resultSale > 1;
 	}
 }

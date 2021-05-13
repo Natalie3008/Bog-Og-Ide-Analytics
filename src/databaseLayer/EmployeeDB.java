@@ -9,7 +9,7 @@ public class EmployeeDB {
 
 	//Create an employee in DB
 	public boolean createEmployee(Employee employee) throws SQLException {
-		String sqlEmployee = "INSERT INTO Employee (CPR, name, address, phoneNumber, email, position)" + " VALUES(?, ?, ?, ?, ?, ?)";
+		String sqlEmployee = "INSERT INTO Employee (CPR, name, address, phoneNumber, email, position) VALUES(?, ?, ?, ?, ?, ?)";
 		int resultEmployee = 0;
 		try {
 			DBConnection.getInstance().getConnection().setAutoCommit(false);
