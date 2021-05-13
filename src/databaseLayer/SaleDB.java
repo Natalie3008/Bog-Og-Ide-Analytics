@@ -1,5 +1,6 @@
 package databaseLayer;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -32,7 +33,7 @@ public class SaleDB implements SaleDBIF {
 
 	public Sale getOneSaleInformation(int ID) throws SQLException {
 		Sale foundSale = null;
-		String selectSale = "SELECT * FROM Sale WHERE ID = " + ID + "";
+		String selectSale = "SELECT * FROM Sale WHERE ID = " + ID;
 		try {
 			Statement statement = DBConnection.getInstance().getConnection().createStatement();
 			ResultSet resultSet = statement.executeQuery(selectSale);
@@ -100,18 +101,24 @@ public class SaleDB implements SaleDBIF {
 	public ArrayList<Product> getProductsAnalytics(String choice, String type, int year, int month, int day)
 			throws SQLException {
 		ArrayList<Product> foundProducts = new ArrayList<Product>();
-		String selectBooksFast = "SELECT *, DATEDIFF(day, receivedInStore, dateSold) AS dateDifference FROM Book JOIN Product ON Product.barcode = Book.barcode WHERE DATEDIFF(day, dateSold, receivedInStore) < 30;";
-		String selectGamesFast = "SELECT *, DATEDIFF(day, receivedInStore, dateSold) AS dateDifference FROM Game JOIN Product ON Product.barcode = Game.barcode WHERE DATEDIFF(day, dateSold, receivedInStore) < 30;";
-		String selectBooksSlow = "SELECT *, DATEDIFF(day, receivedInStore, dateSold) AS dateDifference FROM Book JOIN Product ON Product.barcode = Book.barcode WHERE DATEDIFF(day, dateSold, receivedInStore) > 30;";
-		String selectGamesSlow = "SELECT *, DATEDIFF(day, receivedInStore, dateSold) AS dateDifference FROM Game JOIN Product ON Product.barcode = Game.barcode WHERE DATEDIFF(day, dateSold, receivedInStore) > 30;";
+		String selectBooksFast = "SELECT * FROM Book JOIN Product ON Product.barcode = Book.barcode WHERE DATEDIFF(day, receivedInStore, dateSold) < 30;";
+		String selectGamesFast = "SELECT * FROM Game JOIN Product ON Product.barcode = Game.barcode WHERE DATEDIFF(day, receivedInStore, dateSold) < 30;";
+		String selectBooksSlow = "SELECT * FROM Book JOIN Product ON Product.barcode = Book.barcode WHERE DATEDIFF(day, receivedInStore, dateSold) > 30;";
+		String selectGamesSlow = "SELECT * FROM Game JOIN Product ON Product.barcode = Game.barcode WHERE DATEDIFF(day, receivedInStore, dateSold) > 30;";
 		String selectBooksNotSold = "SELECT * FROM Book JOIN Product ON Product.barcode = Book.barcode WHERE dateSold IS NULL;";
 		String selectGamesNotSold = "SELECT * FROM Game JOIN Product ON Product.barcode = Game.barcode WHERE dateSold IS NULL;";
-		String selectBooksYear = "SELECT * FROM Book JOIN Product ON Product.barcode = Book.barcode WHERE YEAR(dateSold) = " + year + ";";
-		String selectGamesYear = "SELECT * FROM Game JOIN Product ON Product.barcode = Game.barcode WHERE YEAR(dateSold) = " + year + ";";
-		String selectBooksMonth = "SELECT * FROM Book JOIN Product ON Product.barcode = Book.barcode WHERE MONTH(dateSold) = " + month + ";";
-		String selectGamesMonth = "SELECT * FROM Game JOIN Product ON Product.barcode = Game.barcode WHERE MONTH(dateSold) = " + month + ";";
-		String selectBooksDay = "SELECT * FROM Book JOIN Product ON Product.barcode = Book.barcode WHERE DAY(dateSold) = " + day + ";";
-		String selectGamesDay = "SELECT * FROM Game JOIN Product ON Product.barcode = Game.barcode WHERE DAY(dateSold) = " + day + ";";
+		String selectBooksYear = "SELECT * FROM Book JOIN Product ON Product.barcode = Book.barcode WHERE YEAR(dateSold) = "
+				+ year + ";";
+		String selectGamesYear = "SELECT * FROM Game JOIN Product ON Product.barcode = Game.barcode WHERE YEAR(dateSold) = "
+				+ year + ";";
+		String selectBooksMonth = "SELECT * FROM Book JOIN Product ON Product.barcode = Book.barcode WHERE MONTH(dateSold) = "
+				+ month + ";";
+		String selectGamesMonth = "SELECT * FROM Game JOIN Product ON Product.barcode = Game.barcode WHERE MONTH(dateSold) = "
+				+ month + ";";
+		String selectBooksDay = "SELECT * FROM Book JOIN Product ON Product.barcode = Book.barcode WHERE DAY(dateSold) = "
+				+ day + ";";
+		String selectGamesDay = "SELECT * FROM Game JOIN Product ON Product.barcode = Game.barcode WHERE DAY(dateSold) = "
+				+ day + ";";
 		String selectBarcodeMostProfit = "SELECT * FROM (SELECT [barcode], [title]"
 				+ ",(quantity + COUNT(barcode)) * (RRP - CostPrice) AS [Total Profit] FROM [Product]"
 				+ "INNER JOIN [OrderLine] ON [Product].[barcode] = [OrderLine].[productBarcode]"
@@ -122,7 +129,7 @@ public class SaleDB implements SaleDBIF {
 				if (type.equals("Book")) {
 					ResultSet resultSet = statement.executeQuery(selectBooksYear);
 					foundProducts.addAll(productDb.buildObjects(resultSet, "Book"));
-				} else if (type.equals("Game"))	{
+				} else if (type.equals("Game")) {
 					ResultSet resultSet = statement.executeQuery(selectGamesYear);
 					foundProducts.addAll(productDb.buildObjects(resultSet, "Game"));
 				}
@@ -131,15 +138,14 @@ public class SaleDB implements SaleDBIF {
 			}
 
 		}
-		
+
 		else if (choice.equals("Slow")) {
 			try {
 				Statement statement = DBConnection.getInstance().getConnection().createStatement();
 				if (type.equals("Book")) {
 					ResultSet resultSet = statement.executeQuery(selectBooksSlow);
 					foundProducts.addAll(productDb.buildObjects(resultSet, "Book"));
-				} else if (type.equals("Game"))
-				{
+				} else if (type.equals("Game")) {
 					ResultSet resultSet = statement.executeQuery(selectGamesSlow);
 					foundProducts.addAll(productDb.buildObjects(resultSet, "Game"));
 				}
@@ -147,15 +153,14 @@ public class SaleDB implements SaleDBIF {
 				e.printStackTrace();
 			}
 		}
-		
+
 		else if (choice.equals("Fast")) {
 			try {
 				Statement statement = DBConnection.getInstance().getConnection().createStatement();
 				if (type.equals("Book")) {
 					ResultSet resultSet = statement.executeQuery(selectBooksFast);
 					foundProducts.addAll(productDb.buildObjects(resultSet, "Book"));
-				} else if (type.equals("Game"))
-				{
+				} else if (type.equals("Game")) {
 					ResultSet resultSet = statement.executeQuery(selectGamesFast);
 					foundProducts.addAll(productDb.buildObjects(resultSet, "Game"));
 				}
@@ -163,15 +168,14 @@ public class SaleDB implements SaleDBIF {
 				e.printStackTrace();
 			}
 		}
-		
+
 		else if (month > 0) {
 			try {
 				Statement statement = DBConnection.getInstance().getConnection().createStatement();
 				if (type.equals("Book")) {
 					ResultSet resultSet = statement.executeQuery(selectBooksMonth);
 					foundProducts.addAll(productDb.buildObjects(resultSet, "Book"));
-				} else if (type.equals("Game"))
-				{
+				} else if (type.equals("Game")) {
 					ResultSet resultSet = statement.executeQuery(selectGamesMonth);
 					foundProducts.addAll(productDb.buildObjects(resultSet, "Game"));
 				}
@@ -179,15 +183,14 @@ public class SaleDB implements SaleDBIF {
 				e.printStackTrace();
 			}
 		}
-		
+
 		else if (choice.equals("Not sold")) {
 			try {
 				Statement statement = DBConnection.getInstance().getConnection().createStatement();
 				if (type.equals("Book")) {
 					ResultSet resultSet = statement.executeQuery(selectBooksNotSold);
 					foundProducts.addAll(productDb.buildObjects(resultSet, "Book"));
-				} else if (type.equals("Game"))
-				{
+				} else if (type.equals("Game")) {
 					ResultSet resultSet = statement.executeQuery(selectGamesNotSold);
 					foundProducts.addAll(productDb.buildObjects(resultSet, "Game"));
 				}
@@ -195,15 +198,14 @@ public class SaleDB implements SaleDBIF {
 				e.printStackTrace();
 			}
 		}
-		
+
 		else if (day > 0) {
 			try {
 				Statement statement = DBConnection.getInstance().getConnection().createStatement();
 				if (type.equals("Book")) {
 					ResultSet resultSet = statement.executeQuery(selectBooksDay);
 					foundProducts.addAll(productDb.buildObjects(resultSet, "Book"));
-				} else if (type.equals("Game"))
-				{
+				} else if (type.equals("Game")) {
 					ResultSet resultSet = statement.executeQuery(selectGamesDay);
 					foundProducts.addAll(productDb.buildObjects(resultSet, "Game"));
 				}
@@ -211,7 +213,7 @@ public class SaleDB implements SaleDBIF {
 				e.printStackTrace();
 			}
 		}
-		
+
 		else if (choice.equals("Most profit")) {
 			try {
 				Statement statement = DBConnection.getInstance().getConnection().createStatement();
@@ -230,7 +232,7 @@ public class SaleDB implements SaleDBIF {
 	public ArrayList<OrderLine> getSalesAnalytics() {
 		ArrayList<OrderLine> foundOrderLines = new ArrayList<OrderLine>();
 		String selectBarcodeBest = "SELECT y.saleID ,y.productBarcode ,y.quantity FROM OrderLine y INNER JOIN (SELECT productBarcode, COUNT(*) AS CountOf"
-				+ " FROM OrderLine" + " GROUP BY productBarcode" + " HAVING COUNT(*) > 1"
+				+ " FROM OrderLine GROUP BY productBarcode HAVING COUNT(*) > 1"
 				+ " ) dt ON y.productBarcode=dt.productBarcode";
 		try {
 			Statement statement = DBConnection.getInstance().getConnection().createStatement();
@@ -241,24 +243,54 @@ public class SaleDB implements SaleDBIF {
 		}
 		return foundOrderLines;
 	}
-	
-	//CRUD Sale
-	
-	 //Create Sale by implementing into DB and updating dateSold via articleNumber in Copy
-    public Sale createSale(Sale sale, Copy copy) throws SQLException {
-        String sqlSale = "INSERT INTO Sale (ID, transactionDate, targetedCategoryID, paymentMethod, totalPrice, employeeCPR)"
-            + " VALUES( " + sale.getID() + ", " + sale.getDate() + ", " + sale.getAgeCategory() + ", " + sale.getPaymentMethod() + ", "+ sale.getTotalPrice() + ", " +  sale.getEmployee() + ")";
-        String sqlCopy = "UPDATE Copy SET dateSold = '" + sale.getDate() + "' WHERE articleNumber = "
-                + copy.getArticleNumber();
-        int resultCopy = DBConnection.getInstance().executeUpdate(sqlCopy);
-        int resultSale = DBConnection.getInstance().executeUpdate(sqlSale);
-        return resultSale == 1 && resultCopy == 1 ? sale : null;
-        }
-		
-		//Delete Sale by going into the DB
-		public boolean deleteSale(int ID) throws SQLException {
-			String sqlSale = "DELETE FROM Sale WHERE ID like '" + ID + "'";
-			int resultSale = DBConnection.getInstance().executeUpdate(sqlSale);
-			return resultSale > 1;
+
+	// CRUD Sale
+
+	// Create Sale by implementing into DB and updating dateSold via articleNumber
+	// in Copy
+	public Sale createSale(Sale sale, Copy copy) throws SQLException {
+		String sqlSale = "INSERT INTO Sale (ID, transactionDate, targetedCategoryID, paymentMethod, totalPrice, employeeCPR)"
+				+ " VALUES(?,?,?,?,?,?)";
+		String sqlCopy = "UPDATE Copy SET dateSold = ? WHERE articleNumber LIKE ?";
+		int resultSale = 0;
+		int resultCopy = 0;
+		try {
+			DBConnection.getInstance().getConnection().setAutoCommit(false);
+			PreparedStatement statementSale = DBConnection.getInstance().getConnection().prepareStatement(sqlSale);
+			statementSale.setInt(1, sale.getID());
+			statementSale.setDate(2, sale.getDate());
+			statementSale.setInt(3, sale.getAgeCategory().getID());
+			statementSale.setString(4,  sale.getPaymentMethod());
+			statementSale.setDouble(5, sale.getTotalPrice());
+			statementSale.setLong(6, sale.getEmployee().getCPR());
+			resultSale = statementSale.executeUpdate();
+			statementSale.close();
+			DBConnection.getInstance().getConnection().commit();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			DBConnection.getInstance().getConnection().rollback();
+			throw e;
+			
 		}
+		try {
+			DBConnection.getInstance().getConnection().setAutoCommit(false);
+			PreparedStatement statementCopy = DBConnection.getInstance().getConnection().prepareStatement(sqlCopy);
+			statementCopy.setDate(1, copy.getDateSold());
+			statementCopy.setString(2, copy.getArticleNumber());
+			resultCopy = statementCopy.executeUpdate();
+			DBConnection.getInstance().getConnection().commit();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			DBConnection.getInstance().getConnection().rollback();
+			throw e;
+		}
+		return resultSale == 1 && resultCopy == 1 ? sale : null;
+	}
+
+	// Delete Sale by going into the DB
+	public boolean deleteSale(int ID) throws SQLException {
+		String sqlSale = "DELETE FROM Sale WHERE ID = " + ID;
+		int resultSale = DBConnection.getInstance().executeUpdate(sqlSale);
+		return resultSale > 1;
+	}
 }
