@@ -46,8 +46,8 @@ public class ProductDB {
 
 	public ArrayList<Copy> buildCopies(Product product, String barcode, String type) throws SQLException {
 		ArrayList<Copy> builtCopies = new ArrayList<Copy>();
-		String selectBookCopies = "SELECT * FROM Book WHERE Book.barcode LIKE '?'";
-		String selectGameCopies = "SELECT * FROM Game WHERE Game.barcode LIKE '?'";
+		String selectBookCopies = "SELECT * FROM Book WHERE Book.barcode LIKE ?";
+		String selectGameCopies = "SELECT * FROM Game WHERE Game.barcode LIKE ?";
 		ResultSet resultSet = null;
 		try {
 			DBConnection.getInstance().getConnection().setAutoCommit(false);
@@ -55,14 +55,13 @@ public class ProductDB {
 			PreparedStatement statementGames = DBConnection.getInstance().getConnection().prepareStatement(selectGameCopies);
 			statementBooks.setString(1,  barcode);
 			statementGames.setString(1, barcode);
-			statementBooks.close();
-			statementGames.close();
 			DBConnection.getInstance().getConnection().commit();
 			if (type.equals("Book")) {
-				resultSet = statementBooks.executeQuery(selectBookCopies);
+				resultSet = statementBooks.executeQuery();
 			} else if (type.equals("Game")) {
-				resultSet = statementGames.executeQuery(selectGameCopies);
+				resultSet = statementGames.executeQuery();
 			}
+			DBConnection.getInstance().getConnection().setAutoCommit(true);
 		} catch (SQLException e) {
 			e.printStackTrace();
 			DBConnection.getInstance().getConnection().rollback();
@@ -72,7 +71,6 @@ public class ProductDB {
 			try {
 				builtCopies.add(new Copy(resultSet.getString("articleNumber"), resultSet.getDate("dateSold"),
 						resultSet.getDate("receivedInStore"), product));
-
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
@@ -87,9 +85,8 @@ public class ProductDB {
 			DBConnection.getInstance().getConnection().setAutoCommit(false);
 			PreparedStatement statement = DBConnection.getInstance().getConnection().prepareStatement(selectSupplier);
 			statement.setLong(1, supplierCVR);
-			statement.close();
 			DBConnection.getInstance().getConnection().commit();
-			ResultSet resultSet = statement.executeQuery(selectSupplier);
+			ResultSet resultSet = statement.executeQuery();
 			if (resultSet.next()) {
 				builtSupplier = new Supplier(resultSet.getInt("CVR"), resultSet.getString("name"),
 						resultSet.getString("contactPerson"),
@@ -98,6 +95,7 @@ public class ProductDB {
 						resultSet.getString("phoneNumber"), resultSet.getString("email"),
 						resultSet.getString("category"));
 			}
+			DBConnection.getInstance().getConnection().setAutoCommit(true);
 		} catch (SQLException e) {
 			e.printStackTrace();
 			DBConnection.getInstance().getConnection().rollback();
@@ -108,18 +106,16 @@ public class ProductDB {
 
 	public Product getOneProductInformation(String barcode) throws SQLException {
 		Product foundProduct = null;
-		String selectBooks = "SELECT * FROM Book JOIN Product ON Book.barcode = Product.barcode WHERE Book.barcode LIKE '?'";
-		String selectGames = "SELECT * FROM Game JOIN Product ON Game.barcode = Product.barcode WHERE Game.barcode LIKE '?'";
+		String selectBooks = "SELECT * FROM Book JOIN Product ON Book.barcode = Product.barcode WHERE Book.barcode LIKE ?";
+		String selectGames = "SELECT * FROM Game JOIN Product ON Game.barcode = Product.barcode WHERE Game.barcode LIKE ?";
 		try {
 			DBConnection.getInstance().getConnection().setAutoCommit(false);
 			PreparedStatement statementBooks = DBConnection.getInstance().getConnection().prepareStatement(selectBooks);
 			PreparedStatement statementGames = DBConnection.getInstance().getConnection().prepareStatement(selectGames);
 			statementBooks.setString(1, barcode);
 			statementGames.setString(1, barcode);
-			statementGames.close();
-			statementBooks.close();
 			DBConnection.getInstance().getConnection().commit();
-			ResultSet resultSetBook = statementBooks.executeQuery(selectBooks);
+			ResultSet resultSetBook = statementBooks.executeQuery();
 			if (resultSetBook.next()) {
 				foundProduct = buildObject(resultSetBook, "Book");
 			}
@@ -127,6 +123,7 @@ public class ProductDB {
 			if (resultSetGame.next()) {
 				foundProduct = buildObject(resultSetGame, "Game");
 			}
+			DBConnection.getInstance().getConnection().setAutoCommit(true);
 		} catch (SQLException e) {
 			e.printStackTrace();
 			DBConnection.getInstance().getConnection().rollback();
@@ -182,8 +179,9 @@ public class ProductDB {
 			statementProduct.setString(7, book.getDescription());
 			statementProduct.setLong(8, book.getSupplier().getCVR());
 			resultProduct = statementProduct.executeUpdate();
-			statementProduct.close();
 			DBConnection.getInstance().getConnection().commit();
+			statementProduct.close();
+			DBConnection.getInstance().getConnection().setAutoCommit(true);
 		} catch (SQLException e) {
 			e.printStackTrace();
 			DBConnection.getInstance().getConnection().rollback();
@@ -201,6 +199,8 @@ public class ProductDB {
 			statementBook.setDate(7, copy.getDateSold());
 			resultBook = statementBook.executeUpdate();
 			DBConnection.getInstance().getConnection().commit();
+			statementBook.close();
+			DBConnection.getInstance().getConnection().setAutoCommit(true);
 		} catch (SQLException e) {
 			e.printStackTrace();
 			DBConnection.getInstance().getConnection().rollback();
@@ -235,8 +235,9 @@ public class ProductDB {
 			statementGame.setDate(5, copy.getDateSold());
 			resultGame = statementGame.executeUpdate();
 			resultProduct = statementProduct.executeUpdate();
-			statementProduct.close();
 			DBConnection.getInstance().getConnection().commit();
+			statementProduct.close();
+			DBConnection.getInstance().getConnection().setAutoCommit(true);
 		} catch (SQLException e) {
 			e.printStackTrace();
 			DBConnection.getInstance().getConnection().rollback();
@@ -245,9 +246,9 @@ public class ProductDB {
 	}
 
 	public boolean deleteProduct(String articleNumber, String barcode) throws SQLException {
-		String sqlProduct = "DELETE FROM Product WHERE barcode LIKE '?'";
-		String sqlBook = "DELETE FROM Book WHERE articleNumber LIKE '?'";
-		String sqlGame = "DELETE FROM Game WHERE articleNumber LIKE '?'";
+		String sqlProduct = "DELETE FROM Product WHERE barcode LIKE ?";
+		String sqlBook = "DELETE FROM Book WHERE articleNumber LIKE ?";
+		String sqlGame = "DELETE FROM Game WHERE articleNumber LIKE ?";
 		int resultBook = 0;
 		int resultGame = 0;
 		int resultProduct = 0;
@@ -264,6 +265,9 @@ public class ProductDB {
 			resultBook = statementBook.executeUpdate();
 			resultGame = statementGame.executeUpdate();
 			DBConnection.getInstance().getConnection().commit();
+			statementBook.close();
+			statementGame.close();
+			DBConnection.getInstance().getConnection().setAutoCommit(true);
 		} catch (SQLException e) {
 			e.printStackTrace();
 			DBConnection.getInstance().getConnection().rollback();
@@ -273,7 +277,7 @@ public class ProductDB {
 	}
 
 	public Product updateAmountInStock(Product product) throws SQLException {
-		String sqlUpdate = "UPDATE Product SET amountInStock = ? WHERE barcode LIKE '?'";
+		String sqlUpdate = "UPDATE Product SET amountInStock = ? WHERE barcode LIKE ?";
 		int result = 0;
 		try {
 			DBConnection.getInstance().getConnection().setAutoCommit(false);
@@ -282,6 +286,8 @@ public class ProductDB {
 			statement.setString(2, product.getBarcode());
 			result = statement.executeUpdate();
 			DBConnection.getInstance().getConnection().commit();
+			statement.close();
+			DBConnection.getInstance().getConnection().setAutoCommit(true);
 		} catch (SQLException e) {
 			e.printStackTrace();
 			DBConnection.getInstance().getConnection().rollback();
@@ -291,8 +297,8 @@ public class ProductDB {
 	}
 
 	public Copy updateDateSold(Copy copy) throws SQLException {
-		String sqlGame = "UPDATE Game SET dateSold = '?' WHERE articleNumber LIKE '?'";
-		String sqlBook = "UPDATE Book SET dateSold = '?' WHERE articleNumber LIKE '?'";
+		String sqlGame = "UPDATE Game SET dateSold = ? WHERE articleNumber LIKE ?";
+		String sqlBook = "UPDATE Book SET dateSold = ? WHERE articleNumber LIKE ?";
 		int resultGame = 0;
 		int resultBook = 0;
 		try {
@@ -305,9 +311,10 @@ public class ProductDB {
 			statementBook.setString(2, copy.getArticleNumber());
 			resultGame = statementGame.executeUpdate();
 			resultBook = statementBook.executeUpdate();
+			DBConnection.getInstance().getConnection().commit();
 			statementGame.close();
 			statementBook.close();
-			DBConnection.getInstance().getConnection().commit();
+			DBConnection.getInstance().getConnection().setAutoCommit(true);
 		} catch (SQLException e) {
 			e.printStackTrace();
 			DBConnection.getInstance().getConnection().rollback();
@@ -317,7 +324,7 @@ public class ProductDB {
 	}
 
 	public Product updateRRP(Product product) throws SQLException {
-		String sqlUpdate = "UPDATE Product SET RRP = ? WHERE barcode LIKE '?'";
+		String sqlUpdate = "UPDATE Product SET RRP = ? WHERE barcode LIKE ?";
 		int result = 0;
 		try {
 			DBConnection.getInstance().getConnection().setAutoCommit(false);
@@ -326,8 +333,9 @@ public class ProductDB {
 			statement.setString(2, product.getBarcode());
 			result = statement.executeUpdate();
 			result = statement.executeUpdate();
-			statement.close();
 			DBConnection.getInstance().getConnection().commit();
+			statement.close();
+			DBConnection.getInstance().getConnection().setAutoCommit(true);
 		} catch (SQLException e) {
 			e.printStackTrace();
 			DBConnection.getInstance().getConnection().rollback();
