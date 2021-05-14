@@ -39,10 +39,10 @@ public class EmployeeCtrl {
 			return result;
 	}
 		
-		public boolean updateAddress(Employee employee) {
+		public boolean updateAddress(Employee employee, String street, String city, int zip, String country) {
 			boolean result = true;
 			try {
-				employeeDb.updateAddress(employee);
+				employeeDb.updateAddress(employee, street, city, zip, country);
 			} catch (SQLException e) {
 				e.printStackTrace();
 				result = false;
