@@ -24,6 +24,8 @@ public class TargetedCategoryDB implements TargetedCategoryDBIF {
 			statementCopy.setString(6, targetedCategory.getOther());
 			resultCategory = statementCopy.executeUpdate();
 			DBConnection.getInstance().getConnection().commit();
+			statementCopy.close();
+			DBConnection.getInstance().getConnection().setAutoCommit(true);
 		} catch (SQLException e) {
 			e.printStackTrace();
 			DBConnection.getInstance().getConnection().rollback();
@@ -46,6 +48,8 @@ public class TargetedCategoryDB implements TargetedCategoryDBIF {
 			statementCopy.setInt(6, targetedCategory.getID());
 			resultCategory = statementCopy.executeUpdate();
 			DBConnection.getInstance().getConnection().commit();
+			statementCopy.close();
+			DBConnection.getInstance().getConnection().setAutoCommit(true);
 		} catch (SQLException e) {
 			e.printStackTrace();
 			DBConnection.getInstance().getConnection().rollback();
@@ -77,6 +81,8 @@ public class TargetedCategoryDB implements TargetedCategoryDBIF {
 			statement.setInt(1, targetedCategoryID);
 			result = statement.executeUpdate();
 			DBConnection.getInstance().getConnection().commit();
+			statement.close();
+			DBConnection.getInstance().getConnection().setAutoCommit(true);
 		} catch (SQLException e) {
 			e.printStackTrace();
 			DBConnection.getInstance().getConnection().rollback();
