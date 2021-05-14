@@ -15,11 +15,11 @@ public class EmployeeCtrl {
 	}
 	
 	
-	public boolean createEmployee(Employee employee) {
+	public boolean createEmployee(Employee employee, String street, int zip, String city, String country) {
 		boolean result = true;
 
 		try {
-			employeeDb.createEmployee(employee);
+			employeeDb.createEmployee(employee, street, zip, city, country);
 		} catch (SQLException e) {
 			e.printStackTrace();
 			result = false;
@@ -39,10 +39,10 @@ public class EmployeeCtrl {
 			return result;
 	}
 		
-		public boolean updateAddress(Employee employee, String street, String city, int zip, String country) {
+		public boolean updateAddress(Employee employee, String street, int zip, String city, String country) {
 			boolean result = true;
 			try {
-				employeeDb.updateAddress(employee, street, city, zip, country);
+				employeeDb.updateAddress(employee, street, zip, city, country);
 			} catch (SQLException e) {
 				e.printStackTrace();
 				result = false;

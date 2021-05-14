@@ -35,11 +35,13 @@ public class SaleDB implements SaleDBIF {
 		Sale foundSale = null;
 		String selectSale = "SELECT * FROM Sale WHERE ID LIKE ?";
 		try {
+			DBConnection.getInstance().getConnection().setAutoCommit(false);
 			PreparedStatement statement = DBConnection.getInstance().getConnection().prepareStatement(selectSale);
 			statement.setInt(1, ID);
 			ResultSet resultSet = statement.executeQuery(selectSale);
 			foundSale = buildSale(resultSet);
-
+			statement.close();
+			DBConnection.getInstance().getConnection().setAutoCommit(true);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -60,42 +62,36 @@ public class SaleDB implements SaleDBIF {
 	// TODO comment
 	public Sale buildSale(ResultSet resultSet) throws SQLException {
 		Sale builtSale = null;
-
 		builtSale = new Sale(resultSet.getInt("ID"), resultSet.getDate("transactionDate"),
 				new TargetedCategory(resultSet.getInt("targetedCategoryID")), resultSet.getString("paymentMethod"),
 				resultSet.getDouble("totalPrice"), buildEmployee(resultSet.getInt("EmployeeCPR")));
 		return builtSale;
 	}
 
-	// TODO comment aaaaa
-	public Employee buildEmployee(long EmployeeCPR) throws SQLException {
+	// TODO comment
+	public Employee buildEmployee(long employeeCPR) throws SQLException {
 		Employee builtEmployee = null;
-		String SelectEmployee = "SELECT * FROM Employee WHERE EmployeeCPR = ?";
+		String selectEmployee = "SELECT * FROM Employee WHERE EmployeeCPR = ?";
 
 		try {
 			DBConnection.getInstance().getConnection().setAutoCommit(false);
-			Statement statement = DBConnection.getInstance().getConnection().prepareStatement(SelectEmployee);
-			statement.setLong(1, EmployeeCPR);
+			PreparedStatement statement = DBConnection.getInstance().getConnection().prepareStatement(selectEmployee);
+			statement.setLong(1, employeeCPR);
 			DBConnection.getInstance().getConnection().commit();
-			ResultSet resultSet = statement.executeQuery(SelectEmployee);
-
+			ResultSet resultSet = statement.executeQuery(selectEmployee);
 			if (resultSet.next()) {
-
 				builtEmployee = new Employee(resultSet.getInt("CPR"),
 						(resultSet.getString("firstName") + resultSet.getString("lastName")),
 						(resultSet.getString("street") + ", " + resultSet.getInt("zipcode") + ", "
 								+ resultSet.getString("city")),
 						resultSet.getInt("phoneNumber"), resultSet.getString("email"), resultSet.getString("position"));
 			}
-
-		}
-
-		catch (SQLException e) {
+			statement.close();
+			DBConnection.getInstance().getConnection().setAutoCommit(true);
+		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-
-	}return builtEmployee;
-
+		return builtEmployee;
 	}
 
 	public ArrayList<OrderLine> buildOrderLines(ResultSet resultSet) throws SQLException {
@@ -117,32 +113,36 @@ public class SaleDB implements SaleDBIF {
 		String selectGamesSlow = "SELECT * FROM Game JOIN Product ON Product.barcode = Game.barcode WHERE DATEDIFF(day, receivedInStore, dateSold) > 30;";
 		String selectBooksNotSold = "SELECT * FROM Book JOIN Product ON Product.barcode = Book.barcode WHERE dateSold IS NULL;";
 		String selectGamesNotSold = "SELECT * FROM Game JOIN Product ON Product.barcode = Game.barcode WHERE dateSold IS NULL;";
-		String selectBooksYear = "SELECT * FROM Book JOIN Product ON Product.barcode = Book.barcode WHERE YEAR(dateSold) = "
-				+ year + ";";
-		String selectGamesYear = "SELECT * FROM Game JOIN Product ON Product.barcode = Game.barcode WHERE YEAR(dateSold) = "
-				+ year + ";";
-		String selectBooksMonth = "SELECT * FROM Book JOIN Product ON Product.barcode = Book.barcode WHERE MONTH(dateSold) = "
-				+ month + ";";
-		String selectGamesMonth = "SELECT * FROM Game JOIN Product ON Product.barcode = Game.barcode WHERE MONTH(dateSold) = "
-				+ month + ";";
-		String selectBooksDay = "SELECT * FROM Book JOIN Product ON Product.barcode = Book.barcode WHERE DAY(dateSold) = "
-				+ day + ";";
-		String selectGamesDay = "SELECT * FROM Game JOIN Product ON Product.barcode = Game.barcode WHERE DAY(dateSold) = "
-				+ day + ";";
+		String selectBooksYear = "SELECT * FROM Book JOIN Product ON Product.barcode = Book.barcode WHERE YEAR(dateSold) = ?;";
+		String selectGamesYear = "SELECT * FROM Game JOIN Product ON Product.barcode = Game.barcode WHERE YEAR(dateSold) = ?;";
+		String selectBooksMonth = "SELECT * FROM Book JOIN Product ON Product.barcode = Book.barcode WHERE MONTH(dateSold) = ?;";
+		String selectGamesMonth = "SELECT * FROM Game JOIN Product ON Product.barcode = Game.barcode WHERE MONTH(dateSold) = ?;";
+		String selectBooksDay = "SELECT * FROM Book JOIN Product ON Product.barcode = Book.barcode WHERE DAY(dateSold) = ?;";
+		String selectGamesDay = "SELECT * FROM Game JOIN Product ON Product.barcode = Game.barcode WHERE DAY(dateSold) = ?;";
 		String selectBarcodeMostProfit = "SELECT * FROM (SELECT [barcode], [title]"
 				+ ",(quantity + COUNT(barcode)) * (RRP - CostPrice) AS [Total Profit] FROM [Product]"
 				+ "INNER JOIN [OrderLine] ON [Product].[barcode] = [OrderLine].[productBarcode]"
 				+ "GROUP BY [barcode], [quantity], [title], [RRP], [CostPrice]) AS [Derived table]";
 		if (year > 0) {
 			try {
-				Statement statement = DBConnection.getInstance().getConnection().createStatement();
+				DBConnection.getInstance().getConnection().setAutoCommit(false);
+				PreparedStatement statementBooks = DBConnection.getInstance().getConnection()
+						.prepareStatement(selectBooksYear);
+				PreparedStatement statementGames = DBConnection.getInstance().getConnection()
+						.prepareStatement(selectGamesYear);
+				statementBooks.setInt(1, year);
+				statementGames.setInt(1, year);
+				DBConnection.getInstance().getConnection().commit();
 				if (type.equals("Book")) {
-					ResultSet resultSet = statement.executeQuery(selectBooksYear);
+					ResultSet resultSet = statementBooks.executeQuery(selectBooksYear);
 					foundProducts.addAll(productDb.buildObjects(resultSet, "Book"));
 				} else if (type.equals("Game")) {
-					ResultSet resultSet = statement.executeQuery(selectGamesYear);
+					ResultSet resultSet = statementGames.executeQuery(selectGamesYear);
 					foundProducts.addAll(productDb.buildObjects(resultSet, "Game"));
 				}
+				statementBooks.close();
+				statementGames.close();
+				DBConnection.getInstance().getConnection().setAutoCommit(true);
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
@@ -181,14 +181,24 @@ public class SaleDB implements SaleDBIF {
 
 		else if (month > 0) {
 			try {
-				Statement statement = DBConnection.getInstance().getConnection().createStatement();
+				DBConnection.getInstance().getConnection().setAutoCommit(false);
+				PreparedStatement statementBooks = DBConnection.getInstance().getConnection()
+						.prepareStatement(selectBooksMonth);
+				PreparedStatement statementGames = DBConnection.getInstance().getConnection()
+						.prepareStatement(selectGamesMonth);
+				statementBooks.setInt(1, month);
+				statementGames.setInt(1, month);
+				DBConnection.getInstance().getConnection().commit();
 				if (type.equals("Book")) {
-					ResultSet resultSet = statement.executeQuery(selectBooksMonth);
+					ResultSet resultSet = statementBooks.executeQuery(selectBooksMonth);
 					foundProducts.addAll(productDb.buildObjects(resultSet, "Book"));
 				} else if (type.equals("Game")) {
-					ResultSet resultSet = statement.executeQuery(selectGamesMonth);
+					ResultSet resultSet = statementGames.executeQuery(selectGamesMonth);
 					foundProducts.addAll(productDb.buildObjects(resultSet, "Game"));
 				}
+				statementBooks.close();
+				statementGames.close();
+				DBConnection.getInstance().getConnection().setAutoCommit(true);
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
@@ -211,14 +221,24 @@ public class SaleDB implements SaleDBIF {
 
 		else if (day > 0) {
 			try {
-				Statement statement = DBConnection.getInstance().getConnection().createStatement();
+				DBConnection.getInstance().getConnection().setAutoCommit(false);
+				PreparedStatement statementBooks = DBConnection.getInstance().getConnection()
+						.prepareStatement(selectBooksDay);
+				PreparedStatement statementGames = DBConnection.getInstance().getConnection()
+						.prepareStatement(selectGamesDay);
+				statementBooks.setInt(1, day);
+				statementGames.setInt(1, day);
+				DBConnection.getInstance().getConnection().commit();
 				if (type.equals("Book")) {
-					ResultSet resultSet = statement.executeQuery(selectBooksDay);
+					ResultSet resultSet = statementBooks.executeQuery(selectBooksDay);
 					foundProducts.addAll(productDb.buildObjects(resultSet, "Book"));
 				} else if (type.equals("Game")) {
-					ResultSet resultSet = statement.executeQuery(selectGamesDay);
+					ResultSet resultSet = statementGames.executeQuery(selectGamesDay);
 					foundProducts.addAll(productDb.buildObjects(resultSet, "Game"));
 				}
+				statementBooks.close();
+				statementGames.close();
+				DBConnection.getInstance().getConnection().setAutoCommit(true);
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
@@ -274,8 +294,9 @@ public class SaleDB implements SaleDBIF {
 			statementSale.setDouble(5, sale.getTotalPrice());
 			statementSale.setLong(6, sale.getEmployee().getCPR());
 			resultSale = statementSale.executeUpdate();
-			statementSale.close();
 			DBConnection.getInstance().getConnection().commit();
+			statementSale.close();
+			DBConnection.getInstance().getConnection().setAutoCommit(true);
 		} catch (SQLException e) {
 			e.printStackTrace();
 			DBConnection.getInstance().getConnection().rollback();
@@ -288,6 +309,8 @@ public class SaleDB implements SaleDBIF {
 			statementCopy.setString(2, copy.getArticleNumber());
 			resultCopy = statementCopy.executeUpdate();
 			DBConnection.getInstance().getConnection().commit();
+			statementCopy.close();
+			DBConnection.getInstance().getConnection().setAutoCommit(true);
 		} catch (SQLException e) {
 			e.printStackTrace();
 			DBConnection.getInstance().getConnection().rollback();
@@ -306,6 +329,8 @@ public class SaleDB implements SaleDBIF {
 			statement.setInt(1, ID);
 			resultSale = statement.executeUpdate();
 			DBConnection.getInstance().getConnection().commit();
+			statement.close();
+			DBConnection.getInstance().getConnection().setAutoCommit(true);
 		} catch (SQLException e) {
 			e.printStackTrace();
 			DBConnection.getInstance().getConnection().rollback();

@@ -17,7 +17,7 @@ public interface SaleDBIF {
 	
 	Sale buildSale(ResultSet resultSet) throws SQLException;
 	 
-	Employee buildEmployee(int EmployeeCPR) throws SQLException;
+	Employee buildEmployee(long EmployeeCPR) throws SQLException;
 	 
 	ArrayList<OrderLine> buildOrderLines(ResultSet resultSet) throws SQLException;
 	 

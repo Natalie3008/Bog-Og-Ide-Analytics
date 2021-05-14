@@ -8,8 +8,8 @@ import modelLayer.*;
 public class EmployeeDB {
 
 	// Create an employee in DB
-	public boolean createEmployee(Employee employee) throws SQLException {
-		String sqlEmployee = "INSERT INTO Employee (CPR, name, address, phoneNumber, email, position) VALUES(?,?,?,?,?,?)";
+	public boolean createEmployee(Employee employee, String street, int zip, String city, String country) throws SQLException {
+		String sqlEmployee = "INSERT INTO Employee (CPR, name, street, zip, city, country, phoneNumber, email, position) VALUES(?,?,?,?,?,?,?,?,?)";
 		int resultEmployee = 0;
 		try {
 			DBConnection.getInstance().getConnection().setAutoCommit(false);
@@ -17,10 +17,13 @@ public class EmployeeDB {
 					.prepareStatement(sqlEmployee);
 			statementEmployee.setLong(1, employee.getCPR());
 			statementEmployee.setString(2, employee.getName());
-			statementEmployee.setString(3, employee.getAddress());
-			statementEmployee.setInt(4, employee.getPhoneNumber());
-			statementEmployee.setString(5, employee.getEmail());
-			statementEmployee.setString(6, employee.getPosition());
+			statementEmployee.setString(3, street);
+			statementEmployee.setInt(4, zip);
+			statementEmployee.setString(5, city);
+			statementEmployee.setString(6, country);
+			statementEmployee.setInt(7, employee.getPhoneNumber());
+			statementEmployee.setString(8, employee.getEmail());
+			statementEmployee.setString(9, employee.getPosition());
 			resultEmployee = statementEmployee.executeUpdate();
 			DBConnection.getInstance().getConnection().commit();
 			statementEmployee.close();
@@ -55,16 +58,16 @@ public class EmployeeDB {
 	}
 
 	// Update Address
-	public Employee updateAddress(Employee employee, String street, String city, int zip, String country)
+	public Employee updateAddress(Employee employee, String street, int zip, String city, String country)
 			throws SQLException {
-		String sql = "UPDATE Employee SET street = ?, city = ?, zip = ?, country = ? WHERE CPR = ?";
+		String sql = "UPDATE Employee SET street = ?, zip = ?, city = ?, country = ? WHERE CPR = ?";
 		int result = 0;
 		try {
 			DBConnection.getInstance().getConnection().setAutoCommit(false);
 			PreparedStatement statementEmployee = DBConnection.getInstance().getConnection().prepareStatement(sql);
 			statementEmployee.setString(1, street);
-			statementEmployee.setString(2, city);
-			statementEmployee.setInt(3, zip);
+			statementEmployee.setInt(2, zip);
+			statementEmployee.setString(3, city);
 			statementEmployee.setString(4, country);
 			statementEmployee.setLong(5, employee.getCPR());
 			result = statementEmployee.executeUpdate();
