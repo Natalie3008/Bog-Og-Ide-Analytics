@@ -33,9 +33,10 @@ public class SaleDB implements SaleDBIF {
 
 	public Sale getOneSaleInformation(int ID) throws SQLException {
 		Sale foundSale = null;
-		String selectSale = "SELECT * FROM Sale WHERE ID = " + ID;
+		String selectSale = "SELECT * FROM Sale WHERE ID LIKE ?";
 		try {
-			Statement statement = DBConnection.getInstance().getConnection().createStatement();
+			PreparedStatement statement = DBConnection.getInstance().getConnection().prepareStatement(selectSale);
+			statement.setInt(1, ID);
 			ResultSet resultSet = statement.executeQuery(selectSale);
 			foundSale = buildSale(resultSet);
 
@@ -67,25 +68,34 @@ public class SaleDB implements SaleDBIF {
 	}
 
 	// TODO comment aaaaa
-	public Employee buildEmployee(int EmployeeCPR) throws SQLException {
+	public Employee buildEmployee(long EmployeeCPR) throws SQLException {
 		Employee builtEmployee = null;
-		String SelectEmployee = String.format("SELECT * FROM Employee WHERE EmployeeCPR = " + EmployeeCPR + "");
-		Statement statement = DBConnection.getInstance().getConnection().createStatement();
-		ResultSet resultSet = statement.executeQuery(SelectEmployee);
+		String SelectEmployee = "SELECT * FROM Employee WHERE EmployeeCPR = ?";
 
-		if (resultSet.next()) {
+		try {
+			DBConnection.getInstance().getConnection().setAutoCommit(false);
+			Statement statement = DBConnection.getInstance().getConnection().prepareStatement(SelectEmployee);
+			statement.setLong(1, EmployeeCPR);
+			DBConnection.getInstance().getConnection().commit();
+			ResultSet resultSet = statement.executeQuery(SelectEmployee);
 
-			try {
+			if (resultSet.next()) {
+
 				builtEmployee = new Employee(resultSet.getInt("CPR"),
 						(resultSet.getString("firstName") + resultSet.getString("lastName")),
 						(resultSet.getString("street") + ", " + resultSet.getInt("zipcode") + ", "
 								+ resultSet.getString("city")),
 						resultSet.getInt("phoneNumber"), resultSet.getString("email"), resultSet.getString("position"));
-			} catch (SQLException e) {
-				e.printStackTrace();
 			}
+
 		}
-		return builtEmployee;
+
+		catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+	}return builtEmployee;
+
 	}
 
 	public ArrayList<OrderLine> buildOrderLines(ResultSet resultSet) throws SQLException {
@@ -260,7 +270,7 @@ public class SaleDB implements SaleDBIF {
 			statementSale.setInt(1, sale.getID());
 			statementSale.setDate(2, sale.getDate());
 			statementSale.setInt(3, sale.getAgeCategory().getID());
-			statementSale.setString(4,  sale.getPaymentMethod());
+			statementSale.setString(4, sale.getPaymentMethod());
 			statementSale.setDouble(5, sale.getTotalPrice());
 			statementSale.setLong(6, sale.getEmployee().getCPR());
 			resultSale = statementSale.executeUpdate();
@@ -269,7 +279,7 @@ public class SaleDB implements SaleDBIF {
 		} catch (SQLException e) {
 			e.printStackTrace();
 			DBConnection.getInstance().getConnection().rollback();
-			
+
 		}
 		try {
 			DBConnection.getInstance().getConnection().setAutoCommit(false);
@@ -292,10 +302,10 @@ public class SaleDB implements SaleDBIF {
 		int resultSale = 0;
 		try {
 			DBConnection.getInstance().getConnection().setAutoCommit(false);
-		PreparedStatement statement = DBConnection.getInstance().getConnection().prepareStatement(sqlSale);
-		statement.setInt(1, ID);
-		resultSale = statement.executeUpdate();
-		DBConnection.getInstance().getConnection().commit();
+			PreparedStatement statement = DBConnection.getInstance().getConnection().prepareStatement(sqlSale);
+			statement.setInt(1, ID);
+			resultSale = statement.executeUpdate();
+			DBConnection.getInstance().getConnection().commit();
 		} catch (SQLException e) {
 			e.printStackTrace();
 			DBConnection.getInstance().getConnection().rollback();
