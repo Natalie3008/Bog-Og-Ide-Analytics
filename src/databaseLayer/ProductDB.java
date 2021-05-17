@@ -163,7 +163,7 @@ public class ProductDB {
 	public Product createBook(Book book, Copy copy) throws SQLException {
 		String sqlProduct = "INSERT INTO Product "
 				+ "(barcode, title, costPrice, RRP, amountInStock, publicationDate, description, supplierCVR) VALUES(?,?,?,?,?,?,?,?)";
-		String sqlBook = "INSERT INTO Book (articleNumber, barcode, ISBN, author, genre, receivedInStore, dateSold) VALUES (?,?,?,?,?,?,?)";
+		String sqlBook = "INSERT INTO Book (articleNumber, barcode, ISBN, author, genre, receivedInStore, dateSold, version) VALUES (?,?,?,?,?,?,?, ?)";
 		int resultProduct = 0;
 		int resultBook = 0;
 		try {
@@ -212,7 +212,7 @@ public class ProductDB {
 	public Product createGame(Game game, Copy copy) throws SQLException {
 		String sqlProduct = "INSERT INTO Product "
 				+ "(barcode, title, costPrice, RRP, amountInStock, publicationDate, description, supplierCVR) VALUES(?,?,?,?,?,?,?,?)";
-		String sqlGame = "INSERT INTO Game (articleNumber, barcode, type, receivedInStore, dateSold) VALUES (?,?,?,?,?)";
+		String sqlGame = "INSERT INTO Game (articleNumber, barcode, type, receivedInStore, dateSold, version) VALUES (?,?,?,?,?, ?)";
 		int resultProduct = 0;
 		int resultGame = 0;
 		try {
@@ -277,13 +277,17 @@ public class ProductDB {
 	}
 
 	public Product updateAmountInStock(Product product) throws SQLException {
-		String sqlUpdate = "UPDATE Product SET amountInStock = ? WHERE barcode LIKE ?";
+		String sqlUpdate = "UPDATE Product SET amountInStock = ?, version = ? WHERE barcode LIKE ? AND version = ?";
 		int result = 0;
+		int version = getVersion(product.getBarcode());
 		try {
 			DBConnection.getInstance().getConnection().setAutoCommit(false);
 			PreparedStatement statement = DBConnection.getInstance().getConnection().prepareStatement(sqlUpdate);
 			statement.setInt(1, product.getAmountInStock());
 			statement.setString(2, product.getBarcode());
+			statement.setInt(3, version + 1);
+			statement.setString(4, product.getBarcode());
+			statement.setInt(5, version);
 			result = statement.executeUpdate();
 			DBConnection.getInstance().getConnection().commit();
 			statement.close();
@@ -291,16 +295,16 @@ public class ProductDB {
 		} catch (SQLException e) {
 			e.printStackTrace();
 			DBConnection.getInstance().getConnection().rollback();
-			throw e;
 		}
 		return result == 1 ? product : null;
 	}
 
 	public Copy updateDateSold(Copy copy) throws SQLException {
-		String sqlGame = "UPDATE Game SET dateSold = ? WHERE articleNumber LIKE ?";
-		String sqlBook = "UPDATE Book SET dateSold = ? WHERE articleNumber LIKE ?";
+		String sqlGame = "UPDATE Game SET dateSold = ?, version = ? WHERE articleNumber LIKE ? AND version = ?";
+		String sqlBook = "UPDATE Book SET dateSold = ?, version = ? WHERE articleNumber LIKE ? AND version = ?";
 		int resultGame = 0;
 		int resultBook = 0;
+		int version = getVersion(copy.getArticleNumber());
 		try {
 			DBConnection.getInstance().getConnection().setAutoCommit(false);
 			PreparedStatement statementGame = DBConnection.getInstance().getConnection().prepareStatement(sqlGame);
@@ -309,6 +313,12 @@ public class ProductDB {
 			statementGame.setString(2, copy.getArticleNumber());
 			statementBook.setDate(1, copy.getDateSold());
 			statementBook.setString(2, copy.getArticleNumber());
+			statementGame.setInt(3, version + 1);
+			statementGame.setString(4, copy.getArticleNumber());
+			statementGame.setInt(5, version);
+			statementBook.setInt(3, version + 1);
+			statementBook.setString(4, copy.getArticleNumber());
+			statementBook.setInt(5, version);
 			resultGame = statementGame.executeUpdate();
 			resultBook = statementBook.executeUpdate();
 			DBConnection.getInstance().getConnection().commit();
@@ -318,19 +328,22 @@ public class ProductDB {
 		} catch (SQLException e) {
 			e.printStackTrace();
 			DBConnection.getInstance().getConnection().rollback();
-			throw e;
 		}
 		return resultGame == 1 || resultBook == 1 ? copy : null;
 	}
 
 	public Product updateRRP(Product product) throws SQLException {
-		String sqlUpdate = "UPDATE Product SET RRP = ? WHERE barcode LIKE ?";
+		String sqlUpdate = "UPDATE Product SET RRP = ?, version = ? WHERE barcode LIKE ? AND version = ?";
 		int result = 0;
+		int version = getVersion(product.getBarcode());
 		try {
 			DBConnection.getInstance().getConnection().setAutoCommit(false);
 			PreparedStatement statement = DBConnection.getInstance().getConnection().prepareStatement(sqlUpdate);
 			statement.setDouble(1, product.getRecommendedRetailPrice());
 			statement.setString(2, product.getBarcode());
+			statement.setInt(3, version + 1);
+			statement.setString(4, product.getBarcode());
+			statement.setInt(5, version);
 			result = statement.executeUpdate();
 			result = statement.executeUpdate();
 			DBConnection.getInstance().getConnection().commit();
@@ -342,5 +355,22 @@ public class ProductDB {
 			throw e;
 		}
 		return result == 1 ? product : null;
+	}
+	
+	private int getVersion(String productBarcode) throws SQLException {
+		String sqlFindVersion = "SELECT version FROM product WHERE barcode = ?";
+		int version = -1;
+		try {
+			DBConnection.getInstance().getConnection().setAutoCommit(false);
+			PreparedStatement statement = DBConnection.getInstance().getConnection().prepareStatement(sqlFindVersion);
+			statement.setString(1, productBarcode);
+			ResultSet resultSet = statement.executeQuery();
+			if (resultSet.next()) {
+				version = resultSet.getInt(1);
+			}
+		} catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return version;
 	}
 }
