@@ -33,7 +33,6 @@ public class EmployeeDB {
 		} catch (SQLException e) {
 			e.printStackTrace();
 			DBConnection.getInstance().getConnection().rollback();
-			throw e;
 		}
 		return resultEmployee > 1;
 	}
@@ -57,7 +56,6 @@ public class EmployeeDB {
 		} catch (SQLException e) {
 			e.printStackTrace();
 			DBConnection.getInstance().getConnection().rollback();
-			throw e;
 		}
 		return result == 1 ? employee : null;
 	}
@@ -85,7 +83,6 @@ public class EmployeeDB {
 		} catch (SQLException e) {
 			e.printStackTrace();
 			DBConnection.getInstance().getConnection().rollback();
-			throw e;
 		}
 		return result == 1 ? employee : null;
 	}
@@ -109,7 +106,6 @@ public class EmployeeDB {
 		} catch (SQLException e) {
 			e.printStackTrace();
 			DBConnection.getInstance().getConnection().rollback();
-			throw e;
 		}
 		return result == 1 ? employee : null;
 	}
@@ -133,7 +129,6 @@ public class EmployeeDB {
 		} catch (SQLException e) {
 			e.printStackTrace();
 			DBConnection.getInstance().getConnection().rollback();
-			throw e;
 		}
 		return result == 1 ? employee : null;
 	}
@@ -157,7 +152,6 @@ public class EmployeeDB {
 		} catch (SQLException e) {
 			e.printStackTrace();
 			DBConnection.getInstance().getConnection().rollback();
-			throw e;
 		}
 		return result == 1 ? employee : null;
 	}
@@ -176,7 +170,6 @@ public class EmployeeDB {
 		} catch (SQLException e) {
 			e.printStackTrace();
 			DBConnection.getInstance().getConnection().rollback();
-			throw e;
 		}
 		return result > 1;
 	}
