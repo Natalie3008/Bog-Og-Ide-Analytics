@@ -150,7 +150,7 @@ public class EmployeeDB {
 		int result = 0;
 		try {
 			DBConnection.getInstance().getConnection().setAutoCommit(false);
-			PreparedStatement statementEmployee = DBConnection.getInstance().getConnection().prepareStatement(sql);
+			PreparedStatement statementEmployee = DBConnection.getInstance().getConnection().prepareStatement(sqlEmployee);
 			statementEmployee.setLong(1, CPR);
 			result = statementEmployee.executeUpdate();
 			DBConnection.getInstance().getConnection().commit();
@@ -163,5 +163,4 @@ public class EmployeeDB {
 		}
 		return result > 1;
 	}
-
 }

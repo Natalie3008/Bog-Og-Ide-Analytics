@@ -338,4 +338,22 @@ public class SaleDB implements SaleDBIF {
 		}
 		return resultSale > 1;
 	}
+	
+	private int getVersion(int saleID) throws SQLException {
+		String sqlFindVersion = "SELECT version FROM Sale WHERE ID = ?";
+		 int version = -1;
+	        try {
+	        	DBConnection.getInstance().getConnection().setAutoCommit(false);
+	        	PreparedStatement statement = DBConnection.getInstance().getConnection().prepareStatement(sqlFindVersion);
+	        	statement.setInt(1, saleID);
+	            ResultSet resultSet = statement.executeQuery();
+	            if (resultSet.next()) {
+	                version = resultSet.getInt(1);
+	            }
+	            DBConnection.getInstance().getConnection().setAutoCommit(true);
+	        } catch (SQLException e) {
+	            e.printStackTrace();
+	        }
+	        return version;
+	}
 }

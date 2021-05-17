@@ -11,7 +11,7 @@ import modelLayer.TargetedCategory;
 public class TargetedCategoryDB implements TargetedCategoryDBIF {
 
 	public TargetedCategory createTargetedCategory(TargetedCategory targetedCategory) throws SQLException {
-		String sqlCategory = "INSERT INTO TargetedCategory (ID, title, minimumAge, maximumAge, gender, other) VALUES(?,?,?,?,?,?)";
+		String sqlCategory = "INSERT INTO TargetedCategory (ID, title, minimumAge, maximumAge, gender, other, version) VALUES(?,?,?,?,?,?,?)";
 		int resultCategory = 0;
 		try {
 			DBConnection.getInstance().getConnection().setAutoCommit(false);
@@ -22,6 +22,7 @@ public class TargetedCategoryDB implements TargetedCategoryDBIF {
 			statementCopy.setInt(4, targetedCategory.getMaximumAge());
 			statementCopy.setString(5, targetedCategory.getGender());
 			statementCopy.setString(6, targetedCategory.getOther());
+			statementCopy.setInt(7,  0);
 			resultCategory = statementCopy.executeUpdate();
 			DBConnection.getInstance().getConnection().commit();
 			statementCopy.close();
@@ -35,8 +36,9 @@ public class TargetedCategoryDB implements TargetedCategoryDBIF {
 	}
 
 	public TargetedCategory updateTargetedCategory(TargetedCategory targetedCategory) throws SQLException {
-		String sqlCategory = "UPDATE TargetedCategory SET title = ?, minimumAge = ?, maximumAge = ?, gender = ?, other = ? WHERE ID = ?)";
+		String sqlCategory = "UPDATE TargetedCategory SET title = ?, minimumAge = ?, maximumAge = ?, gender = ?, other = ? , version = ? WHERE ID = ? AND version = ?)";
 		int resultCategory = 0;
+		int version = getVersion(targetedCategory.getID());
 		try {
 			DBConnection.getInstance().getConnection().setAutoCommit(false);
 			PreparedStatement statementCopy = DBConnection.getInstance().getConnection().prepareStatement(sqlCategory);
@@ -45,7 +47,9 @@ public class TargetedCategoryDB implements TargetedCategoryDBIF {
 			statementCopy.setInt(3, targetedCategory.getMaximumAge());
 			statementCopy.setString(4, targetedCategory.getGender());
 			statementCopy.setString(5, targetedCategory.getOther());
-			statementCopy.setInt(6, targetedCategory.getID());
+			statementCopy.setInt(6, version + 1);
+			statementCopy.setInt(7, targetedCategory.getID());
+			statementCopy.setInt(8, version);
 			resultCategory = statementCopy.executeUpdate();
 			DBConnection.getInstance().getConnection().commit();
 			statementCopy.close();
@@ -53,7 +57,6 @@ public class TargetedCategoryDB implements TargetedCategoryDBIF {
 		} catch (SQLException e) {
 			e.printStackTrace();
 			DBConnection.getInstance().getConnection().rollback();
-			throw e;
 		}
 		return resultCategory == 1 ? targetedCategory : null;
 	}
@@ -86,7 +89,6 @@ public class TargetedCategoryDB implements TargetedCategoryDBIF {
 		} catch (SQLException e) {
 			e.printStackTrace();
 			DBConnection.getInstance().getConnection().rollback();
-			throw e;
 		}
 		return result > 1;
 	}
@@ -106,5 +108,23 @@ public class TargetedCategoryDB implements TargetedCategoryDBIF {
 			foundCategories.add(category);
 		}
 		return foundCategories;
+	}
+	
+	private int getVersion(int targetedCategoryID) throws SQLException {
+		String sqlFindVersion = "SELECT version FROM TargetedCategory WHERE ID = ?";
+		 int version = -1;
+	        try {
+	        	DBConnection.getInstance().getConnection().setAutoCommit(false);
+	        	PreparedStatement statement = DBConnection.getInstance().getConnection().prepareStatement(sqlFindVersion);
+	        	statement.setInt(1, targetedCategoryID);
+	            ResultSet resultSet = statement.executeQuery();
+	            if (resultSet.next()) {
+	                version = resultSet.getInt(1);
+	            }
+	            DBConnection.getInstance().getConnection().setAutoCommit(true);
+	        } catch (SQLException e) {
+	            e.printStackTrace();
+	        }
+	        return version;
 	}
 }
