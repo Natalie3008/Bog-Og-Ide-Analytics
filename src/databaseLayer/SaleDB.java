@@ -279,9 +279,9 @@ public class SaleDB implements SaleDBIF {
 	// Create Sale by implementing into DB and updating dateSold via articleNumber
 	// in Copy
 	public Sale createSale(Sale sale, Copy copy) throws SQLException {
-		String sqlSale = "INSERT INTO Sale (ID, transactionDate, targetedCategoryID, paymentMethod, totalPrice, employeeCPR)"
-				+ " VALUES(?,?,?,?,?,?)";
-		String sqlCopy = "UPDATE Copy SET dateSold = ? WHERE articleNumber LIKE ?";
+		String sqlSale = "INSERT INTO Sale (ID, transactionDate, targetedCategoryID, paymentMethod, totalPrice, employeeCPR, version)"
+				+ " VALUES(?,?,?,?,?,?,?)";
+		String sqlCopy = "UPDATE Copy SET dateSold = ?, version = ? WHERE articleNumber LIKE ? AND version = ?";
 		int resultSale = 0;
 		int resultCopy = 0;
 		try {
