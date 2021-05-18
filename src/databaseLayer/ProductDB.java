@@ -162,7 +162,7 @@ public class ProductDB {
 	// method to make a book and add it into the db // WIP STILL
 	public Product createBook(Book book, Copy copy) throws SQLException {
 		String sqlProduct = "INSERT INTO Product "
-				+ "(barcode, title, costPrice, RRP, amountInStock, publicationDate, description, supplierCVR) VALUES(?,?,?,?,?,?,?,?)";
+				+ "(barcode, title, costPrice, RRP, amountInStock, publicationDate, description, supplierCVR, version) VALUES(?,?,?,?,?,?,?,?,?)";
 		String sqlBook = "INSERT INTO Book (articleNumber, barcode, ISBN, author, genre, receivedInStore, dateSold, version) VALUES (?,?,?,?,?,?,?, ?)";
 		int resultProduct = 0;
 		int resultBook = 0;
@@ -211,7 +211,7 @@ public class ProductDB {
 
 	public Product createGame(Game game, Copy copy) throws SQLException {
 		String sqlProduct = "INSERT INTO Product "
-				+ "(barcode, title, costPrice, RRP, amountInStock, publicationDate, description, supplierCVR) VALUES(?,?,?,?,?,?,?,?)";
+				+ "(barcode, title, costPrice, RRP, amountInStock, publicationDate, description, supplierCVR, version) VALUES(?,?,?,?,?,?,?,?,?)";
 		String sqlGame = "INSERT INTO Game (articleNumber, barcode, type, receivedInStore, dateSold, version) VALUES (?,?,?,?,?, ?)";
 		int resultProduct = 0;
 		int resultGame = 0;
@@ -344,7 +344,6 @@ public class ProductDB {
 			statement.setInt(3, version + 1);
 			statement.setString(4, product.getBarcode());
 			statement.setInt(5, version);
-			result = statement.executeUpdate();
 			result = statement.executeUpdate();
 			DBConnection.getInstance().getConnection().commit();
 			statement.close();
