@@ -8,7 +8,6 @@ import modelLayer.*;
 
 public class EmployeeCtrl {
 	private EmployeeDB employeeDb;
-	private SaleCtrl saleCtrl;
 	
 	public EmployeeCtrl() {
 		employeeDb = new EmployeeDB();
@@ -92,8 +91,5 @@ public class EmployeeCtrl {
 				result = false;
 			}
 			return result;
-	}
-		
+	}	
 }
-
-

@@ -22,7 +22,7 @@ public class OrderLine {
 	}
 
 	public void setSale(Sale sale) {
-		sale = sale;
+		this.sale = sale;
 	}
 
 	public int getQuantity() {

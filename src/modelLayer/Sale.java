@@ -43,11 +43,11 @@ public class Sale {
 		this.date = date;
 	}
 
-	public TargetedCategory getAgeCategory() {
+	public TargetedCategory getTargetedCategory() {
 		return targetedCategory;
 	}
 
-	public void setAgeCategory(TargetedCategory targetedCategory) {
+	public void setTargetedCategory(TargetedCategory targetedCategory) {
 		this.targetedCategory = targetedCategory;
 	}
 

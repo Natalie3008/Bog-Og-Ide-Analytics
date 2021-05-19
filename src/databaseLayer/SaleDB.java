@@ -289,7 +289,7 @@ public class SaleDB implements SaleDBIF {
 			PreparedStatement statementSale = DBConnection.getInstance().getConnection().prepareStatement(sqlSale);
 			statementSale.setInt(1, sale.getID());
 			statementSale.setDate(2, sale.getDate());
-			statementSale.setInt(3, sale.getAgeCategory().getID());
+			statementSale.setInt(3, sale.getTargetedCategory().getID());
 			statementSale.setString(4, sale.getPaymentMethod());
 			statementSale.setDouble(5, sale.getTotalPrice());
 			statementSale.setLong(6, sale.getEmployee().getCPR());

@@ -16,30 +16,41 @@ public class TargetedCategoryCtrl {
 		try {
 			targetedCategoryDb.createTargetedCategory(targetedCategory);
 		} catch (SQLException e) {
-
+			e.printStackTrace();
+			return false;
 		}
-    	return true;
-		
+    	return true;	
 	}
 	
-	public void updateTargetedCategory(TargetedCategory targetedCategory) throws SQLException {
+	public boolean updateTargetedCategory(TargetedCategory targetedCategory) throws SQLException {
 		try {
 			targetedCategoryDb.updateTargetedCategory(targetedCategory);
 		} catch (Exception e) {
-
+			e.printStackTrace();
+			return false;
 		}
-
+		return true;
 		
 	}
 
-	public void deleteTargetedCategory(int targetedCategoryID) throws SQLException {
-		targetedCategoryDb.deleteTargetedCategory(targetedCategoryID);	
+	public boolean deleteTargetedCategory(int targetedCategoryID) throws SQLException {
+		try {
+			targetedCategoryDb.deleteTargetedCategory(targetedCategoryID);	
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+		return true;
 	}
 	
 	
 	public ArrayList<TargetedCategory> getAllTargetedCategories() throws SQLException {
 		ArrayList<TargetedCategory> foundCategories = new ArrayList<>();
-		foundCategories = targetedCategoryDb.getAllTargetedCategories();
+		try {
+			foundCategories = targetedCategoryDb.getAllTargetedCategories();
+		} catch (Exception e ) {
+			e.printStackTrace();
+		}
 		return foundCategories;
 	}
 	
