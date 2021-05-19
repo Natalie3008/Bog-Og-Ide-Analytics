@@ -104,9 +104,12 @@ public class SaleDB implements SaleDBIF {
 		return orderLines;
 	}
 
-	public ArrayList<Product> getProductsAnalytics(String choice, String type, int year, int month, int day)
-			throws SQLException {
+	public ArrayList<Product> getProductsAnalytics(String choice, String type, int year, int month, int day,
+			int targetedCategoryID) throws SQLException {
 		ArrayList<Product> foundProducts = new ArrayList<Product>();
+		ArrayList<Product> finiteProducts = new ArrayList<Product>();
+		ArrayList<Product> productsOfCategory = new ArrayList<Product>();
+		String selectTargetedCategories = "SELECT ID, targetedCategoryID, productBarcode FROM Sale JOIN Orderline ON Sale.ID = OrderLine.saleID WHERE targetedCategoryID = ?";
 		String selectBooksFast = "SELECT * FROM Book JOIN Product ON Product.barcode = Book.barcode WHERE DATEDIFF(day, receivedInStore, dateSold) < 30;";
 		String selectGamesFast = "SELECT * FROM Game JOIN Product ON Product.barcode = Game.barcode WHERE DATEDIFF(day, receivedInStore, dateSold) < 30;";
 		String selectBooksSlow = "SELECT * FROM Book JOIN Product ON Product.barcode = Book.barcode WHERE DATEDIFF(day, receivedInStore, dateSold) > 30;";
@@ -146,7 +149,6 @@ public class SaleDB implements SaleDBIF {
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
-
 		}
 
 		else if (choice.equals("Slow")) {
@@ -249,11 +251,34 @@ public class SaleDB implements SaleDBIF {
 				Statement statement = DBConnection.getInstance().getConnection().createStatement();
 				ResultSet resultSet = statement.executeQuery(selectBarcodeMostProfit);
 				while (resultSet.next()) {
-					foundProducts.add(new Product(resultSet.getString("barcode")));
+					productsOfCategory.add(new Product(resultSet.getString("barcode")));
 				}
-
 			} catch (SQLException e) {
 				e.printStackTrace();
+			}
+			if (targetedCategoryID >= 0) {
+				try {
+					DBConnection.getInstance().getConnection().setAutoCommit(false);
+					PreparedStatement statementCategories = DBConnection.getInstance().getConnection()
+							.prepareStatement(selectTargetedCategories);
+					statementCategories.setInt(1, targetedCategoryID);
+					DBConnection.getInstance().getConnection().commit();
+					ResultSet resultSet = statementCategories.executeQuery(selectTargetedCategories);
+					while (resultSet.next()) {
+						productsOfCategory.add(new Product(resultSet.getString("productBarcode")));
+					}
+					DBConnection.getInstance().getConnection().setAutoCommit(true);
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+				for (Product p : foundProducts) {
+					for (Product r : productsOfCategory) {
+						if (p.getBarcode().equals(r.getBarcode())) {
+							finiteProducts.add(p);
+						}
+					}
+				}
+				foundProducts = finiteProducts;
 			}
 		}
 		return foundProducts;
@@ -337,23 +362,5 @@ public class SaleDB implements SaleDBIF {
 			throw e;
 		}
 		return resultSale > 1;
-	}
-	
-	private int getVersion(int saleID) throws SQLException {
-		String sqlFindVersion = "SELECT version FROM Sale WHERE ID = ?";
-		 int version = -1;
-	        try {
-	        	DBConnection.getInstance().getConnection().setAutoCommit(false);
-	        	PreparedStatement statement = DBConnection.getInstance().getConnection().prepareStatement(sqlFindVersion);
-	        	statement.setInt(1, saleID);
-	            ResultSet resultSet = statement.executeQuery();
-	            if (resultSet.next()) {
-	                version = resultSet.getInt(1);
-	            }
-	            DBConnection.getInstance().getConnection().setAutoCommit(true);
-	        } catch (SQLException e) {
-	            e.printStackTrace();
-	        }
-	        return version;
 	}
 }

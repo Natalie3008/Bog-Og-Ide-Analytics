@@ -21,7 +21,7 @@ public interface SaleDBIF {
 	 
 	ArrayList<OrderLine> buildOrderLines(ResultSet resultSet) throws SQLException;
 	 
-	ArrayList<Product> getProductsAnalytics(String choice, String type, int year, int month, int day)
+	ArrayList<Product> getProductsAnalytics(String choice, String type, int year, int month, int day, int targetedCategoryID)
 				throws SQLException;
 	 
 	ArrayList<OrderLine> getSalesAnalytics();
