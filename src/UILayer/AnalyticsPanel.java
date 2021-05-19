@@ -33,6 +33,8 @@ import controlLayer.SaleCtrl;
 import controlLayer.TargetedCategoryCtrl;
 
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.DefaultListModel;
+
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -41,6 +43,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.awt.event.ActionEvent;
 import javax.swing.SwingConstants;
+import javax.swing.SwingWorker;
+
 import java.awt.Dimension;
 import javax.swing.JTextField;
 import java.awt.FlowLayout;
@@ -48,6 +52,17 @@ import javax.swing.JToggleButton;
 import javax.swing.JTabbedPane;
 import javax.swing.ImageIcon;
 import javax.swing.border.LineBorder;
+import javax.swing.table.DefaultTableColumnModel;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
+import javax.swing.table.TableColumnModel;
+import javax.swing.table.TableModel;
+import javax.swing.JTable;
+import javax.swing.UIManager;
+import javax.swing.border.SoftBevelBorder;
+import javax.swing.border.BevelBorder;
+import javax.swing.JSplitPane;
+import javax.swing.JProgressBar;
 
 public class AnalyticsPanel extends JPanel {
 
@@ -68,7 +83,10 @@ public class AnalyticsPanel extends JPanel {
 		saleCtrl = new SaleCtrl();
 		jfxChart = new JFXChart();
 		initAndShowGUI();	
+		
 	}
+	
+
 	
 	private void initAndShowGUI() {
 		setLayout(new BorderLayout(0, 0));
@@ -104,7 +122,18 @@ public class AnalyticsPanel extends JPanel {
 		CustomButton fastSellingBooksBtn = new CustomButton("FAST SELLING BOOKS", "#1A1F20",18);
 		fastSellingBooksBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {	
-				getFastestSellingBooks(booksFxPanel);
+				SwingWorker<Boolean, Void> fastSellingBooksWorker = new SwingWorker<Boolean, Void>() {
+					@Override
+					protected Boolean doInBackground() {
+						getFastestSellingBooks(booksFxPanel);
+						return true;
+					}
+					@Override
+					protected void done() {
+						System.out.println("FASTEST SELLING BOOKS LOADED");
+					}		
+				};
+				fastSellingBooksWorker.execute();
 			}
 		});
 		booksButtonPanel.add(fastSellingBooksBtn);
@@ -112,15 +141,43 @@ public class AnalyticsPanel extends JPanel {
 		CustomButton slowSellingBooksBtn = new CustomButton("SLOW SELLING BOOKS", "#1A1F20",18);
 		slowSellingBooksBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {	
-				getSlowestSellingBooks(booksFxPanel);
+				SwingWorker<Boolean, Void> slowSellingBooksWorker = new SwingWorker<Boolean, Void>() {
+					@Override
+					protected Boolean doInBackground() {
+						getSlowestSellingBooks(booksFxPanel);
+						return true;
+					}
+					@Override
+					protected void done() {
+						System.out.println("SLOWEST SELLING BOOKS LOADED");
+					}		
+				};
+				slowSellingBooksWorker.execute();
 			}
 		});
 		booksButtonPanel.add(slowSellingBooksBtn);
 		tabbedPane.setForegroundAt(0, Color.WHITE);
 		tabbedPane.setBackgroundAt(0, Color.decode("#1A1F20"));
 		
+		JPanel panel = new JPanel();
+		panel.setBackground(Color.decode("#242A2B"));
+		Books.add(panel, BorderLayout.CENTER);
+		GridBagLayout gbl_panel = new GridBagLayout();
+		gbl_panel.columnWidths = new int[]{511, 225, 0};
+		gbl_panel.rowHeights = new int[]{130, 0};
+		gbl_panel.columnWeights = new double[]{1.0, 1.0, Double.MIN_VALUE};
+		gbl_panel.rowWeights = new double[]{1.0, Double.MIN_VALUE};
+		panel.setLayout(gbl_panel);
+				
 		booksFxPanel = new JFXPanel();
-		Books.add(booksFxPanel,BorderLayout.CENTER);
+		GridBagConstraints gbc_booksFxPanel = new GridBagConstraints();
+		gbc_booksFxPanel.fill = GridBagConstraints.VERTICAL;
+		gbc_booksFxPanel.anchor = GridBagConstraints.WEST;
+		gbc_booksFxPanel.insets = new Insets(0, 0, 0, 5);
+		gbc_booksFxPanel.gridx = 0;
+		gbc_booksFxPanel.gridy = 0;
+		panel.add(booksFxPanel, gbc_booksFxPanel);
+				
 		
 		
 		JPanel Games = new JPanel();
@@ -138,7 +195,18 @@ public class AnalyticsPanel extends JPanel {
 		CustomButton fastSellingGamesBtn = new CustomButton("FAST SELLING GAMES", "#1A1F20",18);
 		fastSellingGamesBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {	
-				getFastestSellingGames(gamesFxPanel);
+				SwingWorker<Boolean, Void> fastSellingGamesWorker = new SwingWorker<Boolean, Void>() {
+					@Override
+					protected Boolean doInBackground() {
+						getFastestSellingGames(gamesFxPanel);
+						return true;
+					}
+					@Override
+					protected void done() {
+						System.out.println("FASTEST SELLING GAMES LOADED");
+					}		
+				};
+				fastSellingGamesWorker.execute();
 			}
 		});
 		gamesButtonPanel.add(fastSellingGamesBtn);
@@ -146,7 +214,18 @@ public class AnalyticsPanel extends JPanel {
 		CustomButton slowSellingGamesBtn = new CustomButton("SLOW SELLING GAMES", "#1A1F20",18);
 		slowSellingGamesBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {	
-				getSlowestSellingGames(gamesFxPanel);
+				SwingWorker<Boolean, Void> slowSellingGamesWorker = new SwingWorker<Boolean, Void>() {
+					@Override
+					protected Boolean doInBackground() {
+						getSlowestSellingGames(gamesFxPanel);
+						return true;
+					}
+					@Override
+					protected void done() {
+						System.out.println("SLOWEST SELLING GAMES LOADED");
+					}		
+				};
+				slowSellingGamesWorker.execute();
 			}
 		});
 		gamesButtonPanel.add(slowSellingGamesBtn);
@@ -223,6 +302,7 @@ public class AnalyticsPanel extends JPanel {
         // This method is invoked on JavaFX thread
         Scene scene = jfxChart.initChart(fxPanel);
         fxPanel.setScene(scene);
+
 	}
 	
 

@@ -24,12 +24,15 @@ public class JFXChart{
 	
 	public Scene initChart(JFXPanel fxPanel) {
         Group  root  =  new  Group();
-        Scene  scene  =  new  Scene(root,100,100, javafx.scene.paint.Color.TRANSPARENT);
+        Scene  scene  =  new  Scene(root,700,600, javafx.scene.paint.Color.TRANSPARENT);
         final CategoryAxis xAxis = new CategoryAxis();
         final NumberAxis yAxis = new NumberAxis();
 
         final BarChart<String,Number> barChart = new BarChart<String,Number>(xAxis,yAxis);
                 
+        barChart.setMinSize(700,600);
+
+        
         XYChart.Series series = new XYChart.Series();
         
         series.getData().add(new XYChart.Data("Placeholder 1", 100));
@@ -48,13 +51,14 @@ public class JFXChart{
 	
 	public Scene updateChart(JFXPanel fxPanel, String chartName, List<Product> products) {
         Group  root  =  new  Group();
-        Scene  scene  =  new  Scene(root,100,100, javafx.scene.paint.Color.TRANSPARENT);
+        Scene  scene  =  new  Scene(root,700,600, javafx.scene.paint.Color.TRANSPARENT);
         final CategoryAxis xAxis = new CategoryAxis();
         final NumberAxis yAxis = new NumberAxis();
 
         final BarChart<String,Number> barChart = new BarChart<String,Number>(xAxis,yAxis);        
         
         barChart.setTitle(chartName);
+        barChart.setMinSize(700,600);
         
         XYChart.Series series = new XYChart.Series();
         try {

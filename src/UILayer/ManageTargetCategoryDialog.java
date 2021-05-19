@@ -14,6 +14,8 @@ import controlLayer.SaleCtrl;
 import controlLayer.TargetedCategoryCtrl;
 
 import javax.swing.SwingConstants;
+import javax.swing.SwingWorker;
+
 import java.awt.Font;
 import java.awt.Color;
 import java.awt.Dialog.ModalityType;
@@ -48,6 +50,26 @@ public class ManageTargetCategoryDialog extends JDialog {
 	// SECONDARY DARK GREEN COLOR: #242A2B 
 	// SELECTED COLOR: #323A3A
 	
+
+	
+	private SwingWorker<Boolean, Void> worker = new SwingWorker<Boolean, Void>() {
+		// SwingWorker - execution on a worker thread
+		@Override
+		protected Boolean doInBackground() {
+			listModel = new DefaultListModel<>();
+			try {
+				ArrayList<TargetedCategory> targetedCategories = targetedCategoryCtrl.getAllTargetedCategories();
+				listModel.addAll(targetedCategories);
+				list.setModel(listModel);
+			}catch(SQLException e) {		
+			}
+			return true;
+		}
+		@Override
+		protected void done() {
+			System.out.println("WORKER FINISHED");
+		}		
+	};
 	
 	/**
 	 * Create the dialog.
@@ -164,7 +186,7 @@ public class ManageTargetCategoryDialog extends JDialog {
 		dialog.addWindowListener(new WindowAdapter() {
     		@Override
     	    public void windowClosed(WindowEvent e) {
-    	        refreshList();
+    	        worker.execute();
     	    }
     	});
 		dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
@@ -183,7 +205,7 @@ public class ManageTargetCategoryDialog extends JDialog {
 			dialog.addWindowListener(new WindowAdapter() {
 	    		@Override
 	    	    public void windowClosed(WindowEvent e) {
-	    	        refreshList();
+	    			worker.execute();
 	    	    }
 	    	});
 			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
@@ -219,17 +241,6 @@ public class ManageTargetCategoryDialog extends JDialog {
 		this.dispose();
 	}
 	
-	protected void refreshList() {
-		
-		listModel = new DefaultListModel<>();
-		try {
-			ArrayList<TargetedCategory> targetedCategories = targetedCategoryCtrl.getAllTargetedCategories();
-			listModel.addAll(targetedCategories);
-			list.setModel(listModel);
-		}catch(SQLException e) {
-			
-		}
-		
-	}
+	
 
 }
