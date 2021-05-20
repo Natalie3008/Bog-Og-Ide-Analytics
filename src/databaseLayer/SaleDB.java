@@ -303,12 +303,14 @@ public class SaleDB implements SaleDBIF {
 
 	// Create Sale by implementing into DB and updating dateSold via articleNumber
 	// in Copy
-	public Sale createSale(Sale sale, Copy copy) throws SQLException {
+	public Sale createSale(Sale sale, Copy copy, OrderLine orderLine) throws SQLException {
 		String sqlSale = "INSERT INTO Sale (ID, transactionDate, targetedCategoryID, paymentMethod, totalPrice, employeeCPR, version)"
 				+ " VALUES(?,?,?,?,?,?,?)";
 		String sqlCopy = "UPDATE Copy SET dateSold = ?, version = ? WHERE articleNumber LIKE ? AND version = ?";
+		String sqlOrderLine = "INSERT INTO OrderLine (saleID, productBarcode, quantity, version)" + " VALUES (?,?,?,?)";
 		int resultSale = 0;
 		int resultCopy = 0;
+		int resultOrderLine = 0;
 		try {
 			DBConnection.getInstance().getConnection().setAutoCommit(false);
 			PreparedStatement statementSale = DBConnection.getInstance().getConnection().prepareStatement(sqlSale);
@@ -341,7 +343,23 @@ public class SaleDB implements SaleDBIF {
 			DBConnection.getInstance().getConnection().rollback();
 			throw e;
 		}
-		return resultSale == 1 && resultCopy == 1 ? sale : null;
+		
+		try {
+			DBConnection.getInstance().getConnection().setAutoCommit(false);
+			PreparedStatement statementOrderLine = DBConnection.getInstance().getConnection().prepareStatement(sqlOrderLine);
+			statementOrderLine.setInt(1, orderLine.getSale().getID());
+			statementOrderLine.setString(2, orderLine.getProduct().getBarcode());
+			statementOrderLine.setInt(3, orderLine.getQuantity());
+			resultOrderLine = statementOrderLine.executeUpdate();
+			DBConnection.getInstance().getConnection().commit();
+			statementOrderLine.close();
+			DBConnection.getInstance().getConnection().setAutoCommit(true);
+		}
+		catch(SQLException e)  {
+			e.printStackTrace();
+			DBConnection.getInstance().getConnection().rollback();
+		}
+		return resultSale == 1 && resultCopy == 1 && resultOrderLine == 1 ? sale : null;	
 	}
 
 	// Delete Sale by going into the DB
