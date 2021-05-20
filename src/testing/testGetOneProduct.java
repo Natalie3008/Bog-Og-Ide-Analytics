@@ -66,7 +66,7 @@ public class testGetOneProduct {
 		assertEquals("No Item found", foundProduct, null);
 	}
 
-	// fuk u useless fuk (for now at least)
+
 	@After
 	public void tearDown() throws Exception {
 	}
