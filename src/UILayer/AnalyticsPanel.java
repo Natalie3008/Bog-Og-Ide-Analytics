@@ -41,6 +41,7 @@ import java.awt.event.WindowEvent;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 import java.awt.event.ActionEvent;
 import javax.swing.SwingConstants;
 import javax.swing.SwingWorker;
@@ -57,16 +58,21 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
+
 import javax.swing.JTable;
 import javax.swing.UIManager;
 import javax.swing.border.SoftBevelBorder;
 import javax.swing.border.BevelBorder;
 import javax.swing.JSplitPane;
 import javax.swing.JProgressBar;
+import javax.swing.JLabel;
+import javax.swing.SpringLayout;
+import javax.swing.BoxLayout;
+import javax.swing.ComboBoxModel;
 
 public class AnalyticsPanel extends JPanel {
-
-	private JComboBox<TargetedCategory> comboBox;
+	private JComboBox<TargetedCategory> comboBoxBooks;
+	private JComboBox<TargetedCategory> comboBoxGames;
 	private DefaultComboBoxModel<TargetedCategory> comboBoxModel;
 	private SaleCtrl saleCtrl;
 	private JFXChart jfxChart;
@@ -76,22 +82,27 @@ public class AnalyticsPanel extends JPanel {
 	private ArrayList<Product> products = new ArrayList<>();
 	private JFXPanel booksFxPanel;
 	private JFXPanel gamesFxPanel;
-	private JFXPanel customerFxPanel;
 	
 	public AnalyticsPanel() throws SQLException {
 		targetedCategoryCtrl = new TargetedCategoryCtrl();
 		saleCtrl = new SaleCtrl();
 		jfxChart = new JFXChart();
-		initAndShowGUI();	
-		
+		initAndShowGUI();		
 	}
 	
-
 	
 	private void initAndShowGUI() {
-		setLayout(new BorderLayout(0, 0));
-	
+
+		comboBoxModel = new DefaultComboBoxModel<TargetedCategory>();
+		try {
+			ArrayList<TargetedCategory> targetedCategories = targetedCategoryCtrl.getAllTargetedCategories();
+			comboBoxModel.addAll(targetedCategories);
+		}catch(SQLException e) {
+			
+		}
 		
+		setLayout(new BorderLayout(0, 0));
+
 		JPanel analyticsPanel = new JPanel();
 		analyticsPanel.setBackground(Color.decode("#242A2B"));
 		add(analyticsPanel, BorderLayout.CENTER);
@@ -113,30 +124,9 @@ public class AnalyticsPanel extends JPanel {
 		Books.setLayout(new BorderLayout(0, 0));
 		
 		JPanel booksButtonPanel = new JPanel();
-		FlowLayout flowLayout_1 = (FlowLayout) booksButtonPanel.getLayout();
-		flowLayout_1.setAlignment(FlowLayout.LEFT);
 		booksButtonPanel.setBorder(new EmptyBorder(10, 5, 10, 5));
 		booksButtonPanel.setBackground(new Color(36, 42, 43));
 		Books.add(booksButtonPanel, BorderLayout.NORTH);
-		
-		CustomButton fastSellingBooksBtn = new CustomButton("FAST SELLING BOOKS", "#1A1F20",18);
-		fastSellingBooksBtn.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {	
-				SwingWorker<Boolean, Void> fastSellingBooksWorker = new SwingWorker<Boolean, Void>() {
-					@Override
-					protected Boolean doInBackground() {
-						getFastestSellingBooks(booksFxPanel);
-						return true;
-					}
-					@Override
-					protected void done() {
-						System.out.println("FASTEST SELLING BOOKS LOADED");
-					}		
-				};
-				fastSellingBooksWorker.execute();
-			}
-		});
-		booksButtonPanel.add(fastSellingBooksBtn);
 		
 		CustomButton slowSellingBooksBtn = new CustomButton("SLOW SELLING BOOKS", "#1A1F20",18);
 		slowSellingBooksBtn.addActionListener(new ActionListener() {
@@ -155,7 +145,59 @@ public class AnalyticsPanel extends JPanel {
 				slowSellingBooksWorker.execute();
 			}
 		});
+		
+		CustomButton fastSellingBooksBtn = new CustomButton("FAST SELLING BOOKS", "#1A1F20",18);
+		fastSellingBooksBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {	
+				SwingWorker<Boolean, Void> fastSellingBooksWorker = new SwingWorker<Boolean, Void>() {
+					@Override
+					protected Boolean doInBackground() {
+						getFastestSellingBooks(booksFxPanel);
+						return true;
+					}
+					@Override
+					protected void done() {
+						System.out.println("FASTEST SELLING BOOKS LOADED");
+					}		
+				};
+				fastSellingBooksWorker.execute();
+			}
+		});
+		booksButtonPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
+		booksButtonPanel.add(fastSellingBooksBtn);
 		booksButtonPanel.add(slowSellingBooksBtn);
+		
+		CustomButton manageTargetCategoriesButtonBooks = new CustomButton("MANAGE TARGET CATEGORIES", "#1A1F20", 18);
+		manageTargetCategoriesButtonBooks.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {	
+				SwingWorker<Boolean, Void> manageTargetedCategoryDialogWorker = new SwingWorker<Boolean, Void>() {
+					@Override
+					protected Boolean doInBackground() {
+						manageTargetCategoryDialog();
+						return true;
+					}
+					@Override
+					protected void done() {
+						System.out.println("MANAGE TARGETED CATEGORIES DIALOG LOADED");
+					}		
+				};
+				manageTargetedCategoryDialogWorker.execute();
+			}
+		});
+		manageTargetCategoriesButtonBooks.setHorizontalAlignment(SwingConstants.LEFT);
+		booksButtonPanel.add(manageTargetCategoriesButtonBooks);
+		
+		comboBoxBooks = new JComboBox<TargetedCategory>(comboBoxModel);
+		comboBoxBooks.setBorder(new EmptyBorder(5, 5, 5, 5));
+		comboBoxBooks.setOpaque(false);
+		comboBoxBooks.setForeground(Color.WHITE);
+		comboBoxBooks.setFont(new Font("Segoe UI", Font.BOLD, 18));
+		comboBoxBooks.setFocusable(false);
+		comboBoxBooks.setFocusTraversalKeysEnabled(false);
+		comboBoxBooks.setBackground(new Color(26, 31, 32));
+		booksButtonPanel.add(comboBoxBooks);
+		
+		
 		tabbedPane.setForegroundAt(0, Color.WHITE);
 		tabbedPane.setBackgroundAt(0, Color.decode("#1A1F20"));
 		
@@ -166,7 +208,7 @@ public class AnalyticsPanel extends JPanel {
 		gbl_panel.columnWidths = new int[]{511, 225, 0};
 		gbl_panel.rowHeights = new int[]{130, 0};
 		gbl_panel.columnWeights = new double[]{1.0, 1.0, Double.MIN_VALUE};
-		gbl_panel.rowWeights = new double[]{1.0, Double.MIN_VALUE};
+		gbl_panel.rowWeights = new double[]{0.0, Double.MIN_VALUE};
 		panel.setLayout(gbl_panel);
 				
 		booksFxPanel = new JFXPanel();
@@ -177,7 +219,6 @@ public class AnalyticsPanel extends JPanel {
 		gbc_booksFxPanel.gridx = 0;
 		gbc_booksFxPanel.gridy = 0;
 		panel.add(booksFxPanel, gbc_booksFxPanel);
-				
 		
 		
 		JPanel Games = new JPanel();
@@ -229,61 +270,41 @@ public class AnalyticsPanel extends JPanel {
 			}
 		});
 		gamesButtonPanel.add(slowSellingGamesBtn);
+		
+		CustomButton manageTargetCategoriesButtonGames = new CustomButton("MANAGE TARGET CATEGORIES", "#1A1F20", 18);
+		manageTargetCategoriesButtonGames.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {	
+				SwingWorker<Boolean, Void> manageTargetedCategoryDialogWorker = new SwingWorker<Boolean, Void>() {
+					@Override
+					protected Boolean doInBackground() {
+						manageTargetCategoryDialog();
+						return true;
+					}
+					@Override
+					protected void done() {
+						System.out.println("MANAGE TARGETED CATEGORIES DIALOG LOADED");
+					}		
+				};
+				manageTargetedCategoryDialogWorker.execute();
+			}
+		});
+		manageTargetCategoriesButtonGames.setHorizontalAlignment(SwingConstants.LEFT);
+		gamesButtonPanel.add(manageTargetCategoriesButtonGames);
+		
+		comboBoxGames = new JComboBox<TargetedCategory>(comboBoxModel);
+		comboBoxGames.setOpaque(false);
+		comboBoxGames.setForeground(Color.WHITE);
+		comboBoxGames.setFont(new Font("Segoe UI", Font.BOLD, 18));
+		comboBoxGames.setFocusable(false);
+		comboBoxGames.setFocusTraversalKeysEnabled(false);
+		comboBoxGames.setBackground(new Color(26, 31, 32));
+		gamesButtonPanel.add(comboBoxGames);
 		tabbedPane.setForegroundAt(1, Color.WHITE);
 		tabbedPane.setBackgroundAt(1, Color.decode("#1A1F20"));
 		
 		gamesFxPanel = new JFXPanel();
 		Games.add(gamesFxPanel,BorderLayout.CENTER);
 		
-		
-		
-		JPanel Customers = new JPanel();
-		Customers.setBackground(Color.decode("#242A2B"));
-		Customers.setFont(new Font("Segoe UI", Font.BOLD, 14));
-		Customers.setFocusable(false);
-		Customers.setFocusTraversalKeysEnabled(false);
-		tabbedPane.addTab("CUSTOMERS", new ImageIcon(AnalyticsPanel.class.getResource("/Assets/people-white-icon.png")), Customers, null);
-		Customers.setLayout(new BorderLayout(0, 0));
-		
-
-		JPanel analyticsMenu = new JPanel();
-		Customers.add(analyticsMenu,BorderLayout.NORTH);
-		analyticsMenu.setBorder(new EmptyBorder(10, 10, 10, 10));
-		analyticsMenu.setBackground(Color.decode("#242A2B"));
-		analyticsMenu.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
-		
-		JButton manageTargetCategoriesButton = new CustomButton("MANAGE TARGET CATEGORIES","#1A1F20",18);
-		analyticsMenu.add(manageTargetCategoriesButton);
-		manageTargetCategoriesButton.setHorizontalAlignment(SwingConstants.LEFT);
-		manageTargetCategoriesButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				manageTargetCategoryDialog();
-				
-			}
-		});
-		
-		comboBoxModel = new DefaultComboBoxModel<TargetedCategory>();
-		try {
-			ArrayList<TargetedCategory> targetedCategories = targetedCategoryCtrl.getAllTargetedCategories();
-			comboBoxModel.addAll(targetedCategories);
-		}catch(SQLException e) {
-			
-		}
-		
-		comboBox = new JComboBox<TargetedCategory>(comboBoxModel);
-		analyticsMenu.add(comboBox);
-		comboBox.setBackground(Color.decode("#1A1F20"));
-		comboBox.setForeground(Color.WHITE);
-		comboBox.setFont(new Font("Segoe UI", Font.BOLD, 18));
-		comboBox.setOpaque(false);
-		comboBox.setFocusable(false);
-		comboBox.setFocusTraversalKeysEnabled(false);
-		
-		customerFxPanel = new JFXPanel();
-		Customers.add(customerFxPanel,BorderLayout.CENTER);
-		
-		tabbedPane.setForegroundAt(2, Color.WHITE);
-		tabbedPane.setBackgroundAt(2, Color.decode("#1A1F20"));
 		
 
        Platform.runLater(new Runnable() {
@@ -292,8 +313,6 @@ public class AnalyticsPanel extends JPanel {
                
 				initFX(booksFxPanel);
 				initFX(gamesFxPanel);
-				initFX(customerFxPanel);
-
             }
         });
     }
@@ -304,9 +323,8 @@ public class AnalyticsPanel extends JPanel {
         fxPanel.setScene(scene);
 
 	}
-	
-
-    protected void manageTargetCategoryDialog()
+    
+	protected void manageTargetCategoryDialog()
     {
     	ManageTargetCategoryDialog dialog = new ManageTargetCategoryDialog();
     	
@@ -321,7 +339,7 @@ public class AnalyticsPanel extends JPanel {
 		dialog.setVisible(true);
     	
     }
-    
+	
     protected void refreshComboBoxList() {
     	comboBoxModel = new DefaultComboBoxModel<TargetedCategory>();
     	try {
@@ -330,14 +348,15 @@ public class AnalyticsPanel extends JPanel {
 		}catch(SQLException e) {
 			
 		}
-		comboBox.setModel(comboBoxModel);
+		comboBoxBooks.setModel(comboBoxModel);
+		comboBoxGames.setModel(comboBoxModel);
 
     }
     
     protected void getFastestSellingBooks(JFXPanel fxPanel) {
     		
     	try {
-			List<Product> res = saleCtrl.getProductsAnalytics("Fast", "Book", 0, 0, 0);
+			List<Product> res = saleCtrl.getProductsAnalytics("Fast", "Book", 0, 0, 0, 0);
 			
 			Platform.runLater(new Runnable() {
 	            @Override
@@ -354,7 +373,7 @@ public class AnalyticsPanel extends JPanel {
     protected void getSlowestSellingBooks(JFXPanel fxPanel) {
 		
     	try {
-			List<Product> res = saleCtrl.getProductsAnalytics("Slow", "Book", 0, 0, 0);
+			List<Product> res = saleCtrl.getProductsAnalytics("Slow", "Book", 0, 0, 0, 0);
 			
 			Platform.runLater(new Runnable() {
 	            @Override
@@ -371,7 +390,7 @@ public class AnalyticsPanel extends JPanel {
     protected void getFastestSellingGames(JFXPanel fxPanel) {
 		
     	try {
-			List<Product> res = saleCtrl.getProductsAnalytics("Fast", "Game", 0, 0, 0);
+			List<Product> res = saleCtrl.getProductsAnalytics("Fast", "Game", 0, 0, 0, 0);
 			
 			Platform.runLater(new Runnable() {
 	            @Override
@@ -388,7 +407,7 @@ public class AnalyticsPanel extends JPanel {
     protected void getSlowestSellingGames(JFXPanel fxPanel) {
 		
     	try {
-			List<Product> res = saleCtrl.getProductsAnalytics("Slow", "Game", 0, 0, 0);
+			List<Product> res = saleCtrl.getProductsAnalytics("Slow", "Game", 0, 0, 0, 0);
 			
 			Platform.runLater(new Runnable() {
 	            @Override
@@ -401,6 +420,5 @@ public class AnalyticsPanel extends JPanel {
 			e.printStackTrace();
 		}	
     }
-
     
 }

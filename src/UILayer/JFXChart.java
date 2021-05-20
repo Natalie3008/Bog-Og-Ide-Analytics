@@ -15,12 +15,6 @@ import modelLayer.Product;
 public class JFXChart{
 
 
-	public JFXChart() {
-	}
-	
-	public JFXChart(JFXPanel fxPanel, String chartName, List<Product> products) {
-		updateChart(fxPanel, chartName, products);
-	}
 	
 	public Scene initChart(JFXPanel fxPanel) {
         Group  root  =  new  Group();
@@ -40,6 +34,9 @@ public class JFXChart{
         series.getData().add(new XYChart.Data("Placeholder 3", 300));
         
         barChart.getData().add(series);
+        
+        xAxis.setLabel("Book Title");
+        yAxis.setLabel("Days in Stock");
 
         String cssPath = this.getClass().getResource("chartStyle.css").toExternalForm();
         scene.getStylesheets().add(cssPath);
@@ -59,6 +56,10 @@ public class JFXChart{
         
         barChart.setTitle(chartName);
         barChart.setMinSize(700,600);
+        
+        xAxis.setLabel("Book Title");
+        yAxis.setLabel("Days in Stock");
+        
         
         XYChart.Series series = new XYChart.Series();
         try {

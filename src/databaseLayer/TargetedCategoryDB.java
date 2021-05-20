@@ -36,7 +36,7 @@ public class TargetedCategoryDB implements TargetedCategoryDBIF {
 	}
 
 	public TargetedCategory updateTargetedCategory(TargetedCategory targetedCategory) throws SQLException {
-		String sqlCategory = "UPDATE TargetedCategory SET title = ?, minimumAge = ?, maximumAge = ?, gender = ?, other = ? , version = ? WHERE ID = ? AND version = ?)";
+		String sqlCategory = "UPDATE TargetedCategory SET title = ?, minimumAge = ?, maximumAge = ?, gender = ?, other = ? , version = ? WHERE ID = ? AND version = ?";
 		int resultCategory = 0;
 		int version = getVersion(targetedCategory.getID());
 		try {
