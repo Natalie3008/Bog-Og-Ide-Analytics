@@ -109,7 +109,7 @@ public class SaleDB implements SaleDBIF {
 		ArrayList<Product> foundProducts = new ArrayList<Product>();
 		ArrayList<Product> finiteProducts = new ArrayList<Product>();
 		ArrayList<Product> productsOfCategory = new ArrayList<Product>();
-		String selectTargetedCategories = "SELECT ID, targetedCategoryID, productBarcode FROM Sale JOIN Orderline ON Sale.ID = OrderLine.saleID WHERE targetedCategoryID = ?";
+		String selectTargetedCategories = "SELECT ID, targetedCategoryID, productBarcode FROM Sale JOIN OrderLine ON Sale.ID = OrderLine.saleID WHERE targetedCategoryID = ?";
 		String selectBooksFast = "SELECT * FROM Book JOIN Product ON Product.barcode = Book.barcode WHERE DATEDIFF(day, receivedInStore, dateSold) < 30;";
 		String selectGamesFast = "SELECT * FROM Game JOIN Product ON Product.barcode = Game.barcode WHERE DATEDIFF(day, receivedInStore, dateSold) < 30;";
 		String selectBooksSlow = "SELECT * FROM Book JOIN Product ON Product.barcode = Book.barcode WHERE DATEDIFF(day, receivedInStore, dateSold) > 30;";
