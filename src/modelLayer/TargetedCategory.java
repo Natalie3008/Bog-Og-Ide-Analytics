@@ -88,7 +88,7 @@ public class TargetedCategory {
 	
 	@Override 
 	public String toString() {
-		return String.format("TITLE: "+title);
+		return String.format(title.toUpperCase());
 	}
 	
 }
