@@ -8,6 +8,7 @@ import java.sql.Statement;
 import java.util.*;
 
 import modelLayer.Sale;
+import modelLayer.Supplier;
 import modelLayer.TargetedCategory;
 import modelLayer.Copy;
 import modelLayer.Employee;
@@ -122,9 +123,8 @@ public class SaleDB implements SaleDBIF {
 		String selectGamesMonth = "SELECT * FROM Game JOIN Product ON Product.barcode = Game.barcode WHERE MONTH(dateSold) = ?;";
 		String selectBooksDay = "SELECT * FROM Book JOIN Product ON Product.barcode = Book.barcode WHERE DAY(dateSold) = ?;";
 		String selectGamesDay = "SELECT * FROM Game JOIN Product ON Product.barcode = Game.barcode WHERE DAY(dateSold) = ?;";
-		String selectBarcodeMostProfit = "SELECT * FROM (SELECT [barcode], [title]"
-				+ ",(quantity + COUNT(barcode)) * (RRP - CostPrice) AS [Total Profit] FROM [Product]"
-				+ "INNER JOIN [OrderLine] ON [Product].[barcode] = [OrderLine].[productBarcode]"
+		String selectBarcodeMostProfit = "SELECT * FROM (SELECT [barcode], [title], [costPrice], [RRP], [quantity] FROM [Product] "
+				+ "INNER JOIN [OrderLine] ON [Product].[barcode] = [OrderLine].[productBarcode] "
 				+ "GROUP BY [barcode], [quantity], [title], [RRP], [CostPrice]) AS [Derived table]";
 		if (year > 0) {
 			try {
@@ -250,9 +250,10 @@ public class SaleDB implements SaleDBIF {
 			try {
 				Statement statement = DBConnection.getInstance().getConnection().createStatement();
 				ResultSet resultSet = statement.executeQuery(selectBarcodeMostProfit);
-				while (resultSet.next()) {
-					productsOfCategory.add(new Product(resultSet.getString("barcode")));
+				while(resultSet.next()) {
+					foundProducts.add(new Product(resultSet.getString("title"), resultSet.getDouble("costPrice"), resultSet.getDouble("RRP"), resultSet.getInt("quantity")));
 				}
+				
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
@@ -263,7 +264,7 @@ public class SaleDB implements SaleDBIF {
 							.prepareStatement(selectTargetedCategories);
 					statementCategories.setInt(1, targetedCategoryID);
 					DBConnection.getInstance().getConnection().commit();
-					ResultSet resultSet = statementCategories.executeQuery(selectTargetedCategories);
+					ResultSet resultSet = statementCategories.executeQuery();
 					while (resultSet.next()) {
 						productsOfCategory.add(new Product(resultSet.getString("productBarcode")));
 					}
@@ -280,6 +281,26 @@ public class SaleDB implements SaleDBIF {
 				}
 				foundProducts = finiteProducts;
 			}
+		}
+		return foundProducts;
+	}
+	
+	public ArrayList<Product> getMostProfitProducts(){
+		
+		ArrayList<Product> foundProducts = new ArrayList<Product>();
+		String selectBarcodeMostProfit = "SELECT * FROM (SELECT [barcode], [title], [costPrice], [RRP], [quantity] FROM [Product] "
+				+ "INNER JOIN [OrderLine] ON [Product].[barcode] = [OrderLine].[productBarcode] "
+				+ "GROUP BY [barcode], [quantity], [title], [RRP], [CostPrice]) AS [Derived table]";
+		
+		try {
+			Statement statement = DBConnection.getInstance().getConnection().createStatement();
+			ResultSet resultSet = statement.executeQuery(selectBarcodeMostProfit);
+			while(resultSet.next()) {
+				foundProducts.add(new Product(resultSet.getString("title"), resultSet.getDouble("costPrice"), resultSet.getDouble("RRP"), resultSet.getInt("quantity")));
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
 		}
 		return foundProducts;
 	}

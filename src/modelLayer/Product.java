@@ -35,6 +35,14 @@ public class Product {
 		this.barcode = barcode;
 		copies = new ArrayList<Copy>();
 	}
+	
+	public Product(String title, double costPrice, double recommendedRetailPrice, int amountInStock) {
+		this.title = title;
+		this.costPrice = costPrice;
+		this.recommendedRetailPrice = recommendedRetailPrice;
+		this.amountInStock = amountInStock;
+		copies = new ArrayList<Copy>();
+	}
 
 	public String getBarcode() {
 		return barcode;

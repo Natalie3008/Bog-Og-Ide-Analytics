@@ -4,71 +4,39 @@ import javax.swing.JPanel;
 
 import javafx.application.Platform;
 import javafx.embed.swing.JFXPanel;
-import javafx.scene.Group;
 import javafx.scene.Scene;
-import javafx.scene.chart.BarChart;
-import javafx.scene.chart.CategoryAxis;
-import javafx.scene.chart.LineChart;
-import javafx.scene.chart.NumberAxis;
-import javafx.scene.chart.XYChart;
-import modelLayer.Employee;
-import modelLayer.OrderLine;
 import modelLayer.Product;
 import modelLayer.TargetedCategory;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.GridBagLayout;
-import javax.swing.JButton;
 import java.awt.GridBagConstraints;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
 
 import java.awt.Insets;
-import javax.swing.JSeparator;
 import java.awt.Font;
 import javax.swing.border.EmptyBorder;
 
 import controlLayer.SaleCtrl;
 import controlLayer.TargetedCategoryCtrl;
+import databaseLayer.SaleDB;
 
 import javax.swing.DefaultComboBoxModel;
-import javax.swing.DefaultListModel;
-
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
 import java.awt.event.ActionEvent;
 import javax.swing.SwingConstants;
 import javax.swing.SwingWorker;
 
-import java.awt.Dimension;
-import javax.swing.JTextField;
 import java.awt.FlowLayout;
-import javax.swing.JToggleButton;
 import javax.swing.JTabbedPane;
 import javax.swing.ImageIcon;
-import javax.swing.border.LineBorder;
-import javax.swing.table.DefaultTableColumnModel;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableColumn;
-import javax.swing.table.TableColumnModel;
-import javax.swing.table.TableModel;
-
-import javax.swing.JTable;
-import javax.swing.UIManager;
-import javax.swing.border.SoftBevelBorder;
-import javax.swing.border.BevelBorder;
-import javax.swing.JSplitPane;
-import javax.swing.JProgressBar;
-import javax.swing.JLabel;
-import javax.swing.SpringLayout;
-import javax.swing.BoxLayout;
-import javax.swing.ComboBoxModel;
 
 public class AnalyticsPanel extends JPanel {
 	private JComboBox<TargetedCategory> comboBoxBooks;
@@ -164,8 +132,29 @@ public class AnalyticsPanel extends JPanel {
 			}
 		});
 		booksButtonPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
+		
+		
+		CustomButton mostProfitBooksBtn = new CustomButton("MOST PROFIT BOOKS", "#1A1F20",18);
+		mostProfitBooksBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {	
+				SwingWorker<Boolean, Void> mostProfitBooksWorker = new SwingWorker<Boolean, Void>() {
+					@Override
+					protected Boolean doInBackground() {
+						getMostProfitBooks(booksFxPanel);
+						return true;
+					}
+					@Override
+					protected void done() {
+						System.out.println("MOST PROFIT BOOKS LOADED");
+					}		
+				};
+				mostProfitBooksWorker.execute();
+			}
+		});
+		
 		booksButtonPanel.add(fastSellingBooksBtn);
 		booksButtonPanel.add(slowSellingBooksBtn);
+		booksButtonPanel.add(mostProfitBooksBtn);
 		
 		CustomButton manageTargetCategoriesButtonBooks = new CustomButton("MANAGE TARGET CATEGORIES", "#1A1F20", 18);
 		manageTargetCategoriesButtonBooks.addActionListener(new ActionListener() {
@@ -188,6 +177,18 @@ public class AnalyticsPanel extends JPanel {
 		booksButtonPanel.add(manageTargetCategoriesButtonBooks);
 		
 		comboBoxBooks = new JComboBox<TargetedCategory>(comboBoxModel);
+		comboBoxBooks.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent event) {
+	        	TargetedCategory selectedCategory = comboBoxBooks.getModel().getElementAt(comboBoxBooks.getSelectedIndex());
+	        	int selectedCategoryID = selectedCategory.getID();
+	        	try {
+					saleCtrl.getProductsAnalytics("", "Books", 0, 0, 0, selectedCategoryID);
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+            }
+        });
 		comboBoxBooks.setBorder(new EmptyBorder(5, 5, 5, 5));
 		comboBoxBooks.setOpaque(false);
 		comboBoxBooks.setForeground(Color.WHITE);
@@ -250,7 +251,6 @@ public class AnalyticsPanel extends JPanel {
 				fastSellingGamesWorker.execute();
 			}
 		});
-		gamesButtonPanel.add(fastSellingGamesBtn);
 		
 		CustomButton slowSellingGamesBtn = new CustomButton("SLOW SELLING GAMES", "#1A1F20",18);
 		slowSellingGamesBtn.addActionListener(new ActionListener() {
@@ -269,7 +269,27 @@ public class AnalyticsPanel extends JPanel {
 				slowSellingGamesWorker.execute();
 			}
 		});
+		
+		CustomButton mostProfitGamesBtn = new CustomButton("MOST PROFIT GAMES", "#1A1F20",18);
+		mostProfitGamesBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {	
+				SwingWorker<Boolean, Void> mostProfitGamesBtn = new SwingWorker<Boolean, Void>() {
+					@Override
+					protected Boolean doInBackground() {
+						getMostProfitGames(gamesFxPanel);
+						return true;
+					}
+					@Override
+					protected void done() {
+						System.out.println("MOST PROFIT GAMES LOADED");
+					}		
+				};
+				mostProfitGamesBtn.execute();
+			}
+		});
+		gamesButtonPanel.add(fastSellingGamesBtn);
 		gamesButtonPanel.add(slowSellingGamesBtn);
+		gamesButtonPanel.add(mostProfitGamesBtn);
 		
 		CustomButton manageTargetCategoriesButtonGames = new CustomButton("MANAGE TARGET CATEGORIES", "#1A1F20", 18);
 		manageTargetCategoriesButtonGames.addActionListener(new ActionListener() {
@@ -361,7 +381,7 @@ public class AnalyticsPanel extends JPanel {
 			Platform.runLater(new Runnable() {
 	            @Override
 	            public void run() {          
-	            	Scene scene = jfxChart.updateChart(fxPanel,"FASTEST SELLING BOOKS", res);
+	            	Scene scene = jfxChart.updateChart("FASTEST SELLING BOOKS", res);
 	            	fxPanel.setScene(scene);
 	            }
 	        });
@@ -378,7 +398,7 @@ public class AnalyticsPanel extends JPanel {
 			Platform.runLater(new Runnable() {
 	            @Override
 	            public void run() {          
-	            	Scene scene = jfxChart.updateChart(fxPanel,"SLOWEST SELLING BOOKS", res);
+	            	Scene scene = jfxChart.updateChart("SLOWEST SELLING BOOKS", res);
 	            	fxPanel.setScene(scene);
 	            }
 	        });
@@ -395,7 +415,7 @@ public class AnalyticsPanel extends JPanel {
 			Platform.runLater(new Runnable() {
 	            @Override
 	            public void run() {          
-	            	Scene scene = jfxChart.updateChart(fxPanel,"FASTEST SELLING GAMES", res);
+	            	Scene scene = jfxChart.updateChart("FASTEST SELLING GAMES", res);
 	            	fxPanel.setScene(scene);
 	            }
 	        });
@@ -412,13 +432,51 @@ public class AnalyticsPanel extends JPanel {
 			Platform.runLater(new Runnable() {
 	            @Override
 	            public void run() {          
-	            	Scene scene = jfxChart.updateChart(fxPanel,"SLOWEST SELLING GAMES", res);
+	            	Scene scene = jfxChart.updateChart("SLOWEST SELLING GAMES", res);
 	            	fxPanel.setScene(scene);
 	            }
 	        });
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}	
+    }
+    
+    protected void getMostProfitBooks(JFXPanel fxPanel) {
+    	try {
+			List<Product> res = saleCtrl.getProductsAnalytics("Most profit", "Books", 0, 0, 0, -1);
+			
+			Platform.runLater(new Runnable() {
+	            @Override
+	            public void run() {          
+	            	Scene scene = jfxChart.updateChartMostProfit("MOST PROFIT BOOKS", res);
+	            	fxPanel.setScene(scene);
+	            }
+	        });
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+    	
+    }
+    
+    protected void getMostProfitGames(JFXPanel fxPanel) {
+    
+			List<Product> res;
+			try {
+				res = saleCtrl.getProductsAnalytics("Most profit", "Games", 0, 0, 0, -1);
+				
+				Platform.runLater(new Runnable() {
+		            @Override
+		            public void run() {          
+		            	Scene scene = jfxChart.updateChartMostProfit("MOST PROFIT GAMES", res);
+		            	fxPanel.setScene(scene);	            
+		            }
+		        });
+			}
+			catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+    	
     }
     
 }
