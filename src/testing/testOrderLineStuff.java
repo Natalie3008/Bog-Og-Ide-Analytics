@@ -1,7 +1,5 @@
 package testing;
 
-import static org.junit.Assert.*;
-
 import java.sql.SQLException;
 import java.util.ArrayList;
 
@@ -27,13 +25,13 @@ public class testOrderLineStuff {
 
 	@Test
 	public void testIfOrderLineWorks() throws SQLException {
-		ArrayList<OrderLine> fuckMe = saleDb.getSalesAnalytics();
-		System.out.println(fuckMe.get(0).getSale().getTotalPrice());
+		ArrayList<OrderLine> testOne = saleDb.getSalesAnalytics();
+		System.out.println(testOne.get(0).getSale().getTotalPrice());
 	}
 	
 	@Test public void testIfBestProfitsWorks() throws SQLException {
-		ArrayList<Product> fuckMeToo = saleDb.getProductsAnalytics("Not sold", "Book", 0, 0, 0);
-		System.out.println(fuckMeToo.size());
+		ArrayList<Product> testTwo = saleDb.getProductsAnalytics("Not sold", "Book", 0, 0, 0, -1);
+		System.out.println(testTwo.size());
 	}
 	
 

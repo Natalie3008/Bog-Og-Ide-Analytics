@@ -47,10 +47,10 @@ public class testGetAllProductInformation {
 				"bobIsInLove@gmail.com", "I give u game");
 		book = new Book("1234", "Spork", 14.4, 55.7, 10, "07/11/2020", "Description of pretty book", "English",
 				bookSupplier, "ABC123", "Foon ", "novel");
-		copyBook = new Copy("BC125", null, null, 15, book);
+		copyBook = new Copy("BC125", null, null, book);
 		game = new Game("9876", "Exploding puppies", 150.00, 250.50, 1, "21/11/2020", "description of pretty game",
 				"English", gameSupplier, "puzzle");
-		copyGame = new Copy("GM148", null, null, 12, game);
+		copyGame = new Copy("GM148", null, null, game);
 		productDB.createBook(book, copyBook);
 		productDB.createGame(game, copyGame);
 	}
