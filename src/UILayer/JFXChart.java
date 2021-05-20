@@ -14,7 +14,6 @@ import modelLayer.Product;
 
 public class JFXChart{
 
-
 	
 	public Scene initChart(JFXPanel fxPanel) {
         Group  root  =  new  Group();
@@ -46,13 +45,13 @@ public class JFXChart{
 
     }
 	
-	public Scene updateChart(JFXPanel fxPanel, String chartName, List<Product> products) {
-        Group  root  =  new  Group();
+	public Scene updateChart(String chartName, List<Product> products) {
+		Group  root  =  new  Group();
         Scene  scene  =  new  Scene(root,700,600, javafx.scene.paint.Color.TRANSPARENT);
         final CategoryAxis xAxis = new CategoryAxis();
         final NumberAxis yAxis = new NumberAxis();
-
-        final BarChart<String,Number> barChart = new BarChart<String,Number>(xAxis,yAxis);        
+        
+        final BarChart<String,Number> barChart = new BarChart<String,Number>(xAxis,yAxis);
         
         barChart.setTitle(chartName);
         barChart.setMinSize(700,600);
@@ -71,6 +70,49 @@ public class JFXChart{
 	        			String title = p.getTitle();
 	        			long dateDiff = p.getCopies().get(index).getDaysInStock();
 	        			series.getData().add(new XYChart.Data(title, dateDiff));	
+	        		}
+	        	}
+	        }
+        } catch (Exception e) {
+
+  
+        }
+        
+        barChart.getData().add(series);
+        String cssPath = this.getClass().getResource("chartStyle.css").toExternalForm();
+        scene.getStylesheets().add(cssPath);
+        root.getChildren().add(barChart);  
+        
+        return (scene);
+
+    }
+	
+	public Scene updateChartMostProfit(String chartName, List<Product> products) {
+        
+		Group  root  =  new  Group();
+        Scene  scene  =  new  Scene(root,700,600, javafx.scene.paint.Color.TRANSPARENT);
+        final CategoryAxis xAxis = new CategoryAxis();
+        final NumberAxis yAxis = new NumberAxis();
+        
+        final BarChart<String,Number> barChart = new BarChart<String,Number>(xAxis,yAxis);
+        
+        barChart.setTitle(chartName);
+        barChart.setMinSize(700,600);
+        
+        xAxis.setLabel("Book Title");
+        yAxis.setLabel("Total profit");
+        
+        
+        XYChart.Series series = new XYChart.Series();
+        try {
+	        List<Product> res = products;
+	        if(!res.isEmpty()) {
+	        	int index = 0;
+	        	for(Product p : res) {
+	        		if(series.getData().size()<10) {
+	        			String title = p.getTitle();
+	        			double profit = (p.getRecommendedRetailPrice()-p.getCostPrice())*p.getAmountInStock();
+	        			series.getData().add(new XYChart.Data(title, profit));	
 	        		}
 	        	}
 	        }
