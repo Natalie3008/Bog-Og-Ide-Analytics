@@ -7,13 +7,7 @@ import java.sql.Statement;
 
 import java.util.*;
 
-import modelLayer.Sale;
-import modelLayer.Supplier;
-import modelLayer.TargetedCategory;
-import modelLayer.Copy;
-import modelLayer.Employee;
-import modelLayer.OrderLine;
-import modelLayer.Product;
+import modelLayer.*;
 
 public class SaleDB implements SaleDBIF {
 	private ProductDB productDb = new ProductDB();
@@ -105,8 +99,7 @@ public class SaleDB implements SaleDBIF {
 		return orderLines;
 	}
 
-	public ArrayList<Product> getProductsAnalytics(String choice, String type, int year, int month, int day,
-			int targetedCategoryID) throws SQLException {
+	public ArrayList<Product> getProductsAnalytics(String choice, String type, int year, int month, int day, int targetedCategoryID) throws SQLException {
 		ArrayList<Product> foundProducts = new ArrayList<Product>();
 		ArrayList<Product> finiteProducts = new ArrayList<Product>();
 		ArrayList<Product> productsOfCategory = new ArrayList<Product>();
@@ -284,28 +277,8 @@ public class SaleDB implements SaleDBIF {
 		}
 		return foundProducts;
 	}
-	
-	public ArrayList<Product> getMostProfitProducts(){
-		
-		ArrayList<Product> foundProducts = new ArrayList<Product>();
-		String selectBarcodeMostProfit = "SELECT * FROM (SELECT [barcode], [title], [costPrice], [RRP], [quantity] FROM [Product] "
-				+ "INNER JOIN [OrderLine] ON [Product].[barcode] = [OrderLine].[productBarcode] "
-				+ "GROUP BY [barcode], [quantity], [title], [RRP], [CostPrice]) AS [Derived table]";
-		
-		try {
-			Statement statement = DBConnection.getInstance().getConnection().createStatement();
-			ResultSet resultSet = statement.executeQuery(selectBarcodeMostProfit);
-			while(resultSet.next()) {
-				foundProducts.add(new Product(resultSet.getString("title"), resultSet.getDouble("costPrice"), resultSet.getDouble("RRP"), resultSet.getInt("quantity")));
-			}
-			
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return foundProducts;
-	}
 
-	public ArrayList<OrderLine> getSalesAnalytics() {
+	public ArrayList<OrderLine> getSalesAnalytics() throws SQLException {
 		ArrayList<OrderLine> foundOrderLines = new ArrayList<OrderLine>();
 		String selectBarcodeBest = "SELECT y.saleID ,y.productBarcode ,y.quantity FROM OrderLine y INNER JOIN (SELECT productBarcode, COUNT(*) AS CountOf"
 				+ " FROM OrderLine GROUP BY productBarcode HAVING COUNT(*) > 1"
