@@ -301,7 +301,7 @@ public class SaleDB implements SaleDBIF {
 		String sqlSale = "INSERT INTO Sale (ID, transactionDate, targetedCategoryID, paymentMethod, totalPrice, employeeCPR, version)"
 				+ " VALUES(?,?,?,?,?,?,?)";
 		String sqlCopy = "UPDATE Copy SET dateSold = ?, version = ? WHERE articleNumber LIKE ? AND version = ?";
-		String sqlOrderLine = "INSERT INTO OrderLine (saleID, productBarcode, quantity, version)" + " VALUES (?,?,?,?)";
+		String sqlOrderLine = "INSERT INTO OrderLine (saleID, productBarcode, quantity, version) VALUES (?,?,?,?)";
 		int resultSale = 0;
 		int resultCopy = 0;
 		int resultOrderLine = 0;

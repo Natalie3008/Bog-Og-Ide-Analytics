@@ -58,7 +58,7 @@ public class testAnalytics {
 
 	//All parameters are correct
 	@Test
-	public void testProductsAnalytics() {
+	public void testProductsAnalytics() throws SQLException {
 		// Arrange
 		ArrayList<Product> foundProducts = new ArrayList<Product>();
 
@@ -76,7 +76,7 @@ public class testAnalytics {
 
 	//Incorrect parameter used - choice
 	@Test
-	public void testIncorrectParameterChoice() {
+	public void testIncorrectParameterChoice() throws SQLException {
 		// Arrange
 		ArrayList<Product> foundProducts = new ArrayList<Product>();
 
@@ -93,7 +93,7 @@ public class testAnalytics {
 	
 	//Incorrect parameter used - time
 	@Test
-	public void testIncorrectParameterTime() {
+	public void testIncorrectParameterTime() throws SQLException {
 		// Arrange
 		ArrayList<Product> foundProducts = new ArrayList<Product>();
 
@@ -111,7 +111,7 @@ public class testAnalytics {
 
 	//Incorrect targetedCategoryID - not in the database
 	@Test
-	public void testNotInDatabase() {
+	public void testNotInDatabase() throws SQLException {
 		// Arrange
 				ArrayList<Product> foundProducts = new ArrayList<Product>();
 
@@ -130,7 +130,7 @@ public class testAnalytics {
 	
 	//Incorrect targetedCategoryID - null
 	@Test
-	public void testIncorrectTargetedCategoryID () {
+	public void testIncorrectTargetedCategoryID () throws SQLException {
 		// Arrange
 		ArrayList<Product> foundProducts = new ArrayList<Product>();
 
@@ -148,7 +148,7 @@ public class testAnalytics {
 	
 	//One to test if it works for getSalesAnalytics() 
 	@Test
-	public void testSalesAnalytics() {
+	public void testSalesAnalytics() throws SQLException {
 		// Arrange
 		ArrayList<OrderLine> foundOrderLines = new ArrayList<OrderLine>();
 		
