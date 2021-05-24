@@ -61,6 +61,7 @@ public class ProductDB {
 	private PreparedStatement psUpdateProductRRP;
 
 	private PreparedStatement psSelectVersion;
+	
 	public ProductDB() {
 		initPreparedStatement();
 	}

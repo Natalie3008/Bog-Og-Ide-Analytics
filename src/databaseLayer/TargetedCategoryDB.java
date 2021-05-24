@@ -1,5 +1,6 @@
 package databaseLayer;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -10,22 +11,47 @@ import modelLayer.TargetedCategory;
 
 public class TargetedCategoryDB implements TargetedCategoryDBIF {
 
+	private static final String INSERT_INTO_TARGETED_CATEGORY = "INSERT INTO TargetedCategory (ID, title, minimumAge, maximumAge, gender, other, version) VALUES(?,?,?,?,?,?,?)";
+	private static final String UPDATE_TARGETED_CATEGORY = "UPDATE TargetedCategory SET title = ?, minimumAge = ?, maximumAge = ?, gender = ?, other = ? , version = ? WHERE ID = ? AND version = ?";
+	private static final String DELETE_TARGETED_CATEGORY_WITH_ID = "DELETE FROM TargetedCategory WHERE ID = ?";
+
+	private static final String SELECT_VERSION = "SELECT version FROM TargetedCategory WHERE ID = ?";
+
+	private PreparedStatement psInsertIntoTargetedCategory;
+	private PreparedStatement psUpdateTargetedCategory;
+	private PreparedStatement psDeleteTargetedCategoryWithID;
+
+	private PreparedStatement psSelectVersion;
+
+	public TargetedCategoryDB(){
+		initPreparedStatement();
+	}
+
+	private void initPreparedStatement() {
+		Connection connection = DBConnection.getInstance().getConnection();
+		try{
+			psInsertIntoTargetedCategory = connection.prepareStatement(INSERT_INTO_TARGETED_CATEGORY);
+			psUpdateTargetedCategory = connection.prepareStatement(UPDATE_TARGETED_CATEGORY);
+			psDeleteTargetedCategoryWithID = connection.prepareStatement(DELETE_TARGETED_CATEGORY_WITH_ID);
+			psSelectVersion = connection.prepareStatement(SELECT_VERSION);
+		}catch(SQLException e){
+			e.printStackTrace();
+		}
+	}
+
 	public TargetedCategory createTargetedCategory(TargetedCategory targetedCategory) throws SQLException {
-		String sqlCategory = "INSERT INTO TargetedCategory (ID, title, minimumAge, maximumAge, gender, other, version) VALUES(?,?,?,?,?,?,?)";
 		int resultCategory = 0;
 		try {
 			DBConnection.getInstance().getConnection().setAutoCommit(false);
-			PreparedStatement statementCopy = DBConnection.getInstance().getConnection().prepareStatement(sqlCategory);
-			statementCopy.setInt(1, targetedCategory.getID());			
-			statementCopy.setString(2, targetedCategory.getTitle());
-			statementCopy.setInt(3, targetedCategory.getMinimumAge());
-			statementCopy.setInt(4, targetedCategory.getMaximumAge());
-			statementCopy.setString(5, targetedCategory.getGender());
-			statementCopy.setString(6, targetedCategory.getOther());
-			statementCopy.setInt(7,  0);
-			resultCategory = statementCopy.executeUpdate();
+			psInsertIntoTargetedCategory.setInt(1, targetedCategory.getID());			
+			psInsertIntoTargetedCategory.setString(2, targetedCategory.getTitle());
+			psInsertIntoTargetedCategory.setInt(3, targetedCategory.getMinimumAge());
+			psInsertIntoTargetedCategory.setInt(4, targetedCategory.getMaximumAge());
+			psInsertIntoTargetedCategory.setString(5, targetedCategory.getGender());
+			psInsertIntoTargetedCategory.setString(6, targetedCategory.getOther());
+			psInsertIntoTargetedCategory.setInt(7,  0);
+			resultCategory = psInsertIntoTargetedCategory.executeUpdate();
 			DBConnection.getInstance().getConnection().commit();
-			statementCopy.close();
 			DBConnection.getInstance().getConnection().setAutoCommit(true);
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -36,23 +62,20 @@ public class TargetedCategoryDB implements TargetedCategoryDBIF {
 	}
 
 	public TargetedCategory updateTargetedCategory(TargetedCategory targetedCategory) throws SQLException {
-		String sqlCategory = "UPDATE TargetedCategory SET title = ?, minimumAge = ?, maximumAge = ?, gender = ?, other = ? , version = ? WHERE ID = ? AND version = ?";
 		int resultCategory = 0;
 		int version = getVersion(targetedCategory.getID());
 		try {
 			DBConnection.getInstance().getConnection().setAutoCommit(false);
-			PreparedStatement statementCopy = DBConnection.getInstance().getConnection().prepareStatement(sqlCategory);
-			statementCopy.setString(1, targetedCategory.getTitle());
-			statementCopy.setInt(2, targetedCategory.getMinimumAge());
-			statementCopy.setInt(3, targetedCategory.getMaximumAge());
-			statementCopy.setString(4, targetedCategory.getGender());
-			statementCopy.setString(5, targetedCategory.getOther());
-			statementCopy.setInt(6, version + 1);
-			statementCopy.setInt(7, targetedCategory.getID());
-			statementCopy.setInt(8, version);
-			resultCategory = statementCopy.executeUpdate();
+			psUpdateTargetedCategory.setString(1, targetedCategory.getTitle());
+			psUpdateTargetedCategory.setInt(2, targetedCategory.getMinimumAge());
+			psUpdateTargetedCategory.setInt(3, targetedCategory.getMaximumAge());
+			psUpdateTargetedCategory.setString(4, targetedCategory.getGender());
+			psUpdateTargetedCategory.setString(5, targetedCategory.getOther());
+			psUpdateTargetedCategory.setInt(6, version + 1);
+			psUpdateTargetedCategory.setInt(7, targetedCategory.getID());
+			psUpdateTargetedCategory.setInt(8, version);
+			resultCategory = psUpdateTargetedCategory.executeUpdate();
 			DBConnection.getInstance().getConnection().commit();
-			statementCopy.close();
 			DBConnection.getInstance().getConnection().setAutoCommit(true);
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -75,16 +98,12 @@ public class TargetedCategoryDB implements TargetedCategoryDBIF {
 	}
 
 	public boolean deleteTargetedCategory(int targetedCategoryID) throws SQLException {
-		String sqlDeleteCategory = "DELETE FROM TargetedCategory WHERE ID = ?";
 		int result = 0;
 		try {
 			DBConnection.getInstance().getConnection().setAutoCommit(false);
-			PreparedStatement statement = DBConnection.getInstance().getConnection()
-					.prepareStatement(sqlDeleteCategory);
-			statement.setInt(1, targetedCategoryID);
-			result = statement.executeUpdate();
+			psDeleteTargetedCategoryWithID.setInt(1, targetedCategoryID);
+			result = psDeleteTargetedCategoryWithID.executeUpdate();
 			DBConnection.getInstance().getConnection().commit();
-			statement.close();
 			DBConnection.getInstance().getConnection().setAutoCommit(true);
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -111,13 +130,11 @@ public class TargetedCategoryDB implements TargetedCategoryDBIF {
 	}
 	
 	private int getVersion(int targetedCategoryID) throws SQLException {
-		String sqlFindVersion = "SELECT version FROM TargetedCategory WHERE ID = ?";
 		 int version = -1;
 	        try {
 	        	DBConnection.getInstance().getConnection().setAutoCommit(false);
-	        	PreparedStatement statement = DBConnection.getInstance().getConnection().prepareStatement(sqlFindVersion);
-	        	statement.setInt(1, targetedCategoryID);
-	            ResultSet resultSet = statement.executeQuery();
+	        	psSelectVersion.setInt(1, targetedCategoryID);
+	            ResultSet resultSet = psSelectVersion.executeQuery();
 	            if (resultSet.next()) {
 	                version = resultSet.getInt(1);
 	            }

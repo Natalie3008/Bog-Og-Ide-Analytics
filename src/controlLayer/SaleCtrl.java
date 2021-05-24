@@ -50,12 +50,6 @@ public class SaleCtrl {
 		foundProducts = saleDb.getProductsAnalytics(choice, type, year, month, day, targetedCategoryID);
 		return foundProducts;
 	}
-
-	public ArrayList<OrderLine> getSalesAnalytics() throws SQLException {
-		ArrayList<OrderLine> foundOrderLines = new ArrayList<OrderLine>();
-		foundOrderLines = saleDb.getSalesAnalytics();
-		return foundOrderLines;
-	}
 	
 	//Sale CRUD in the section below
 	
