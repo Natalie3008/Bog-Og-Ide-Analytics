@@ -22,7 +22,11 @@ public class Copy {
 		this.dateSold = dateSold;
 		this.receivedInStore = receivedInStore;
 		this.product = product;
-		this.daysInStock = DAYS.between(receivedInStore.toLocalDate(), dateSold.toLocalDate());
+		if(dateSold!=null) {
+			this.daysInStock = DAYS.between(receivedInStore.toLocalDate(), dateSold.toLocalDate());
+		}else {
+			this.daysInStock = DAYS.between(receivedInStore.toLocalDate(), java.time.LocalDate.now());
+		}
 	}
 
 	public String getArticleNumber() {
