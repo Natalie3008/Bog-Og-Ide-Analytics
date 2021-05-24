@@ -1,5 +1,6 @@
 package databaseLayer;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -12,6 +13,87 @@ import modelLayer.*;
 public class SaleDB implements SaleDBIF {
 	private ProductDB productDb = new ProductDB();
 
+	private static final String SELECT_FROM_SALE_WITH_ID =  "SELECT * FROM Sale WHERE ID LIKE ?";
+	private static final String SELECT_EMPLOYEE_WITH_CPR =  "SELECT * FROM Employee WHERE CPR = ?";
+	
+	private static final String SELECT_TARGETED_CATEGORY = "SELECT ID, targetedCategoryID, productBarcode FROM Sale JOIN OrderLine ON Sale.ID = OrderLine.saleID WHERE targetedCategoryID = ?";
+	private static final String SELECT_BOOKS_FAST = "SELECT * FROM Book JOIN Product ON Product.barcode = Book.barcode WHERE DATEDIFF(day, receivedInStore, dateSold) < 30;";
+	private static final String SELECT_GAMES_FAST = "SELECT * FROM Game JOIN Product ON Product.barcode = Game.barcode WHERE DATEDIFF(day, receivedInStore, dateSold) < 30;";
+	private static final String SELECT_BOOKS_SLOW = "SELECT * FROM Book JOIN Product ON Product.barcode = Book.barcode WHERE DATEDIFF(day, receivedInStore, dateSold) > 30;";
+	private static final String SELECT_GAMES_SLOW = "SELECT * FROM Game JOIN Product ON Product.barcode = Game.barcode WHERE DATEDIFF(day, receivedInStore, dateSold) > 30;";
+	private static final String SELECT_BOOKS_NOTSOLD = "SELECT * FROM Book JOIN Product ON Product.barcode = Book.barcode WHERE dateSold IS NULL;";
+	private static final String SELECT_GAMES_NOTSOLD = "SELECT * FROM Game JOIN Product ON Product.barcode = Game.barcode WHERE dateSold IS NULL;";
+	private static final String SELECT_BOOKS_YEAR = "SELECT * FROM Book JOIN Product ON Product.barcode = Book.barcode WHERE YEAR(dateSold) = ?;";
+	private static final String SELECT_GAMES_YEAR = "SELECT * FROM Game JOIN Product ON Product.barcode = Game.barcode WHERE YEAR(dateSold) = ?;";
+	private static final String SELECT_BOOKS_MONTH = "SELECT * FROM Book JOIN Product ON Product.barcode = Book.barcode WHERE MONTH(dateSold) = ?;";
+	private static final String SELECT_GAMES_MONTH = "SELECT * FROM Game JOIN Product ON Product.barcode = Game.barcode WHERE MONTH(dateSold) = ?;";
+	private static final String SELECT_BOOKS_DAY = "SELECT * FROM Book JOIN Product ON Product.barcode = Book.barcode WHERE DAY(dateSold) = ?;";
+	private static final String SELECT_GAMES_DAY = "SELECT * FROM Game JOIN Product ON Product.barcode = Game.barcode WHERE DAY(dateSold) = ?;";
+	private static final String SELECT_BARCODE_MOST_PROFIT = "SELECT * FROM (SELECT [barcode], [title], [costPrice], [RRP], [quantity] FROM [Product] "
+			+ "INNER JOIN [OrderLine] ON [Product].[barcode] = [OrderLine].[productBarcode] "
+			+ "GROUP BY [barcode], [quantity], [title], [RRP], [CostPrice]) AS [Derived table]";
+
+	private static final String INSERT_INTO_SALE = "INSERT INTO Sale (ID, transactionDate, targetedCategoryID, paymentMethod, totalPrice, employeeCPR, version) VALUES(?,?,?,?,?,?,?)";
+	private static final String UPDATE_COPY = "UPDATE Copy SET dateSold = ?, version = ? WHERE articleNumber LIKE ? AND version = ?";
+	private static final String INSERT_INTO_ORDERLINE = "INSERT INTO OrderLine (saleID, productBarcode, quantity, version) VALUES (?,?,?,?)";
+	private static final String DELETE_SALE = "DELETE FROM Sale WHERE ID = ?";
+
+	private PreparedStatement psSelectSaleWithID;
+	private PreparedStatement psSelectEmployeeWithCPR;
+	private PreparedStatement psSelectTargetedCategory;
+	private PreparedStatement psSelectBooksFast;
+	private PreparedStatement psSelectGamesFast;
+	private PreparedStatement psSelectBooksSlow;
+	private PreparedStatement psSelectGamesSlow;
+	private PreparedStatement psSelectBooksNotSold;
+	private PreparedStatement psSelectGamesNotSold;
+	private PreparedStatement psSelectBooksYear;
+	private PreparedStatement psSelectGamesYear;
+	private PreparedStatement psSelectBooksMonth;
+	private PreparedStatement psSelectGamesMonth;
+	private PreparedStatement psSelectBooksDay;
+	private PreparedStatement psSelectGamesDay;
+	private PreparedStatement psSelectBarcodeMostProfit;
+	private PreparedStatement psInsertIntoSale;
+	private PreparedStatement psUdateCopy;
+	private PreparedStatement psInsertIntoOrderline;
+	private PreparedStatement psDeleteSale;
+	
+	public SaleDB() {
+		initPreparedStatement();
+	}
+	
+	private void initPreparedStatement() {
+		Connection connection = DBConnection.getInstance().getConnection();
+		try{
+
+			psSelectSaleWithID = connection.prepareStatement(SELECT_FROM_SALE_WITH_ID);
+			psSelectEmployeeWithCPR = connection.prepareStatement(SELECT_EMPLOYEE_WITH_CPR);
+
+			psSelectTargetedCategory = connection.prepareStatement(SELECT_TARGETED_CATEGORY);
+			psSelectBooksFast = connection.prepareStatement(SELECT_BOOKS_FAST);
+			psSelectGamesFast = connection.prepareStatement(SELECT_GAMES_FAST);
+			psSelectBooksSlow = connection.prepareStatement(SELECT_BOOKS_SLOW);
+			psSelectGamesSlow = connection.prepareStatement(SELECT_GAMES_SLOW);
+			psSelectBooksNotSold = connection.prepareStatement(SELECT_BOOKS_NOTSOLD);
+			psSelectGamesNotSold = connection.prepareStatement(SELECT_GAMES_NOTSOLD);
+			psSelectBooksYear = connection.prepareStatement(SELECT_BOOKS_YEAR);
+			psSelectGamesYear = connection.prepareStatement(SELECT_GAMES_YEAR);
+			psSelectBooksMonth = connection.prepareStatement(SELECT_BOOKS_MONTH);
+			psSelectGamesMonth = connection.prepareStatement(SELECT_GAMES_MONTH);
+			psSelectBooksDay = connection.prepareStatement(SELECT_BOOKS_DAY);
+			psSelectGamesDay = connection.prepareStatement(SELECT_GAMES_DAY);
+			psSelectBarcodeMostProfit = connection.prepareStatement(SELECT_BARCODE_MOST_PROFIT);
+
+			psInsertIntoSale = connection.prepareStatement(INSERT_INTO_SALE);
+			psUdateCopy = connection.prepareStatement(UPDATE_COPY);
+			psInsertIntoOrderline = connection.prepareStatement(INSERT_INTO_ORDERLINE);
+			psDeleteSale = connection.prepareStatement(DELETE_SALE);
+		}catch(SQLException e ){
+			e.printStackTrace();
+		}
+	}
+	
 	// TODO comment
 	public ArrayList<Sale> getSaleInformation() throws SQLException {
 		ResultSet resultSet = null;
@@ -28,14 +110,13 @@ public class SaleDB implements SaleDBIF {
 
 	public Sale getOneSaleInformation(int ID) throws SQLException {
 		Sale foundSale = null;
-		String selectSale = "SELECT * FROM Sale WHERE ID LIKE ?";
 		try {
 			DBConnection.getInstance().getConnection().setAutoCommit(false);
-			PreparedStatement statement = DBConnection.getInstance().getConnection().prepareStatement(selectSale);
-			statement.setInt(1, ID);
-			ResultSet resultSet = statement.executeQuery(selectSale);
-			foundSale = buildSale(resultSet);
-			statement.close();
+			psSelectSaleWithID.setInt(1, ID);
+			ResultSet resultSet = psSelectSaleWithID.executeQuery();
+			if(resultSet.next()){
+				foundSale = buildSale(resultSet);
+			}
 			DBConnection.getInstance().getConnection().setAutoCommit(true);
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -59,29 +140,25 @@ public class SaleDB implements SaleDBIF {
 		Sale builtSale = null;
 		builtSale = new Sale(resultSet.getInt("ID"), resultSet.getDate("transactionDate"),
 				new TargetedCategory(resultSet.getInt("targetedCategoryID")), resultSet.getString("paymentMethod"),
-				resultSet.getDouble("totalPrice"), buildEmployee(resultSet.getInt("EmployeeCPR")));
+				resultSet.getDouble("totalPrice"), buildEmployee(resultSet.getInt("employeeCPR")));
 		return builtSale;
 	}
 
 	// TODO comment
 	public Employee buildEmployee(long employeeCPR) throws SQLException {
 		Employee builtEmployee = null;
-		String selectEmployee = "SELECT * FROM Employee WHERE EmployeeCPR = ?";
 
 		try {
 			DBConnection.getInstance().getConnection().setAutoCommit(false);
-			PreparedStatement statement = DBConnection.getInstance().getConnection().prepareStatement(selectEmployee);
-			statement.setLong(1, employeeCPR);
+			psSelectEmployeeWithCPR.setLong(1, employeeCPR);
 			DBConnection.getInstance().getConnection().commit();
-			ResultSet resultSet = statement.executeQuery(selectEmployee);
+			ResultSet resultSet = psSelectEmployeeWithCPR.executeQuery();
 			if (resultSet.next()) {
-				builtEmployee = new Employee(resultSet.getInt("CPR"),
-						(resultSet.getString("firstName") + resultSet.getString("lastName")),
-						(resultSet.getString("street") + ", " + resultSet.getInt("zipcode") + ", "
-								+ resultSet.getString("city")),
-						resultSet.getInt("phoneNumber"), resultSet.getString("email"), resultSet.getString("position"));
+				builtEmployee = new Employee(resultSet.getInt("CPR"), //CPR
+											(resultSet.getString("firstName") +" "+ resultSet.getString("lastName")), //NAME
+											(resultSet.getString("street") + ", " + resultSet.getInt("zipcode") + ", "+ resultSet.getString("city")), //ADDRESS
+											resultSet.getInt("phoneNumber"), resultSet.getString("email"), resultSet.getString("position"));
 			}
-			statement.close();
 			DBConnection.getInstance().getConnection().setAutoCommit(true);
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -103,41 +180,19 @@ public class SaleDB implements SaleDBIF {
 		ArrayList<Product> foundProducts = new ArrayList<Product>();
 		ArrayList<Product> finiteProducts = new ArrayList<Product>();
 		ArrayList<Product> productsOfCategory = new ArrayList<Product>();
-		String selectTargetedCategories = "SELECT ID, targetedCategoryID, productBarcode FROM Sale JOIN OrderLine ON Sale.ID = OrderLine.saleID WHERE targetedCategoryID = ?";
-		String selectBooksFast = "SELECT * FROM Book JOIN Product ON Product.barcode = Book.barcode WHERE DATEDIFF(day, receivedInStore, dateSold) < 30;";
-		String selectGamesFast = "SELECT * FROM Game JOIN Product ON Product.barcode = Game.barcode WHERE DATEDIFF(day, receivedInStore, dateSold) < 30;";
-		String selectBooksSlow = "SELECT * FROM Book JOIN Product ON Product.barcode = Book.barcode WHERE DATEDIFF(day, receivedInStore, dateSold) > 30;";
-		String selectGamesSlow = "SELECT * FROM Game JOIN Product ON Product.barcode = Game.barcode WHERE DATEDIFF(day, receivedInStore, dateSold) > 30;";
-		String selectBooksNotSold = "SELECT * FROM Book JOIN Product ON Product.barcode = Book.barcode WHERE dateSold IS NULL;";
-		String selectGamesNotSold = "SELECT * FROM Game JOIN Product ON Product.barcode = Game.barcode WHERE dateSold IS NULL;";
-		String selectBooksYear = "SELECT * FROM Book JOIN Product ON Product.barcode = Book.barcode WHERE YEAR(dateSold) = ?;";
-		String selectGamesYear = "SELECT * FROM Game JOIN Product ON Product.barcode = Game.barcode WHERE YEAR(dateSold) = ?;";
-		String selectBooksMonth = "SELECT * FROM Book JOIN Product ON Product.barcode = Book.barcode WHERE MONTH(dateSold) = ?;";
-		String selectGamesMonth = "SELECT * FROM Game JOIN Product ON Product.barcode = Game.barcode WHERE MONTH(dateSold) = ?;";
-		String selectBooksDay = "SELECT * FROM Book JOIN Product ON Product.barcode = Book.barcode WHERE DAY(dateSold) = ?;";
-		String selectGamesDay = "SELECT * FROM Game JOIN Product ON Product.barcode = Game.barcode WHERE DAY(dateSold) = ?;";
-		String selectBarcodeMostProfit = "SELECT * FROM (SELECT [barcode], [title], [costPrice], [RRP], [quantity] FROM [Product] "
-				+ "INNER JOIN [OrderLine] ON [Product].[barcode] = [OrderLine].[productBarcode] "
-				+ "GROUP BY [barcode], [quantity], [title], [RRP], [CostPrice]) AS [Derived table]";
 		if (year > 0) {
 			try {
 				DBConnection.getInstance().getConnection().setAutoCommit(false);
-				PreparedStatement statementBooks = DBConnection.getInstance().getConnection()
-						.prepareStatement(selectBooksYear);
-				PreparedStatement statementGames = DBConnection.getInstance().getConnection()
-						.prepareStatement(selectGamesYear);
-				statementBooks.setInt(1, year);
-				statementGames.setInt(1, year);
+				psSelectBooksYear.setInt(1, year);
+				psSelectGamesYear.setInt(1, year);
 				DBConnection.getInstance().getConnection().commit();
 				if (type.equals("Book")) {
-					ResultSet resultSet = statementBooks.executeQuery(selectBooksYear);
+					ResultSet resultSet = psSelectBooksYear.executeQuery();
 					foundProducts.addAll(productDb.buildObjects(resultSet, "Book"));
 				} else if (type.equals("Game")) {
-					ResultSet resultSet = statementGames.executeQuery(selectGamesYear);
+					ResultSet resultSet = psSelectGamesYear.executeQuery();
 					foundProducts.addAll(productDb.buildObjects(resultSet, "Game"));
 				}
-				statementBooks.close();
-				statementGames.close();
 				DBConnection.getInstance().getConnection().setAutoCommit(true);
 			} catch (SQLException e) {
 				e.printStackTrace();
@@ -146,12 +201,11 @@ public class SaleDB implements SaleDBIF {
 
 		else if (choice.equals("Slow")) {
 			try {
-				Statement statement = DBConnection.getInstance().getConnection().createStatement();
 				if (type.equals("Book")) {
-					ResultSet resultSet = statement.executeQuery(selectBooksSlow);
+					ResultSet resultSet = psSelectBooksSlow.executeQuery();
 					foundProducts.addAll(productDb.buildObjects(resultSet, "Book"));
 				} else if (type.equals("Game")) {
-					ResultSet resultSet = statement.executeQuery(selectGamesSlow);
+					ResultSet resultSet = psSelectGamesSlow.executeQuery();
 					foundProducts.addAll(productDb.buildObjects(resultSet, "Game"));
 				}
 			} catch (SQLException e) {
@@ -163,10 +217,10 @@ public class SaleDB implements SaleDBIF {
 			try {
 				Statement statement = DBConnection.getInstance().getConnection().createStatement();
 				if (type.equals("Book")) {
-					ResultSet resultSet = statement.executeQuery(selectBooksFast);
+					ResultSet resultSet = psSelectBooksFast.executeQuery();
 					foundProducts.addAll(productDb.buildObjects(resultSet, "Book"));
 				} else if (type.equals("Game")) {
-					ResultSet resultSet = statement.executeQuery(selectGamesFast);
+					ResultSet resultSet = psSelectGamesFast.executeQuery();
 					foundProducts.addAll(productDb.buildObjects(resultSet, "Game"));
 				}
 			} catch (SQLException e) {
@@ -177,22 +231,17 @@ public class SaleDB implements SaleDBIF {
 		else if (month > 0) {
 			try {
 				DBConnection.getInstance().getConnection().setAutoCommit(false);
-				PreparedStatement statementBooks = DBConnection.getInstance().getConnection()
-						.prepareStatement(selectBooksMonth);
-				PreparedStatement statementGames = DBConnection.getInstance().getConnection()
-						.prepareStatement(selectGamesMonth);
-				statementBooks.setInt(1, month);
-				statementGames.setInt(1, month);
+				psSelectBooksMonth.setInt(1, month);
+				psSelectGamesMonth.setInt(1, month);
 				DBConnection.getInstance().getConnection().commit();
 				if (type.equals("Book")) {
-					ResultSet resultSet = statementBooks.executeQuery(selectBooksMonth);
+					ResultSet resultSet = psSelectBooksMonth.executeQuery();
 					foundProducts.addAll(productDb.buildObjects(resultSet, "Book"));
 				} else if (type.equals("Game")) {
-					ResultSet resultSet = statementGames.executeQuery(selectGamesMonth);
+					ResultSet resultSet = psSelectGamesMonth.executeQuery();
 					foundProducts.addAll(productDb.buildObjects(resultSet, "Game"));
 				}
-				statementBooks.close();
-				statementGames.close();
+
 				DBConnection.getInstance().getConnection().setAutoCommit(true);
 			} catch (SQLException e) {
 				e.printStackTrace();
@@ -201,12 +250,11 @@ public class SaleDB implements SaleDBIF {
 
 		else if (choice.equals("Not sold")) {
 			try {
-				Statement statement = DBConnection.getInstance().getConnection().createStatement();
 				if (type.equals("Book")) {
-					ResultSet resultSet = statement.executeQuery(selectBooksNotSold);
+					ResultSet resultSet = psSelectBooksNotSold.executeQuery();
 					foundProducts.addAll(productDb.buildObjects(resultSet, "Book"));
 				} else if (type.equals("Game")) {
-					ResultSet resultSet = statement.executeQuery(selectGamesNotSold);
+					ResultSet resultSet = psSelectGamesNotSold.executeQuery();
 					foundProducts.addAll(productDb.buildObjects(resultSet, "Game"));
 				}
 			} catch (SQLException e) {
@@ -217,22 +265,16 @@ public class SaleDB implements SaleDBIF {
 		else if (day > 0) {
 			try {
 				DBConnection.getInstance().getConnection().setAutoCommit(false);
-				PreparedStatement statementBooks = DBConnection.getInstance().getConnection()
-						.prepareStatement(selectBooksDay);
-				PreparedStatement statementGames = DBConnection.getInstance().getConnection()
-						.prepareStatement(selectGamesDay);
-				statementBooks.setInt(1, day);
-				statementGames.setInt(1, day);
+				psSelectBooksDay.setInt(1, day);
+				psSelectGamesDay.setInt(1, day);
 				DBConnection.getInstance().getConnection().commit();
 				if (type.equals("Book")) {
-					ResultSet resultSet = statementBooks.executeQuery(selectBooksDay);
+					ResultSet resultSet = psSelectBooksDay.executeQuery();
 					foundProducts.addAll(productDb.buildObjects(resultSet, "Book"));
 				} else if (type.equals("Game")) {
-					ResultSet resultSet = statementGames.executeQuery(selectGamesDay);
+					ResultSet resultSet = psSelectGamesDay.executeQuery();
 					foundProducts.addAll(productDb.buildObjects(resultSet, "Game"));
 				}
-				statementBooks.close();
-				statementGames.close();
 				DBConnection.getInstance().getConnection().setAutoCommit(true);
 			} catch (SQLException e) {
 				e.printStackTrace();
@@ -241,8 +283,7 @@ public class SaleDB implements SaleDBIF {
 
 		else if (choice.equals("Most profit")) {
 			try {
-				Statement statement = DBConnection.getInstance().getConnection().createStatement();
-				ResultSet resultSet = statement.executeQuery(selectBarcodeMostProfit);
+				ResultSet resultSet = psSelectBarcodeMostProfit.executeQuery();
 				while(resultSet.next()) {
 					foundProducts.add(new Product(resultSet.getString("title"), resultSet.getDouble("costPrice"), resultSet.getDouble("RRP"), resultSet.getInt("quantity")));
 				}
@@ -253,11 +294,9 @@ public class SaleDB implements SaleDBIF {
 			if (targetedCategoryID >= 0) {
 				try {
 					DBConnection.getInstance().getConnection().setAutoCommit(false);
-					PreparedStatement statementCategories = DBConnection.getInstance().getConnection()
-							.prepareStatement(selectTargetedCategories);
-					statementCategories.setInt(1, targetedCategoryID);
+					psSelectTargetedCategory.setInt(1, targetedCategoryID);
 					DBConnection.getInstance().getConnection().commit();
-					ResultSet resultSet = statementCategories.executeQuery();
+					ResultSet resultSet = psSelectTargetedCategory.executeQuery();
 					while (resultSet.next()) {
 						productsOfCategory.add(new Product(resultSet.getString("productBarcode")));
 					}
@@ -278,45 +317,25 @@ public class SaleDB implements SaleDBIF {
 		return foundProducts;
 	}
 
-	public ArrayList<OrderLine> getSalesAnalytics() throws SQLException {
-		ArrayList<OrderLine> foundOrderLines = new ArrayList<OrderLine>();
-		String selectBarcodeBest = "SELECT y.saleID ,y.productBarcode ,y.quantity FROM OrderLine y INNER JOIN (SELECT productBarcode, COUNT(*) AS CountOf"
-				+ " FROM OrderLine GROUP BY productBarcode HAVING COUNT(*) > 1"
-				+ " ) dt ON y.productBarcode=dt.productBarcode";
-		try {
-			Statement statement = DBConnection.getInstance().getConnection().createStatement();
-			ResultSet resultSet = statement.executeQuery(selectBarcodeBest);
-			foundOrderLines.addAll(buildOrderLines(resultSet));
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return foundOrderLines;
-	}
-
 	// CRUD Sale
 
 	// Create Sale by implementing into DB and updating dateSold via articleNumber
 	// in Copy
 	public Sale createSale(Sale sale, Copy copy, OrderLine orderLine) throws SQLException {
-		String sqlSale = "INSERT INTO Sale (ID, transactionDate, targetedCategoryID, paymentMethod, totalPrice, employeeCPR, version)"
-				+ " VALUES(?,?,?,?,?,?,?)";
-		String sqlCopy = "UPDATE Copy SET dateSold = ?, version = ? WHERE articleNumber LIKE ? AND version = ?";
-		String sqlOrderLine = "INSERT INTO OrderLine (saleID, productBarcode, quantity, version) VALUES (?,?,?,?)";
+		
 		int resultSale = 0;
 		int resultCopy = 0;
 		int resultOrderLine = 0;
 		try {
 			DBConnection.getInstance().getConnection().setAutoCommit(false);
-			PreparedStatement statementSale = DBConnection.getInstance().getConnection().prepareStatement(sqlSale);
-			statementSale.setInt(1, sale.getID());
-			statementSale.setDate(2, sale.getDate());
-			statementSale.setInt(3, sale.getTargetedCategory().getID());
-			statementSale.setString(4, sale.getPaymentMethod());
-			statementSale.setDouble(5, sale.getTotalPrice());
-			statementSale.setLong(6, sale.getEmployee().getCPR());
-			resultSale = statementSale.executeUpdate();
+			psInsertIntoSale.setInt(1, sale.getID());
+			psInsertIntoSale.setDate(2, sale.getDate());
+			psInsertIntoSale.setInt(3, sale.getTargetedCategory().getID());
+			psInsertIntoSale.setString(4, sale.getPaymentMethod());
+			psInsertIntoSale.setDouble(5, sale.getTotalPrice());
+			psInsertIntoSale.setLong(6, sale.getEmployee().getCPR());
+			resultSale = psInsertIntoSale.executeUpdate();
 			DBConnection.getInstance().getConnection().commit();
-			statementSale.close();
 			DBConnection.getInstance().getConnection().setAutoCommit(true);
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -325,28 +344,23 @@ public class SaleDB implements SaleDBIF {
 		}
 		try {
 			DBConnection.getInstance().getConnection().setAutoCommit(false);
-			PreparedStatement statementCopy = DBConnection.getInstance().getConnection().prepareStatement(sqlCopy);
-			statementCopy.setDate(1, copy.getDateSold());
-			statementCopy.setString(2, copy.getArticleNumber());
-			resultCopy = statementCopy.executeUpdate();
+			psUdateCopy.setDate(1, copy.getDateSold());
+			psUdateCopy.setString(2, copy.getArticleNumber());
+			resultCopy = psUdateCopy.executeUpdate();
 			DBConnection.getInstance().getConnection().commit();
-			statementCopy.close();
 			DBConnection.getInstance().getConnection().setAutoCommit(true);
 		} catch (SQLException e) {
 			e.printStackTrace();
 			DBConnection.getInstance().getConnection().rollback();
-			throw e;
 		}
 		
 		try {
 			DBConnection.getInstance().getConnection().setAutoCommit(false);
-			PreparedStatement statementOrderLine = DBConnection.getInstance().getConnection().prepareStatement(sqlOrderLine);
-			statementOrderLine.setInt(1, orderLine.getSale().getID());
-			statementOrderLine.setString(2, orderLine.getProduct().getBarcode());
-			statementOrderLine.setInt(3, orderLine.getQuantity());
-			resultOrderLine = statementOrderLine.executeUpdate();
+			psInsertIntoOrderline.setInt(1, orderLine.getSale().getID());
+			psInsertIntoOrderline.setString(2, orderLine.getProduct().getBarcode());
+			psInsertIntoOrderline.setInt(3, orderLine.getQuantity());
+			resultOrderLine = psInsertIntoOrderline.executeUpdate();
 			DBConnection.getInstance().getConnection().commit();
-			statementOrderLine.close();
 			DBConnection.getInstance().getConnection().setAutoCommit(true);
 		}
 		catch(SQLException e)  {
@@ -358,20 +372,16 @@ public class SaleDB implements SaleDBIF {
 
 	// Delete Sale by going into the DB
 	public boolean deleteSale(int ID) throws SQLException {
-		String sqlSale = "DELETE FROM Sale WHERE ID = ?";
 		int resultSale = 0;
 		try {
 			DBConnection.getInstance().getConnection().setAutoCommit(false);
-			PreparedStatement statement = DBConnection.getInstance().getConnection().prepareStatement(sqlSale);
-			statement.setInt(1, ID);
-			resultSale = statement.executeUpdate();
+			psDeleteSale.setInt(1, ID);
+			resultSale = psDeleteSale.executeUpdate();
 			DBConnection.getInstance().getConnection().commit();
-			statement.close();
 			DBConnection.getInstance().getConnection().setAutoCommit(true);
 		} catch (SQLException e) {
 			e.printStackTrace();
 			DBConnection.getInstance().getConnection().rollback();
-			throw e;
 		}
 		return resultSale > 1;
 	}

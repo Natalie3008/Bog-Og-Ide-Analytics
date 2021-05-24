@@ -18,6 +18,14 @@ public class ProductDB {
 		Product builtProduct = null;
 
 		try {
+			if (selectedType.equals("Product")) {
+
+				builtProduct = new Product(resultSet.getString("barcode"), resultSet.getString("title"),
+						resultSet.getDouble("costPrice"), resultSet.getDouble("RRP"), resultSet.getInt("amountInStock"),
+						resultSet.getString("publicationDate"), resultSet.getString("description"),
+						resultSet.getString("language"), buildSupplier(resultSet.getInt("supplierCVR")));		
+			}
+			
 			if (selectedType.equals("Book")) {
 
 				builtProduct = new Book(resultSet.getString("barcode"), resultSet.getString("title"),
