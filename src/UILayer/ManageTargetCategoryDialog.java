@@ -67,7 +67,6 @@ public class ManageTargetCategoryDialog extends JDialog {
 		}
 		@Override
 		protected void done() {
-			System.out.println("WORKER FINISHED");
 		}		
 	};
 	

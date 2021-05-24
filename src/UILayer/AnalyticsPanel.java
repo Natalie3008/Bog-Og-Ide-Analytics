@@ -107,7 +107,6 @@ public class AnalyticsPanel extends JPanel {
 					}
 					@Override
 					protected void done() {
-						System.out.println("SLOWEST SELLING BOOKS LOADED");
 					}		
 				};
 				slowSellingBooksWorker.execute();
@@ -125,7 +124,6 @@ public class AnalyticsPanel extends JPanel {
 					}
 					@Override
 					protected void done() {
-						System.out.println("FASTEST SELLING BOOKS LOADED");
 					}		
 				};
 				fastSellingBooksWorker.execute();
@@ -145,7 +143,6 @@ public class AnalyticsPanel extends JPanel {
 					}
 					@Override
 					protected void done() {
-						System.out.println("MOST PROFIT BOOKS LOADED");
 					}		
 				};
 				mostProfitBooksWorker.execute();
@@ -167,7 +164,6 @@ public class AnalyticsPanel extends JPanel {
 					}
 					@Override
 					protected void done() {
-						System.out.println("MANAGE TARGETED CATEGORIES DIALOG LOADED");
 					}		
 				};
 				manageTargetedCategoryDialogWorker.execute();
@@ -245,7 +241,6 @@ public class AnalyticsPanel extends JPanel {
 					}
 					@Override
 					protected void done() {
-						System.out.println("FASTEST SELLING GAMES LOADED");
 					}		
 				};
 				fastSellingGamesWorker.execute();
@@ -263,7 +258,6 @@ public class AnalyticsPanel extends JPanel {
 					}
 					@Override
 					protected void done() {
-						System.out.println("SLOWEST SELLING GAMES LOADED");
 					}		
 				};
 				slowSellingGamesWorker.execute();
@@ -281,7 +275,6 @@ public class AnalyticsPanel extends JPanel {
 					}
 					@Override
 					protected void done() {
-						System.out.println("MOST PROFIT GAMES LOADED");
 					}		
 				};
 				mostProfitGamesBtn.execute();
@@ -302,7 +295,6 @@ public class AnalyticsPanel extends JPanel {
 					}
 					@Override
 					protected void done() {
-						System.out.println("MANAGE TARGETED CATEGORIES DIALOG LOADED");
 					}		
 				};
 				manageTargetedCategoryDialogWorker.execute();
