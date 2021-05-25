@@ -18,11 +18,11 @@ public class DBConnection {
 	private Connection connection = null; // the connection to the database
 	private static DBConnection dbConnection = new DBConnection(); // unique instance of the class - singleton pattern
 
-	private static final String DBNAME = "BogOgIdeAnalytics";
-	private static final String SERVERNAME = "localhost";
+	private static final String DBNAME = "dmai0919_1086321";
+	private static final String SERVERNAME = "hildur.ucn.dk";
 	private static final String PORTNUMBER = "1433";
-	private static final String USERNAME = "sa";
-	private static final String PASSWORD = "secret2021*";
+	private static final String USERNAME = "dmai0919_1086321";
+	private static final String PASSWORD = "Password1!";
 
 	// constructor - private because of singleton pattern
 	private DBConnection() {
