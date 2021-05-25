@@ -283,10 +283,13 @@ public class SaleDB implements SaleDBIF {
 
 		else if (choice.equals("Most profit")) {
 			try {
+				DBConnection.getInstance().getConnection().setAutoCommit(false);
+				DBConnection.getInstance().getConnection().commit();
 				ResultSet resultSet = psSelectBarcodeMostProfit.executeQuery();
 				while(resultSet.next()) {
 					foundProducts.add(new Product(resultSet.getString("barcode"), resultSet.getString("title"), resultSet.getDouble("costPrice"), resultSet.getDouble("RRP"), resultSet.getInt("quantity")));
 				}
+				DBConnection.getInstance().getConnection().setAutoCommit(true);
 				
 			} catch (SQLException e) {
 				e.printStackTrace();

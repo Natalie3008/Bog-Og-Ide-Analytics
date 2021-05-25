@@ -50,6 +50,7 @@ public class AnalyticsPanel extends JPanel {
 	private ArrayList<Product> products = new ArrayList<>();
 	private JFXPanel booksFxPanel;
 	private JFXPanel gamesFxPanel;
+
 	
 	public AnalyticsPanel() throws SQLException {
 		targetedCategoryCtrl = new TargetedCategoryCtrl();
@@ -202,30 +203,13 @@ public class AnalyticsPanel extends JPanel {
 		comboBoxBooks.setBackground(new Color(26, 31, 32));
 		booksButtonPanel.add(comboBoxBooks);
 		
+		booksFxPanel = new JFXPanel();
+		Books.add(booksFxPanel, BorderLayout.CENTER);
 		
 		tabbedPane.setForegroundAt(0, Color.WHITE);
 		tabbedPane.setBackgroundAt(0, Color.decode("#1A1F20"));
 		
-		JPanel panel = new JPanel();
-		panel.setBackground(Color.decode("#242A2B"));
-		Books.add(panel, BorderLayout.CENTER);
-		GridBagLayout gbl_panel = new GridBagLayout();
-		gbl_panel.columnWidths = new int[]{511, 225, 0};
-		gbl_panel.rowHeights = new int[]{130, 0};
-		gbl_panel.columnWeights = new double[]{1.0, 1.0, Double.MIN_VALUE};
-		gbl_panel.rowWeights = new double[]{0.0, Double.MIN_VALUE};
-		panel.setLayout(gbl_panel);
-				
-		booksFxPanel = new JFXPanel();
-		GridBagConstraints gbc_booksFxPanel = new GridBagConstraints();
-		gbc_booksFxPanel.fill = GridBagConstraints.VERTICAL;
-		gbc_booksFxPanel.anchor = GridBagConstraints.WEST;
-		gbc_booksFxPanel.insets = new Insets(0, 0, 0, 5);
-		gbc_booksFxPanel.gridx = 0;
-		gbc_booksFxPanel.gridy = 0;
-		panel.add(booksFxPanel, gbc_booksFxPanel);
-		
-		
+
 		JPanel Games = new JPanel();
 		Games.setBackground(Color.decode("#242A2B"));
 		tabbedPane.addTab("GAMES", new ImageIcon(AnalyticsPanel.class.getResource("/Assets/gamepad-white-icon.png")), Games, null);
@@ -344,8 +328,6 @@ public class AnalyticsPanel extends JPanel {
 		
 		gamesFxPanel = new JFXPanel();
 		Games.add(gamesFxPanel,BorderLayout.CENTER);
-		
-		
 
        Platform.runLater(new Runnable() {
             @Override
@@ -468,7 +450,7 @@ public class AnalyticsPanel extends JPanel {
 			Platform.runLater(new Runnable() {
 	            @Override
 	            public void run() {          
-	            	Scene scene = jfxChart.updateChartMostProfit("MOST PROFIT BOOKS", res);
+	            	Scene scene = jfxChart.updateChartMostProfit("MOST PROFIT PRODUCTS", res);
 	            	fxPanel.setScene(scene);
 	            }
 	        });
@@ -487,7 +469,7 @@ public class AnalyticsPanel extends JPanel {
 				Platform.runLater(new Runnable() {
 		            @Override
 		            public void run() {          
-		            	Scene scene = jfxChart.updateChartMostProfit("MOST PROFIT GAMES", res);
+		            	Scene scene = jfxChart.updateChartMostProfit("MOST PROFIT PRODUCTS", res);
 		            	fxPanel.setScene(scene);	            
 		            }
 		        });
@@ -500,11 +482,11 @@ public class AnalyticsPanel extends JPanel {
     }
     
     
-    protected void getTargetedCategoryAnalytics(JFXPanel fxPanel, int selectedTargetedCategory) {
+    protected void getTargetedCategoryAnalytics(JFXPanel fxPanel, int selectedTargetedCategoryID) {
         
 		List<Product> res;
 		try {
-			res = saleCtrl.getProductsAnalytics("Most profit", "Book", 0, 0, 0, selectedTargetedCategory);
+			res = saleCtrl.getProductsAnalytics("Most profit", "Book", 0, 0, 0, selectedTargetedCategoryID);
 			
 			Platform.runLater(new Runnable() {
 	            @Override
