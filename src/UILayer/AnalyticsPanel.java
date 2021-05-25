@@ -304,6 +304,26 @@ public class AnalyticsPanel extends JPanel {
 		gamesButtonPanel.add(manageTargetCategoriesButtonGames);
 		
 		comboBoxGames = new JComboBox<TargetedCategory>(comboBoxModel);
+		comboBoxGames.addActionListener(new ActionListener() {
+		    @Override
+		    public void actionPerformed(ActionEvent e) {
+		    	TargetedCategory selectedTargetedCategory = comboBoxGames.getModel().getElementAt(comboBoxGames.getSelectedIndex());
+		    	int selectedCategoryID = selectedTargetedCategory.getID();
+		    	SwingWorker<Boolean, Void> getTargetedCategoryAnalyticsWorker = new SwingWorker<Boolean, Void>() {
+					@Override
+					protected Boolean doInBackground() {
+				    	
+				    	getTargetedCategoryAnalytics(gamesFxPanel, selectedCategoryID);
+						return true;
+					}
+					@Override
+					protected void done() {
+					}		
+				};
+				getTargetedCategoryAnalyticsWorker.execute();
+		    	
+		    }
+		});
 		comboBoxGames.setOpaque(false);
 		comboBoxGames.setForeground(Color.WHITE);
 		comboBoxGames.setFont(new Font("Segoe UI", Font.BOLD, 18));
@@ -471,4 +491,25 @@ public class AnalyticsPanel extends JPanel {
     	
     }
     
+    
+    protected void getTargetedCategoryAnalytics(JFXPanel fxPanel, int selectedTargetedCategory) {
+        
+		List<Product> res;
+		try {
+			res = saleCtrl.getProductsAnalytics("Most profit", "Book", 0, 0, 0, selectedTargetedCategory);
+			
+			Platform.runLater(new Runnable() {
+	            @Override
+	            public void run() {          
+	            	Scene scene = jfxChart.updateChartMostProfit("SELECT TARGETED CATEGORY - MOST PROFIT", res);
+	            	fxPanel.setScene(scene);	            
+	            }
+	        });
+		}
+		catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	
+}
 }

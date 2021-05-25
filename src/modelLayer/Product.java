@@ -36,7 +36,8 @@ public class Product {
 		copies = new ArrayList<Copy>();
 	}
 	
-	public Product(String title, double costPrice, double recommendedRetailPrice, int amountInStock) {
+	public Product(String barcode, String title, double costPrice, double recommendedRetailPrice, int amountInStock) {
+		this.barcode = barcode;
 		this.title = title;
 		this.costPrice = costPrice;
 		this.recommendedRetailPrice = recommendedRetailPrice;

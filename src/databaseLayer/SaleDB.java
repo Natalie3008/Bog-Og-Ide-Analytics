@@ -285,7 +285,7 @@ public class SaleDB implements SaleDBIF {
 			try {
 				ResultSet resultSet = psSelectBarcodeMostProfit.executeQuery();
 				while(resultSet.next()) {
-					foundProducts.add(new Product(resultSet.getString("title"), resultSet.getDouble("costPrice"), resultSet.getDouble("RRP"), resultSet.getInt("quantity")));
+					foundProducts.add(new Product(resultSet.getString("barcode"), resultSet.getString("title"), resultSet.getDouble("costPrice"), resultSet.getDouble("RRP"), resultSet.getInt("quantity")));
 				}
 				
 			} catch (SQLException e) {
