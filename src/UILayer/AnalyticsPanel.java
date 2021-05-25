@@ -174,17 +174,25 @@ public class AnalyticsPanel extends JPanel {
 		
 		comboBoxBooks = new JComboBox<TargetedCategory>(comboBoxModel);
 		comboBoxBooks.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent event) {
-	        	TargetedCategory selectedCategory = comboBoxBooks.getModel().getElementAt(comboBoxBooks.getSelectedIndex());
-	        	int selectedCategoryID = selectedCategory.getID();
-	        	try {
-					saleCtrl.getProductsAnalytics("", "Books", 0, 0, 0, selectedCategoryID);
-				} catch (SQLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-            }
-        });
+		    @Override
+		    public void actionPerformed(ActionEvent e) {
+		    	TargetedCategory selectedTargetedCategory = comboBoxGames.getModel().getElementAt(comboBoxGames.getSelectedIndex());
+		    	int selectedCategoryID = selectedTargetedCategory.getID();
+		    	SwingWorker<Boolean, Void> getTargetedCategoryAnalyticsBooksWorker = new SwingWorker<Boolean, Void>() {
+					@Override
+					protected Boolean doInBackground() {
+				    	
+				    	getTargetedCategoryAnalytics(booksFxPanel, selectedCategoryID);
+						return true;
+					}
+					@Override
+					protected void done() {
+					}		
+				};
+				getTargetedCategoryAnalyticsBooksWorker.execute();
+		    	
+		    }
+		});
 		comboBoxBooks.setBorder(new EmptyBorder(5, 5, 5, 5));
 		comboBoxBooks.setOpaque(false);
 		comboBoxBooks.setForeground(Color.WHITE);
@@ -309,7 +317,7 @@ public class AnalyticsPanel extends JPanel {
 		    public void actionPerformed(ActionEvent e) {
 		    	TargetedCategory selectedTargetedCategory = comboBoxGames.getModel().getElementAt(comboBoxGames.getSelectedIndex());
 		    	int selectedCategoryID = selectedTargetedCategory.getID();
-		    	SwingWorker<Boolean, Void> getTargetedCategoryAnalyticsWorker = new SwingWorker<Boolean, Void>() {
+		    	SwingWorker<Boolean, Void> getTargetedCategoryAnalyticsGamesWorker = new SwingWorker<Boolean, Void>() {
 					@Override
 					protected Boolean doInBackground() {
 				    	
@@ -320,7 +328,7 @@ public class AnalyticsPanel extends JPanel {
 					protected void done() {
 					}		
 				};
-				getTargetedCategoryAnalyticsWorker.execute();
+				getTargetedCategoryAnalyticsGamesWorker.execute();
 		    	
 		    }
 		});
