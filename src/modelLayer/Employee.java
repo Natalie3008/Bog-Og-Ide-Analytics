@@ -5,6 +5,7 @@ package modelLayer;
  * 
  */
 public class Employee {
+	
 	private long CPR;
 	private String name;
 	private String address;

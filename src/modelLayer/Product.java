@@ -6,6 +6,7 @@ import java.util.ArrayList;
 */
 
 public class Product {
+	
 	private String barcode;
 	private String title;
 	private double costPrice;

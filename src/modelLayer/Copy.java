@@ -9,12 +9,11 @@ import java.sql.Date;
 
 
 public class Copy {
+	
 	private String articleNumber; //unique number for every copy
 	private Date dateSold;
 	private Date receivedInStore;
 	private long daysInStock;
-	
-
 	private Product product;
 
 	public Copy(String articleNumber, Date dateSold, Date receivedInStore, Product product) {

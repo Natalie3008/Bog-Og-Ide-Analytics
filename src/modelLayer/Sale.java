@@ -5,6 +5,7 @@ import java.sql.Date;
 
 // Sale class holds information about sales in the system 
 public class Sale {
+	
 	private int ID;
 	private Date date;
 	private TargetedCategory targetedCategory; // targeted customer group

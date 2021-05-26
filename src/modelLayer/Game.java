@@ -7,6 +7,7 @@ package modelLayer;
  */
 
 public class Game extends Product {
+	
 	private String type; //such as board game, card game, puzzle etc.
 
 	public Game(String barcode, String title, double costPrice, double recommendedRetailPrice, int amountInStock,
