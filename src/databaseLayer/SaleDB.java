@@ -12,7 +12,7 @@ import modelLayer.*;
 
 public class SaleDB implements SaleDBIF {
 	private ProductDBIF productDb;
-
+// making Strings into queries 
 	private static final String SELECT_FROM_SALE_WITH_ID = "SELECT * FROM Sale WHERE ID LIKE ?";
 	private static final String SELECT_EMPLOYEE_WITH_CPR = "SELECT * FROM Employee WHERE CPR = ?";
 	private static final String SELECT_TARGETED_CATEGORY = "SELECT ID, targetedCategoryID, productBarcode FROM Sale JOIN OrderLine ON Sale.ID = OrderLine.saleID WHERE targetedCategoryID = ?";

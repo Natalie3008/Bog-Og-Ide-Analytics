@@ -8,7 +8,7 @@ import java.sql.SQLException;
 import modelLayer.*;
 
 public class EmployeeDB implements EmployeeDBIF {
-
+// creating Strings with SQL queries and then making them into prepared statements
 	private static final String INSERT_INTO_EMPLOYEE = "INSERT INTO Employee (CPR, name, street, zip, city, country, phoneNumber, email, position, version) VALUES(?,?,?,?,?,?,?,?,?,?)";
 	private static final String UPDATE_EMPLOYEE_NAME = "UPDATE Employee SET name = ?, version = ? WHERE CPR = ? AND version = ?";
 	private static final String UPDATE_EMPLOYEE_ADDRESS = "UPDATE Employee SET street = ?, zip = ?, city = ?, country = ?, version = ? WHERE CPR = ? AND version = ?";
@@ -19,7 +19,7 @@ public class EmployeeDB implements EmployeeDBIF {
 	private static final String DELETE_EMPLOYEE_WITH_CPR = "DELETE FROM Employee WHERE CPR like ?";
 
 	private static final String SELECT_VERSION_FROM_EMPLOYEE = "SELECT version FROM Employee WHERE CPR = ?";
-
+// the question marks will be replaced with actual information from methods
 	PreparedStatement psInsertIntoEmployee;
 	PreparedStatement psUpdateEmployeeName;
 	PreparedStatement psUpdateEmployeeAddress;
@@ -74,7 +74,7 @@ public class EmployeeDB implements EmployeeDBIF {
 			DBConnection.getInstance().getConnection().setAutoCommit(true);
 		} catch (SQLException e) {
 			e.printStackTrace();
-			DBConnection.getInstance().getConnection().rollback();
+			DBConnection.getInstance().getConnection().rollback(); //undo in case of an error 
 		}
 		return resultEmployee > 1;
 	}
@@ -120,7 +120,8 @@ public class EmployeeDB implements EmployeeDBIF {
 			e.printStackTrace();
 			DBConnection.getInstance().getConnection().rollback();
 		}
-		return result == 1 ? employee : null;
+		return result == 1 ? employee : null; //shortened expressions for if else statements
+		
 	}
 
 	// Update phoneNumber
@@ -197,7 +198,7 @@ public class EmployeeDB implements EmployeeDBIF {
 		}
 		return result > 1;
 	}
-	
+	//getting version to avoid conflicts
 	private int getVersion(long CPR) throws SQLException {
 		 int version = -1;
 	        try {

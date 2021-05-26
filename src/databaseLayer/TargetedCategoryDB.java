@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import modelLayer.TargetedCategory;
 
 public class TargetedCategoryDB implements TargetedCategoryDBIF {
-
+//database class to manage targeted categories 
 	private static final String INSERT_INTO_TARGETED_CATEGORY = "INSERT INTO TargetedCategory (ID, title, minimumAge, maximumAge, gender, other, version) VALUES(?,?,?,?,?,?,?)";
 	private static final String UPDATE_TARGETED_CATEGORY = "UPDATE TargetedCategory SET title = ?, minimumAge = ?, maximumAge = ?, gender = ?, other = ? , version = ? WHERE ID = ? AND version = ?";
 	private static final String DELETE_TARGETED_CATEGORY_WITH_ID = "DELETE FROM TargetedCategory WHERE ID = ?";
@@ -56,7 +56,7 @@ public class TargetedCategoryDB implements TargetedCategoryDBIF {
 			DBConnection.getInstance().getConnection().rollback();
 			throw e;
 		}
-		return resultCategory == 1 ? targetedCategory : null;
+		return resultCategory == 1 ? targetedCategory : null;  //short version of logical operations
 	}
 
 	public TargetedCategory updateTargetedCategory(TargetedCategory targetedCategory) throws SQLException {
