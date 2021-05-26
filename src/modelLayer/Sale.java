@@ -87,5 +87,4 @@ public class Sale {
 	public boolean addOrderLine(OrderLine orderLine) {
 		return orderLines.add(orderLine);
 	}
-
 }

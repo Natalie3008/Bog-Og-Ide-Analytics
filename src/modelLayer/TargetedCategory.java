@@ -92,5 +92,4 @@ public class TargetedCategory {
 	public String toString() {
 		return String.format(title.toUpperCase());
 	}
-	
 }

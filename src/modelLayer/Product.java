@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 /*This is a Product class. It was an abstract class, however the team needed to make an instance of product in the database layer. 
 */
-
 public class Product {
 	
 	private String barcode;
@@ -129,5 +128,4 @@ public class Product {
 	public void setCopies(ArrayList<Copy> copies) {
 		this.copies = copies;
 	}
-
 }

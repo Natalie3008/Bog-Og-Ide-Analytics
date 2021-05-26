@@ -2,7 +2,6 @@ package modelLayer;
 
 /* This class holds the information on the Employees
  * in the system. 
- * 
  */
 public class Employee {
 	
@@ -69,5 +68,4 @@ public class Employee {
 	public void setPosition(String position) {
 		this.position = position;
 	}
-
 }

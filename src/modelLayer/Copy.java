@@ -6,8 +6,6 @@ import java.sql.Date;
  * of various Products in the system. These products can
  * be books or games. 
  */
-
-
 public class Copy {
 	
 	private String articleNumber; //unique number for every copy
@@ -67,5 +65,4 @@ public class Copy {
 	public void setDaysInStock(long daysInStock) {
 		this.daysInStock = daysInStock;
 	}
-	
 }

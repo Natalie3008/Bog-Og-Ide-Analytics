@@ -42,5 +42,4 @@ public class Book extends Product {
 	public void setGenre(String genre) {
 		this.genre = genre;
 	}
-
 }

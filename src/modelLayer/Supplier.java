@@ -76,5 +76,4 @@ public class Supplier {
 	public void setProductCategory(String productCategory) {
 		this.productCategory = productCategory;
 	}
-
 }

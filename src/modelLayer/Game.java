@@ -5,7 +5,6 @@ package modelLayer;
  * over the constructor as well as the methods that can be 
  * found in the Product class. 
  */
-
 public class Game extends Product {
 	
 	private String type; //such as board game, card game, puzzle etc.
@@ -23,5 +22,4 @@ public class Game extends Product {
 	public void setType(String type) {
 		this.type = type;
 	}
-
 }
