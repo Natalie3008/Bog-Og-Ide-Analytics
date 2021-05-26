@@ -7,13 +7,29 @@
 }
 .chart-title {
   -fx-text-fill: #ffffff;
-  -fx-font-size: 1.6em;
+  -fx-font-size: 25px;
+  -fx-font-style: italic;
 }
 .axis-label {
-  -fx-text-fill: #ffffff;
-  -fx-font-size: 20px;	 
+  -fx-text-fill: #999999;
+  -fx-font-size: 25px;	 
+  -fx-font-weight: bold;
+  -fx-text-fill: #FF5F1F;
 }
 .axis {  
-    -fx-tick-label-fill: #999999;
+	-fx-tick-length: 20px;
+	-fx-tick-label-gap: 8px;	
+	-fx-tick-label-font-size: 15px;
+    -fx-tick-label-fill: #ffffff;
+    -fx-tick-length: 20;
+    -fx-minor-tick-length: 10;	
+}
 
+
+.axis-tick-mark {
+    -fx-stroke: #ffffff;
+    -fx-stroke-width: 2; 
+}
+.axis-minor-tick-mark {
+    -fx-stroke: #ffffff;
 }
