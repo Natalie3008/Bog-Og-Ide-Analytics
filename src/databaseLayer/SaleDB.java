@@ -11,11 +11,10 @@ import java.util.*;
 import modelLayer.*;
 
 public class SaleDB implements SaleDBIF {
-	private ProductDB productDb = new ProductDB();
+	private ProductDBIF productDb;
 
-	private static final String SELECT_FROM_SALE_WITH_ID =  "SELECT * FROM Sale WHERE ID LIKE ?";
-	private static final String SELECT_EMPLOYEE_WITH_CPR =  "SELECT * FROM Employee WHERE CPR = ?";
-	
+	private static final String SELECT_FROM_SALE_WITH_ID = "SELECT * FROM Sale WHERE ID LIKE ?";
+	private static final String SELECT_EMPLOYEE_WITH_CPR = "SELECT * FROM Employee WHERE CPR = ?";
 	private static final String SELECT_TARGETED_CATEGORY = "SELECT ID, targetedCategoryID, productBarcode FROM Sale JOIN OrderLine ON Sale.ID = OrderLine.saleID WHERE targetedCategoryID = ?";
 	private static final String SELECT_BOOKS_FAST = "SELECT * FROM Book JOIN Product ON Product.barcode = Book.barcode WHERE DATEDIFF(day, receivedInStore, dateSold) < 30;";
 	private static final String SELECT_GAMES_FAST = "SELECT * FROM Game JOIN Product ON Product.barcode = Game.barcode WHERE DATEDIFF(day, receivedInStore, dateSold) < 30;";
@@ -32,7 +31,6 @@ public class SaleDB implements SaleDBIF {
 	private static final String SELECT_BARCODE_MOST_PROFIT = "SELECT * FROM (SELECT [barcode], [title], [costPrice], [RRP], [quantity] FROM [Product] "
 			+ "INNER JOIN [OrderLine] ON [Product].[barcode] = [OrderLine].[productBarcode] "
 			+ "GROUP BY [barcode], [quantity], [title], [RRP], [CostPrice]) AS [Derived table]";
-
 	private static final String INSERT_INTO_SALE = "INSERT INTO Sale (ID, transactionDate, targetedCategoryID, paymentMethod, totalPrice, employeeCPR, version) VALUES(?,?,?,?,?,?,?)";
 	private static final String UPDATE_COPY = "UPDATE Copy SET dateSold = ?, version = ? WHERE articleNumber LIKE ? AND version = ?";
 	private static final String INSERT_INTO_ORDERLINE = "INSERT INTO OrderLine (saleID, productBarcode, quantity, version) VALUES (?,?,?,?)";
@@ -58,18 +56,17 @@ public class SaleDB implements SaleDBIF {
 	private PreparedStatement psUdateCopy;
 	private PreparedStatement psInsertIntoOrderline;
 	private PreparedStatement psDeleteSale;
-	
+
 	public SaleDB() {
 		initPreparedStatement();
+		productDb = new ProductDB();
 	}
-	
+
 	private void initPreparedStatement() {
 		Connection connection = DBConnection.getInstance().getConnection();
-		try{
-
+		try {
 			psSelectSaleWithID = connection.prepareStatement(SELECT_FROM_SALE_WITH_ID);
 			psSelectEmployeeWithCPR = connection.prepareStatement(SELECT_EMPLOYEE_WITH_CPR);
-
 			psSelectTargetedCategory = connection.prepareStatement(SELECT_TARGETED_CATEGORY);
 			psSelectBooksFast = connection.prepareStatement(SELECT_BOOKS_FAST);
 			psSelectGamesFast = connection.prepareStatement(SELECT_GAMES_FAST);
@@ -84,17 +81,15 @@ public class SaleDB implements SaleDBIF {
 			psSelectBooksDay = connection.prepareStatement(SELECT_BOOKS_DAY);
 			psSelectGamesDay = connection.prepareStatement(SELECT_GAMES_DAY);
 			psSelectBarcodeMostProfit = connection.prepareStatement(SELECT_BARCODE_MOST_PROFIT);
-
 			psInsertIntoSale = connection.prepareStatement(INSERT_INTO_SALE);
 			psUdateCopy = connection.prepareStatement(UPDATE_COPY);
 			psInsertIntoOrderline = connection.prepareStatement(INSERT_INTO_ORDERLINE);
 			psDeleteSale = connection.prepareStatement(DELETE_SALE);
-		}catch(SQLException e ){
+		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 	}
-	
-	// TODO comment
+
 	public ArrayList<Sale> getSaleInformation() throws SQLException {
 		ResultSet resultSet = null;
 		ArrayList<Sale> saleInformation = new ArrayList<Sale>();
@@ -114,7 +109,7 @@ public class SaleDB implements SaleDBIF {
 			DBConnection.getInstance().getConnection().setAutoCommit(false);
 			psSelectSaleWithID.setInt(1, ID);
 			ResultSet resultSet = psSelectSaleWithID.executeQuery();
-			if(resultSet.next()){
+			if (resultSet.next()) {
 				foundSale = buildSale(resultSet);
 			}
 			DBConnection.getInstance().getConnection().setAutoCommit(true);
@@ -125,7 +120,6 @@ public class SaleDB implements SaleDBIF {
 		return foundSale;
 	}
 
-	// TODO comment
 	public ArrayList<Sale> buildSales(ResultSet resultSet) throws SQLException {
 		ArrayList<Sale> saleInformation = new ArrayList<>();
 		while (resultSet.next()) {
@@ -135,7 +129,6 @@ public class SaleDB implements SaleDBIF {
 		return saleInformation;
 	}
 
-	// TODO comment
 	public Sale buildSale(ResultSet resultSet) throws SQLException {
 		Sale builtSale = null;
 		builtSale = new Sale(resultSet.getInt("ID"), resultSet.getDate("transactionDate"),
@@ -144,20 +137,19 @@ public class SaleDB implements SaleDBIF {
 		return builtSale;
 	}
 
-	// TODO comment
 	public Employee buildEmployee(long employeeCPR) throws SQLException {
 		Employee builtEmployee = null;
-
 		try {
 			DBConnection.getInstance().getConnection().setAutoCommit(false);
 			psSelectEmployeeWithCPR.setLong(1, employeeCPR);
 			DBConnection.getInstance().getConnection().commit();
 			ResultSet resultSet = psSelectEmployeeWithCPR.executeQuery();
 			if (resultSet.next()) {
-				builtEmployee = new Employee(resultSet.getInt("CPR"), //CPR
-											(resultSet.getString("firstName") +" "+ resultSet.getString("lastName")), //NAME
-											(resultSet.getString("street") + ", " + resultSet.getInt("zipcode") + ", "+ resultSet.getString("city")), //ADDRESS
-											resultSet.getInt("phoneNumber"), resultSet.getString("email"), resultSet.getString("position"));
+				builtEmployee = new Employee(resultSet.getInt("CPR"), // CPR
+						(resultSet.getString("firstName") + " " + resultSet.getString("lastName")), // NAME
+						(resultSet.getString("street") + ", " + resultSet.getInt("zipcode") + ", "
+								+ resultSet.getString("city")), // ADDRESS
+						resultSet.getInt("phoneNumber"), resultSet.getString("email"), resultSet.getString("position"));
 			}
 			DBConnection.getInstance().getConnection().setAutoCommit(true);
 		} catch (SQLException e) {
@@ -176,7 +168,8 @@ public class SaleDB implements SaleDBIF {
 		return orderLines;
 	}
 
-	public ArrayList<Product> getProductsAnalytics(String choice, String type, int year, int month, int day, int targetedCategoryID) throws SQLException {
+	public ArrayList<Product> getProductsAnalytics(String choice, String type, int year, int month, int day,
+			int targetedCategoryID) throws SQLException {
 		ArrayList<Product> foundProducts = new ArrayList<Product>();
 		ArrayList<Product> finiteProducts = new ArrayList<Product>();
 		ArrayList<Product> productsOfCategory = new ArrayList<Product>();
@@ -215,7 +208,6 @@ public class SaleDB implements SaleDBIF {
 
 		else if (choice.equals("Fast")) {
 			try {
-				Statement statement = DBConnection.getInstance().getConnection().createStatement();
 				if (type.equals("Book")) {
 					ResultSet resultSet = psSelectBooksFast.executeQuery();
 					foundProducts.addAll(productDb.buildObjects(resultSet, "Book"));
@@ -286,11 +278,13 @@ public class SaleDB implements SaleDBIF {
 				DBConnection.getInstance().getConnection().setAutoCommit(false);
 				DBConnection.getInstance().getConnection().commit();
 				ResultSet resultSet = psSelectBarcodeMostProfit.executeQuery();
-				while(resultSet.next()) {
-					foundProducts.add(new Product(resultSet.getString("barcode"), resultSet.getString("title"), resultSet.getDouble("costPrice"), resultSet.getDouble("RRP"), resultSet.getInt("quantity")));
+				while (resultSet.next()) {
+					foundProducts.add(new Product(resultSet.getString("barcode"), resultSet.getString("title"),
+							resultSet.getDouble("costPrice"), resultSet.getDouble("RRP"),
+							resultSet.getInt("quantity")));
 				}
 				DBConnection.getInstance().getConnection().setAutoCommit(true);
-				
+
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
@@ -320,12 +314,7 @@ public class SaleDB implements SaleDBIF {
 		return foundProducts;
 	}
 
-	// CRUD Sale
-
-	// Create Sale by implementing into DB and updating dateSold via articleNumber
-	// in Copy
 	public Sale createSale(Sale sale, Copy copy, OrderLine orderLine) throws SQLException {
-		
 		int resultSale = 0;
 		int resultCopy = 0;
 		int resultOrderLine = 0;
@@ -343,8 +332,8 @@ public class SaleDB implements SaleDBIF {
 		} catch (SQLException e) {
 			e.printStackTrace();
 			DBConnection.getInstance().getConnection().rollback();
-
 		}
+
 		try {
 			DBConnection.getInstance().getConnection().setAutoCommit(false);
 			psUdateCopy.setDate(1, copy.getDateSold());
@@ -356,7 +345,7 @@ public class SaleDB implements SaleDBIF {
 			e.printStackTrace();
 			DBConnection.getInstance().getConnection().rollback();
 		}
-		
+
 		try {
 			DBConnection.getInstance().getConnection().setAutoCommit(false);
 			psInsertIntoOrderline.setInt(1, orderLine.getSale().getID());
@@ -365,12 +354,11 @@ public class SaleDB implements SaleDBIF {
 			resultOrderLine = psInsertIntoOrderline.executeUpdate();
 			DBConnection.getInstance().getConnection().commit();
 			DBConnection.getInstance().getConnection().setAutoCommit(true);
-		}
-		catch(SQLException e)  {
+		} catch (SQLException e) {
 			e.printStackTrace();
 			DBConnection.getInstance().getConnection().rollback();
 		}
-		return resultSale == 1 && resultCopy == 1 && resultOrderLine == 1 ? sale : null;	
+		return resultSale == 1 && resultCopy == 1 && resultOrderLine == 1 ? sale : null;
 	}
 
 	// Delete Sale by going into the DB

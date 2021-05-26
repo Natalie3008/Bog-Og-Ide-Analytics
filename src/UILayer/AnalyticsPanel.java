@@ -42,15 +42,12 @@ public class AnalyticsPanel extends JPanel {
 	private JComboBox<TargetedCategory> comboBoxBooks;
 	private JComboBox<TargetedCategory> comboBoxGames;
 	private DefaultComboBoxModel<TargetedCategory> comboBoxModel;
-	private SaleCtrl saleCtrl;
 	private JFXChart jfxChart;
-	private TargetedCategoryCtrl targetedCategoryCtrl;
-	
-	
-	private ArrayList<Product> products = new ArrayList<>();
 	private JFXPanel booksFxPanel;
 	private JFXPanel gamesFxPanel;
-
+	
+	private TargetedCategoryCtrl targetedCategoryCtrl;
+	private SaleCtrl saleCtrl;	
 	
 	public AnalyticsPanel() throws SQLException {
 		targetedCategoryCtrl = new TargetedCategoryCtrl();
@@ -468,14 +465,13 @@ public class AnalyticsPanel extends JPanel {
 				
 				Platform.runLater(new Runnable() {
 		            @Override
-		            public void run() {          
+		            public void run() {
 		            	Scene scene = jfxChart.updateChartMostProfit("MOST PROFIT PRODUCTS", res);
 		            	fxPanel.setScene(scene);	            
 		            }
 		        });
 			}
 			catch (SQLException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
     	
@@ -497,7 +493,6 @@ public class AnalyticsPanel extends JPanel {
 	        });
 		}
 		catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	

@@ -7,28 +7,26 @@ import databaseLayer.*;
 import modelLayer.*;
 // This is the product controller class. Here are methods for manipulating product objects.
 public class ProductCtrl {
-	private ProductDB productDb;
+	private ProductDBIF productDb;
 
 	public ProductCtrl() {
 		productDb = new ProductDB();
 	}
 
-// Method to get the product information by giving the barcode 
+	// Method to get the product information by giving the barcode 
 	public Product getOneProductInformation(String barcode) {
 		Product foundProduct = null;
-
 		try {
 			foundProduct = productDb.getOneProductInformation(barcode);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		return foundProduct;
-
 	}
-// Method to get all product information.
+	
+	// Method to get all product information.
 	public ArrayList<Product> getProductInformation() {
 		ArrayList<Product> allProducts = new ArrayList<Product>();
-
 		try {
 			allProducts.addAll(productDb.getProductInformation()); // this method goes to Product DB and uses a method from there, which accesses the database
 		} catch (SQLException e) {
@@ -37,11 +35,9 @@ public class ProductCtrl {
 		return allProducts;
 	}
 
-// Method to create new Book and insert it in the database
-
+	// Method to create new Book and insert it in the database
 	public boolean createBook(Book book, Copy copy) {
 		boolean result = true;
-
 		try {
 			productDb.createBook(book, copy);
 		} catch (SQLException e) {
@@ -52,10 +48,8 @@ public class ProductCtrl {
 	}
 
 	// Method to create new Game and insert it in the database
-
 	public boolean createGame(Game game, Copy copy) {
 		boolean result = true;
-
 		try {
 			productDb.createGame(game, copy);
 		} catch (SQLException e) {
@@ -77,8 +71,8 @@ public class ProductCtrl {
 		}
 		return result;
 	}
+	
 	// CRUD  - update amount in stock
-
 	public boolean updateAmountInStock(Product product) {
 		boolean result = true;
 		try {
@@ -91,7 +85,6 @@ public class ProductCtrl {
 	}
 	
 	// CRUD - update copy's datesold
-
 	public boolean updateDateSold(Copy copy) {
 		boolean result = true;
 		try {
@@ -102,7 +95,8 @@ public class ProductCtrl {
 		}
 		return result;
 	}
-// CRUD - updating recommended retail price for product
+	
+	// CRUD - updating recommended retail price for product
 	public boolean updateRRP(Product product) {
 		boolean result = true;
 		try {

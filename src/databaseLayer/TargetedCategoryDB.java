@@ -14,27 +14,25 @@ public class TargetedCategoryDB implements TargetedCategoryDBIF {
 	private static final String INSERT_INTO_TARGETED_CATEGORY = "INSERT INTO TargetedCategory (ID, title, minimumAge, maximumAge, gender, other, version) VALUES(?,?,?,?,?,?,?)";
 	private static final String UPDATE_TARGETED_CATEGORY = "UPDATE TargetedCategory SET title = ?, minimumAge = ?, maximumAge = ?, gender = ?, other = ? , version = ? WHERE ID = ? AND version = ?";
 	private static final String DELETE_TARGETED_CATEGORY_WITH_ID = "DELETE FROM TargetedCategory WHERE ID = ?";
-
 	private static final String SELECT_VERSION = "SELECT version FROM TargetedCategory WHERE ID = ?";
 
 	private PreparedStatement psInsertIntoTargetedCategory;
 	private PreparedStatement psUpdateTargetedCategory;
 	private PreparedStatement psDeleteTargetedCategoryWithID;
-
 	private PreparedStatement psSelectVersion;
 
-	public TargetedCategoryDB(){
+	public TargetedCategoryDB() {
 		initPreparedStatement();
 	}
 
 	private void initPreparedStatement() {
 		Connection connection = DBConnection.getInstance().getConnection();
-		try{
+		try {
 			psInsertIntoTargetedCategory = connection.prepareStatement(INSERT_INTO_TARGETED_CATEGORY);
 			psUpdateTargetedCategory = connection.prepareStatement(UPDATE_TARGETED_CATEGORY);
 			psDeleteTargetedCategoryWithID = connection.prepareStatement(DELETE_TARGETED_CATEGORY_WITH_ID);
 			psSelectVersion = connection.prepareStatement(SELECT_VERSION);
-		}catch(SQLException e){
+		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 	}
@@ -43,13 +41,13 @@ public class TargetedCategoryDB implements TargetedCategoryDBIF {
 		int resultCategory = 0;
 		try {
 			DBConnection.getInstance().getConnection().setAutoCommit(false);
-			psInsertIntoTargetedCategory.setInt(1, targetedCategory.getID());			
+			psInsertIntoTargetedCategory.setInt(1, targetedCategory.getID());
 			psInsertIntoTargetedCategory.setString(2, targetedCategory.getTitle());
 			psInsertIntoTargetedCategory.setInt(3, targetedCategory.getMinimumAge());
 			psInsertIntoTargetedCategory.setInt(4, targetedCategory.getMaximumAge());
 			psInsertIntoTargetedCategory.setString(5, targetedCategory.getGender());
 			psInsertIntoTargetedCategory.setString(6, targetedCategory.getOther());
-			psInsertIntoTargetedCategory.setInt(7,  0);
+			psInsertIntoTargetedCategory.setInt(7, 0);
 			resultCategory = psInsertIntoTargetedCategory.executeUpdate();
 			DBConnection.getInstance().getConnection().commit();
 			DBConnection.getInstance().getConnection().setAutoCommit(true);
@@ -128,20 +126,20 @@ public class TargetedCategoryDB implements TargetedCategoryDBIF {
 		}
 		return foundCategories;
 	}
-	
+
 	private int getVersion(int targetedCategoryID) throws SQLException {
-		 int version = -1;
-	        try {
-	        	DBConnection.getInstance().getConnection().setAutoCommit(false);
-	        	psSelectVersion.setInt(1, targetedCategoryID);
-	            ResultSet resultSet = psSelectVersion.executeQuery();
-	            if (resultSet.next()) {
-	                version = resultSet.getInt(1);
-	            }
-	            DBConnection.getInstance().getConnection().setAutoCommit(true);
-	        } catch (SQLException e) {
-	            e.printStackTrace();
-	        }
-	        return version;
+		int version = -1;
+		try {
+			DBConnection.getInstance().getConnection().setAutoCommit(false);
+			psSelectVersion.setInt(1, targetedCategoryID);
+			ResultSet resultSet = psSelectVersion.executeQuery();
+			if (resultSet.next()) {
+				version = resultSet.getInt(1);
+			}
+			DBConnection.getInstance().getConnection().setAutoCommit(true);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return version;
 	}
 }

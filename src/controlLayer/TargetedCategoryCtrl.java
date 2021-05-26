@@ -4,24 +4,27 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 import databaseLayer.TargetedCategoryDB;
-
+import databaseLayer.TargetedCategoryDBIF;
 import modelLayer.TargetedCategory;
 
 public class TargetedCategoryCtrl {
 
-	TargetedCategoryDB targetedCategoryDb = new TargetedCategoryDB();
+	TargetedCategoryDBIF targetedCategoryDb;
+
+	public TargetedCategoryCtrl() {
+		targetedCategoryDb = new TargetedCategoryDB();
+	}
 
 	public boolean createTargetedCategory(TargetedCategory targetedCategory) throws SQLException {
-		
 		try {
 			targetedCategoryDb.createTargetedCategory(targetedCategory);
 		} catch (SQLException e) {
 			e.printStackTrace();
 			return false;
 		}
-    	return true;	
+		return true;
 	}
-	
+
 	public boolean updateTargetedCategory(TargetedCategory targetedCategory) throws SQLException {
 		try {
 			targetedCategoryDb.updateTargetedCategory(targetedCategory);
@@ -30,28 +33,25 @@ public class TargetedCategoryCtrl {
 			return false;
 		}
 		return true;
-		
 	}
 
 	public boolean deleteTargetedCategory(int targetedCategoryID) throws SQLException {
 		try {
-			targetedCategoryDb.deleteTargetedCategory(targetedCategoryID);	
+			targetedCategoryDb.deleteTargetedCategory(targetedCategoryID);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return false;
 		}
 		return true;
 	}
-	
-	
+
 	public ArrayList<TargetedCategory> getAllTargetedCategories() throws SQLException {
 		ArrayList<TargetedCategory> foundCategories = new ArrayList<>();
 		try {
 			foundCategories = targetedCategoryDb.getAllTargetedCategories();
-		} catch (Exception e ) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return foundCategories;
 	}
-	
 }

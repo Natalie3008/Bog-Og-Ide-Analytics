@@ -7,7 +7,7 @@ import java.sql.SQLException;
 
 import modelLayer.*;
 
-public class EmployeeDB {
+public class EmployeeDB implements EmployeeDBIF {
 
 	private static final String INSERT_INTO_EMPLOYEE = "INSERT INTO Employee (CPR, name, street, zip, city, country, phoneNumber, email, position, version) VALUES(?,?,?,?,?,?,?,?,?,?)";
 	private static final String UPDATE_EMPLOYEE_NAME = "UPDATE Employee SET name = ?, version = ? WHERE CPR = ? AND version = ?";

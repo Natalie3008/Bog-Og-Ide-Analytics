@@ -7,7 +7,7 @@ import databaseLayer.*;
 import modelLayer.*;
 
 public class SaleCtrl {
-	private SaleDB saleDb;
+	private SaleDBIF saleDb;
 	private ProductCtrl productCtrl;
 	private TargetedCategoryCtrl categoryCtrl;
 
@@ -45,18 +45,15 @@ public class SaleCtrl {
 		return foundCategories;
 	}
 
-	public ArrayList<Product> getProductsAnalytics(String choice, String type, int year, int month, int day, int targetedCategoryID) throws SQLException {
+	public ArrayList<Product> getProductsAnalytics(String choice, String type, int year, int month, int day,
+			int targetedCategoryID) throws SQLException {
 		ArrayList<Product> foundProducts = new ArrayList<Product>();
 		foundProducts = saleDb.getProductsAnalytics(choice, type, year, month, day, targetedCategoryID);
 		return foundProducts;
 	}
-	
-	//Sale CRUD in the section below
-	
-		//Create Sale
-		public boolean createSale(Sale sale, Copy copy, OrderLine orderLine) {
-		boolean result = true;
 
+	public boolean createSale(Sale sale, Copy copy, OrderLine orderLine) {
+		boolean result = true;
 		try {
 			saleDb.createSale(sale, copy, orderLine);
 		} catch (SQLException e) {
@@ -64,17 +61,16 @@ public class SaleCtrl {
 			result = false;
 		}
 		return result;
+	}
+
+	public boolean deleteSale(int ID) {
+		boolean result = true;
+		try {
+			saleDb.deleteSale(ID);
+		} catch (SQLException e) {
+			e.printStackTrace();
+			result = false;
 		}
-		
-		//Delete Sale
-		public boolean deleteSale(int ID) {
-			boolean result = true;
-			try {
-				saleDb.deleteSale(ID);
-			} catch (SQLException e) {
-				e.printStackTrace();
-				result = false;
-			}
-			return result;
-		}
+		return result;
+	}
 }

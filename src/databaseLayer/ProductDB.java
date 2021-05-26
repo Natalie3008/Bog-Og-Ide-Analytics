@@ -6,13 +6,11 @@ import modelLayer.Copy;
 import modelLayer.Game;
 
 import java.sql.*;
-import java.time.Duration;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 
 import modelLayer.Supplier;
 
-public class ProductDB {
+public class ProductDB implements ProductDBIF {
 
 	private static final String SELECT_BOOK_COPIES = "SELECT * FROM Book WHERE Book.barcode LIKE ?";
 	private static final String SELECT_GAME_COPIES = "SELECT * FROM Game WHERE Game.barcode LIKE ?";
