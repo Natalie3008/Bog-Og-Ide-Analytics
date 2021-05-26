@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import modelLayer.Supplier;
 
 public class ProductDB implements ProductDBIF {
-
+// creating SQL queries and prepared statements  
 	private static final String SELECT_BOOK_COPIES = "SELECT * FROM Book WHERE Book.barcode LIKE ?";
 	private static final String SELECT_GAME_COPIES = "SELECT * FROM Game WHERE Game.barcode LIKE ?";
 	private static final String SELECT_SUPLIER_WITH_CVR = "SELECT * FROM Supplier WHERE CVR = ?";
@@ -35,7 +35,7 @@ public class ProductDB implements ProductDBIF {
 	private static final String UPDATE_PRODUCT_RRP = "UPDATE Product SET RRP = ?, version = ? WHERE barcode LIKE ? AND version = ?";
 
 	private static final String SELECT_VERSION = "SELECT version FROM product WHERE barcode = ?";
-
+// in the strings above the question marks will be replaced with information to enter or retrieve from the database
 	private PreparedStatement psSelectBookCopies;
 	private PreparedStatement psSelectGameCopies;
 	private PreparedStatement psSelectSupplierWithCVR;
@@ -63,7 +63,7 @@ public class ProductDB implements ProductDBIF {
 	public ProductDB() {
 		initPreparedStatement();
 	}
-	
+	// method to initialise prepared statements from the Strings
 	private void initPreparedStatement() {
 		Connection connection = DBConnection.getInstance().getConnection();
 		try{
@@ -90,11 +90,12 @@ public class ProductDB implements ProductDBIF {
 			psUpdateProductRRP = connection.prepareStatement(UPDATE_PRODUCT_RRP);
 
 			psSelectVersion = connection.prepareStatement(SELECT_VERSION);
+			// version is for making sure that two people do not change data in the database and cause conflicts
 		}catch(SQLException e ){
 			e.printStackTrace();
 		}
 	}
-
+// method to build object based on resultset
 	public Product buildObject(ResultSet resultSet, String selectedType) throws SQLException {
 		Product builtProduct = null;
 
@@ -132,13 +133,13 @@ public class ProductDB implements ProductDBIF {
 
 		return builtProduct;
 	}
-
+//method to build an arraylist of copies 
 	public ArrayList<Copy> buildCopies(Product product, String barcode, String type) throws SQLException {
 		ArrayList<Copy> builtCopies = new ArrayList<Copy>();
 		ResultSet resultSet = null;
 		try {
 			DBConnection.getInstance().getConnection().setAutoCommit(false);
-			psSelectBookCopies.setString(1,  barcode);
+			psSelectBookCopies.setString(1,  barcode); //this replaces question marks in the query with actual barcode
 			psSelectGameCopies.setString(1, barcode);
 			DBConnection.getInstance().getConnection().commit();
 			if (type.equals("Book")) {
@@ -162,7 +163,7 @@ public class ProductDB implements ProductDBIF {
 		return builtCopies;
 		}
 
-
+// building a supplier object here
 	public Supplier buildSupplier(int supplierCVR) throws SQLException {
 		Supplier builtSupplier = null;
 		try {
@@ -181,12 +182,12 @@ public class ProductDB implements ProductDBIF {
 			DBConnection.getInstance().getConnection().setAutoCommit(true);
 		} catch (SQLException e) {
 			e.printStackTrace();
-			DBConnection.getInstance().getConnection().rollback();
+			DBConnection.getInstance().getConnection().rollback(); // if something goes wrong, changes are rolled back
 
 		}
 		return builtSupplier;
 	}
-
+// this method only returns one product based on barcode
 	public Product getOneProductInformation(String barcode) throws SQLException {
 		Product foundProduct = null;
 		try {
@@ -205,11 +206,11 @@ public class ProductDB implements ProductDBIF {
 			DBConnection.getInstance().getConnection().setAutoCommit(true);
 		} catch (SQLException e) {
 			e.printStackTrace();
-			DBConnection.getInstance().getConnection().rollback();
+			DBConnection.getInstance().getConnection().rollback(); //rollback in case of error
 		}
 		return foundProduct;
 	}
-
+// this is to return an arraylist with product informaton from the database
 	public ArrayList<Product> getProductInformation() throws SQLException {
 		ArrayList<Product> foundProducts = new ArrayList<Product>();
 
@@ -234,7 +235,7 @@ public class ProductDB implements ProductDBIF {
 		return resultProducts;
 	}
 
-	// method to make a book and add it into the db // WIP STILL
+	// method to make a book and add it into the db 
 	public Product createBook(Book book, Copy copy) throws SQLException {
 		int resultProduct = 0;
 		int resultBook = 0;
@@ -248,7 +249,7 @@ public class ProductDB implements ProductDBIF {
 			psInsertIntoProduct.setString(6, book.getPublicationDate());
 			psInsertIntoProduct.setString(7, book.getDescription());
 			psInsertIntoProduct.setLong(8, book.getSupplier().getCVR());
-
+// the number stands for which question mark is replaced
 			psInsertIntoBook.setString(1, copy.getArticleNumber());
 			psInsertIntoBook.setString(2, book.getBarcode());
 			psInsertIntoBook.setString(3, book.getISBN());
@@ -263,12 +264,12 @@ public class ProductDB implements ProductDBIF {
 			DBConnection.getInstance().getConnection().setAutoCommit(true);
 		} catch (SQLException e) {
 			e.printStackTrace();
-			DBConnection.getInstance().getConnection().rollback();
+			DBConnection.getInstance().getConnection().rollback(); //rollback in case of error
 		}
 		
 		return resultProduct == 1 && resultBook == 1 ? book : null;
 	}
-
+// creating a game and adding it into the db
 	public Product createGame(Game game, Copy copy) throws SQLException {
 		
 		int resultProduct = 0;
@@ -296,11 +297,11 @@ public class ProductDB implements ProductDBIF {
 			DBConnection.getInstance().getConnection().setAutoCommit(true);
 		} catch (SQLException e) {
 			e.printStackTrace();
-			DBConnection.getInstance().getConnection().rollback();
+			DBConnection.getInstance().getConnection().rollback(); //rollback in case of error
 		}
 		return resultProduct == 1 && resultGame == 1 ? game : null;
 	}
-
+// deleting from the database
 	public boolean deleteProduct(String articleNumber, String barcode) throws SQLException {
 		int resultBook = 0;
 		int resultGame = 0;
@@ -314,25 +315,27 @@ public class ProductDB implements ProductDBIF {
 			resultProduct = psDeleteProductWithBarcode.executeUpdate();
 			resultBook = psDeleteBookWithArticleNumber.executeUpdate();
 			resultGame = psDeleteGameWithArticleNumber.executeUpdate();
-
 			DBConnection.getInstance().getConnection().commit();
+			// here the updates need to be executed and commuted manually because autocommit was false
+
 			DBConnection.getInstance().getConnection().setAutoCommit(true);
 		} catch (SQLException e) {
 			e.printStackTrace();
 			DBConnection.getInstance().getConnection().rollback();
 		}
-		return resultProduct > 1 || resultBook > 1 || resultGame > 1;
+		return resultProduct > 1 || resultBook > 1 || resultGame > 1;  // this is a very short logical operation
+		// || stands for OR
 	}
 
 	public Product updateAmountInStock(Product product) throws SQLException {
 		int result = 0;
-		int version = getVersion(product.getBarcode());
+		int version = getVersion(product.getBarcode()); 
 		try {
 			DBConnection.getInstance().getConnection().setAutoCommit(false);
 
 			psUpdateProductAmountInStock.setInt(1, product.getAmountInStock());
 			psUpdateProductAmountInStock.setString(2, product.getBarcode());
-			psUpdateProductAmountInStock.setInt(3, version + 1);
+			psUpdateProductAmountInStock.setInt(3, version + 1); //version is increased by 1 after every change
 			psUpdateProductAmountInStock.setString(4, product.getBarcode());
 			psUpdateProductAmountInStock.setInt(5, version);
 			result = psUpdateProductAmountInStock.executeUpdate();
@@ -375,7 +378,7 @@ public class ProductDB implements ProductDBIF {
 		}
 		return resultGame == 1 || resultBook == 1 ? copy : null;
 	}
-
+//updating recommended retail price
 	public Product updateRRP(Product product) throws SQLException {
 		int result = 0;
 		int version = getVersion(product.getBarcode());
@@ -397,7 +400,7 @@ public class ProductDB implements ProductDBIF {
 		}
 		return result == 1 ? product : null;
 	}
-	
+	// method for getting version from the database
 	private int getVersion(String productBarcode) throws SQLException {
 		int version = -1;
 		try {
